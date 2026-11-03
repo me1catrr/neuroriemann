@@ -1,0 +1,31 @@
+<!--
+Macros LaTeX comunes de NeuroRiemann. Incluir al principio de cada documento con
+el shortcode include de Quarto apuntando a /_macros.qmd (véase index.qmd).
+Pandoc las expande también para formatos no HTML (Typst/LaTeX).
+Convenciones: véase appendices/C-notacion.qmd.
+-->
+
+::: {.hidden}
+$$
+% Espacios de matrices
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Sym}{\mathrm{Sym}}
+\newcommand{\SPD}{\mathrm{SPD}}
+\newcommand{\Corr}{\mathrm{Corr}}
+\newcommand{\Diag}{\mathrm{Diag}}
+\newcommand{\GL}{\mathrm{GL}}
+\newcommand{\Orth}{\mathrm{O}}
+% Funciones matriciales (espectrales, principales)
+\newcommand{\Expm}{\exp}
+\newcommand{\Logm}{\log}
+% Aplicaciones riemannianas (punto base en subíndice: \Exp_P, \Log_P)
+\newcommand{\Exp}{\operatorname{Exp}}
+\newcommand{\Log}{\operatorname{Log}}
+% Distancias
+\newcommand{\dAI}{d_{\mathrm{AI}}}
+\newcommand{\dLE}{d_{\mathrm{LE}}}
+% Operadores
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\diag}{\operatorname{diag}}
+$$
+:::

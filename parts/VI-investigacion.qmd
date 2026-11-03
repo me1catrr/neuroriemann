@@ -1,0 +1,11 @@
+{{< include /_macros.qmd >}}
+
+# Investigación
+
+Problemas abiertos y limitaciones: alta dimensión, no estacionariedad, geometrías para conectividad no SPD, interpretabilidad y coste computacional.
+
+::: {.callout-note}
+## Capítulos previstos
+
+20. Problemas abiertos y limitaciones
+:::

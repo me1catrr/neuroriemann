@@ -1,0 +1,184 @@
+{{< include /_macros.qmd >}}
+
+# Análisis crítico de Tibermacine et al. (2024) {#sec-tibermacine}
+
+::: {.callout-warning}
+## Borrador (Etapa 1)
+Redactado a partir de la lectura local del preprint, sin acceso a las fuentes primarias que cita.
+Las afirmaciones marcadas `[VERIFICAR]` requieren contrastar la fuente primaria antes de publicarse.
+La @prp-tib-frobenius está comprobada numéricamente en los tests de `NeuroRiemann.jl`.
+:::
+
+## Ficha
+
+- **Trabajo:** I. E. Tibermacine, S. Russo, A. Tibermacine, A. Rabehi, B. Nail, K. Kadri, C. Napoli, *Riemannian Geometry-Based EEG Approaches: A Literature Review*, preprint, arXiv:2407.20250v1 [eess.SP], 19 de julio de 2024, 24 pp. [@tibermacine2024riemannian].
+- **Alcance declarado:** revisión de 42 trabajos (búsqueda en Google Scholar y PubMed hasta el 3 de mayo de 2024) sobre geometría riemanniana y aprendizaje profundo en interfaces cerebro-computadora (BCI), agrupados en cinco categorías: extracción de características, clasificación, *manifold learning*, espacio tangente y aprendizaje por transferencia.
+- **Estructura:** §2 CSP + LDA; §3 conceptos de geometría riemanniana (covarianza, métricas LE y AI, espacio tangente, geodésicas); §4 revisión por categorías, con las ecuaciones principales de cada método; §5–6 discusión y conclusiones.
+- **Estado:** preprint sin revisión por pares (en la versión v1 analizada).
+
+Este apéndice no resume el trabajo: aplica el protocolo de revisión del libro (definiciones, convenciones, hipótesis) y señala qué puede usarse, qué debe corregirse y qué debe comprobarse en la fuente primaria. Las ecuaciones se citan por su número en el preprint, p. ej. (T17).
+
+## Protocolo
+
+1. Definición de la distancia afín-invariante y equivalencias.
+2. Aplicaciones exponencial y logarítmica: convención de punto base y notación.
+3. Espacio tangente: blanqueamiento y vectorización.
+4. Hipótesis SPD sobre covarianzas y matrices de conectividad.
+5. Medias: definición, existencia, unicidad y algoritmo.
+6. Afirmaciones empíricas y bibliografía.
+
+## Distancia afín-invariante
+
+**Correcto.** (T17) y (T31) definen
+$\dAI(P_1,P_2)=\|\Logm(P_1^{-1/2}P_2P_1^{-1/2})\|_F$, que es la forma estándar sin factores adicionales.
+Esta es la convención del libro.
+
+**Incorrecto en general.** (T67) afirma
+$\|\Logm(P_1^{-1}P_2)\|_F=\big(\sum_i\log^2\lambda_i(P_1^{-1}P_2)\big)^{1/2}$;
+(T26) escribe la misma igualdad sin especificar la norma.
+La segunda expresión es la distancia afín-invariante; la primera, con norma de Frobenius, no lo es salvo que las matrices conmuten.
+
+::: {#prp-tib-frobenius}
+## Norma de Frobenius de $\Logm(A^{-1}B)$
+Sean $A,B\in\SPD_n$ y $\lambda_1,\dots,\lambda_n>0$ los autovalores de $A^{-1}B$. Entonces
+$$
+\|\Logm(A^{-1}B)\|_F \;\ge\; \Big(\sum_{i=1}^n \log^2\lambda_i\Big)^{1/2} = \dAI(A,B),
+$$
+con igualdad si y solo si $AB=BA$.
+:::
+
+::: {.proof}
+$A^{-1}B = A^{-1/2}\,(A^{-1/2}BA^{-1/2})\,A^{1/2}$ es semejante a la matriz SPD $C=A^{-1/2}BA^{-1/2}$; por tanto, es diagonalizable con autovalores reales positivos $\lambda_i$ y su logaritmo principal es
+$\Logm(A^{-1}B)=A^{-1/2}\Logm(C)A^{1/2}$, con autovalores $\log\lambda_i$.
+La desigualdad de Schur ($\|M\|_F^2\ge\sum_i|\lambda_i(M)|^2$, con igualdad si y solo si $M$ es normal) da la desigualdad.
+Una matriz real normal con autovalores reales es simétrica. Como $\Logm$ es inyectiva sobre los reales positivos, $\Logm(A^{-1}B)$ y $A^{-1}B$ comparten autoespacios, así que una es normal si y solo si lo es la otra.
+Hay igualdad, pues, si y solo si $A^{-1}B$ es simétrica, es decir, $A^{-1}B=BA^{-1}$, lo que equivale a $AB=BA$.
+Finalmente, $\sum_i\log^2\lambda_i=\|\Logm(C)\|_F^2=\dAI(A,B)^2$.
+:::
+
+La expresión espectral $\big(\sum_i\log^2\lambda_i(A^{-1}B)\big)^{1/2}$ es correcta y numéricamente preferible (autoproblema generalizado $Bv=\lambda Av$); lo erróneo es identificarla con la norma de Frobenius de $\Logm(A^{-1}B)$.
+
+**Otras observaciones.**
+
+- (T50) presenta como «correlación geodésica» la cantidad $\sum_i\log^2\lambda_i$ con $\lambda_i$ autovalores generalizados del par: es exactamente $\dAI(X,Y)^2$. La denominación debe comprobarse en la fuente [118] `[VERIFICAR]`.
+- (T61) llama «distancia riemanniana» a $\|\Logm C_i-\Logm C_j\|_F$, que es la distancia log-euclídea $\dLE$. El libro siempre nombra la métrica.
+- (T27) usa la diferencia de dos distancias AI (MDRM binario) con la misma convención: es coherente.
+
+## Exponencial, logaritmo y notación
+
+**Notación ambigua.** El preprint usa:
+
+- `exp`, `log` (Def. 1.3) y también `Exp`, `Log` (T14–T17, T21, T56) para la exponencial y el logaritmo **matriciales**;
+- `Exp_X`, `Log_X` (§3, T39–T41) y `log_Q` (T34) para las aplicaciones **riemannianas**.
+
+La misma tipografía designa, pues, objetos distintos, y el mismo objeto aparece con tipografías distintas.
+El libro separa $\Expm,\Logm$ (matriciales) de $\Exp_P,\Log_P$ (riemannianos).
+
+**Definición 1.3.** Define $\exp(A)$ y $\log(A)$ para cualquier $A\in\mathbb R^{n\times n}$ mediante $A=U\operatorname{diag}(\lambda)U^\top$ con $U$ ortogonal. Esa descomposición solo existe si $A$ es simétrica, y el logaritmo real exige además $\lambda_i>0$. Corrección: definirlas sobre $\Sym_n$ (exponencial) y $\SPD_n$ (logaritmo principal).
+
+**Fórmulas correctas** (métrica AI):
+
+- (T19) $\gamma(t)=P^{1/2}\Expm(tP^{-1/2}SP^{-1/2})P^{1/2}$ es la geodésica con $\gamma(0)=P$ y $\dot\gamma(0)=S$.
+- (T34) y (T40) dan $\Log_P$ y $\Exp_P$ en su forma estándar [@pennec2006riemannian].
+
+**Imprecisiones conceptuales.**
+
+- En §3 (texto previo a T9) se toma la cuerda $\xi=M'-M$ como «vector tangente en $M$» y se dice que $\Exp_M(\xi)$ «aproxima» $M'$. En realidad $\Exp_M(\Log_M M')=M'$ exactamente; la cuerda solo es la aproximación de primer orden: $\Log_M(M')=(M'-M)+O(\|M'-M\|^2)$, como se ve desarrollando $\Logm(I+E)=E+O(\|E\|^2)$ con $E=M^{-1/2}(M'-M)M^{-1/2}$.
+- Tras (T21) se dice que la geodésica log-euclídea «respeta la curvatura» de la variedad. La métrica log-euclídea es **plana**: $\Logm:\SPD_n\to\Sym_n$ es una isometría sobre el espacio euclídeo $(\Sym_n,\langle\cdot,\cdot\rangle_F)$, así que su curvatura seccional es nula. Es precisamente esto lo que permite sus fórmulas cerradas.
+- En §3 se afirma que las geodésicas pueden no ser minimizantes «en variedades no simplemente conexas» y se ilustra con los polos de la esfera. Pero la esfera $S^2$ es simplemente conexa. Las geodésicas son localmente minimizantes; la minimización global falla más allá del lugar de corte, con independencia de la conexión simple. En $\SPD_n$ con la métrica AI (variedad de Hadamard) toda geodésica es minimizante.
+- (T22): la definición del tensor de curvatura es una de las dos convenciones de signo habituales; el libro declara la suya.
+
+## Espacio tangente y vectorización
+
+El preprint usa, sin distinguirlas, tres aplicaciones llamadas «proyección al espacio tangente»:
+
+| Ecuación | Aplicación | Naturaleza |
+|---|---|---|
+| (T34) | $\Log_{C_0}(C)=C_0^{1/2}\Logm(C_0^{-1/2}CC_0^{-1/2})C_0^{1/2}$ | logaritmo riemanniano AI, en $T_{C_0}\SPD_n$ |
+| (T63), (T69) | $\Logm(C_0^{-1/2}CC_0^{-1/2})$ | logaritmo AI blanqueado: transporte a $T_I\SPD_n$ |
+| (T66) | $\Logm C-\Logm C_0$ | coordenadas log-euclídeas centradas |
+
+Relación: (T63) $=C_0^{-1/2}\,\Log_{C_0}(C)\,C_0^{-1/2}$, y $\|(\mathrm{T63})\|_F=\|\Log_{C_0}(C)\|_{C_0}=\dAI(C_0,C)$.
+En cambio, $\|\Log_{C_0}(C)\|_F$ (norma euclídea sin blanquear) no es una distancia riemanniana.
+Para que la distancia euclídea entre vectores aproxime la distancia AI hay que usar la versión blanqueada (T63).
+
+**Vectorización no isométrica.** En §3 (preliminares) se define $\operatorname{vec}(A)$ para $A$ simétrica tomando «solo las entradas únicas», sin pesos, y (T64) la aplica sin más. Para $S\in\Sym_n$,
+$$
+\|S\|_F^2=\sum_i s_{ii}^2+2\sum_{i<j}s_{ij}^2,
+$$
+así que la vectorización isométrica multiplica por $\sqrt2$ las entradas fuera de la diagonal [@barachant2013classification]. Sin ese factor, la geometría euclídea de las características infrapondera las covarianzas cruzadas.
+
+**(T10).** Si uno de los dos puntos es la referencia $M$, la igualdad $\dAI(M,M')=\|\mathcal P_M(M')\|$ es **exacta** (con blanqueamiento y vectorización isométrica). La aproximación solo tiene sentido para pares $M_i,M_j$ distintos de la referencia, y su error depende de la curvatura y de la dispersión respecto de $M$. «Subconjunto compacto», como dice el texto, no es la hipótesis relevante.
+
+**(T69).** Se presenta como «proceso de alineamiento», pero es la proyección tangente blanqueada. El re-centrado (alineamiento riemanniano) es la congruencia $C\mapsto C_0^{-1/2}CC_0^{-1/2}$ sin logaritmo; conviene no confundir ambos pasos (cap. 18).
+
+## Hipótesis SPD
+
+**Covarianza (T11–T13).** El argumento de (T13) es correcto como implicación: $v^\top Pv=\|X^\top v\|^2/(T-1)$, que es $>0$ para todo $v\neq0$ si y solo si $X$ tiene rango por filas completo. Pero (T13) escribe «$>0$» sin condición, y el texto justifica el rango completo con «$T>M$ y datos suficientemente diversos». El libro debe probar, no presuponer, que:
+
+- con **referencia promedio** las filas de $X$ suman cero, así que $\mathbf 1\in\ker(XX^\top)$ y $\operatorname{rank}P\le M-1$;
+- la eliminación de $k$ componentes ICA reduce el rango hasta $M-k$ (en general) `[VERIFICAR enunciado exacto en cap. 16]`;
+- en esos casos $P\notin\SPD_M$ y $\dAI$ no está definida sin regularización o reducción de dimensión.
+
+**Normalizaciones inconsistentes.** (T2) usa $ZZ^\top$ sin normalizar, (T11) $1/(T-1)$ y (T62) $1/N$; (T11) no centra $X$ pese a usar $1/(T-1)$. Como $\dAI(aA,aB)=\dAI(A,B)$, un factor común es inocuo. Pero comparar matrices con normalizaciones distintas introduce un término espurio: si $B'=aB$, entonces $\Logm(A^{-1/2}B'A^{-1/2})=\Logm(A^{-1/2}BA^{-1/2})+(\log a)I$, de modo que la distancia cambia y, para $B=A$, vale $\sqrt n\,|\log a|$.
+
+**Diagonal y «espectro».** La diagonal de $P$ contiene la potencia en la banda filtrada de cada canal, no un espectro de potencia.
+
+**Conectividad funcional.** El texto atribuye a los elementos fuera de la diagonal el papel de «conectividad funcional», pero no distingue entre covarianza y las medidas de conectividad (coherencia, PLV, PLI, wPLI). Estas últimas no son necesariamente PSD; wPLI tiene diagonal nula y nunca es PSD salvo que sea nula (cap. 9). La revisión no trata este problema, central para aplicar geometría SPD a la conectividad.
+
+## Medias
+
+- (T9) y (T68) definen la media de Fréchet/Karcher como $\arg\min\sum_i d^2$; es correcto.
+- (T33) define la «media riemanniana» como $\arg\min\sum_i d(C,C_i)$, **sin cuadrado**: eso es la **mediana geométrica**, no la media. Ejemplo en $\SPD_1=(0,\infty)$ con la métrica AI ($d(a,b)=|\log a-\log b|$): para $\{1,1,e^3\}$, la media es $e$ y la mediana es $1$. Habría que comprobar en la fuente [101] cuál se usa `[VERIFICAR]`.
+- No se dan condiciones de existencia ni de unicidad. En $\SPD_n$ con la métrica AI (variedad de Hadamard), la media de Fréchet de un conjunto finito existe y es única (cap. 8).
+- No se describe el algoritmo (punto fijo de Karcher) ni su criterio de parada. Que no haya «forma cerrada» para la media AI es cierto en general para $N\ge3$; para $N=2$ es el punto medio $A\#B$, y para matrices que conmutan coincide con la media log-euclídea (T15).
+- (T56): media log-euclídea ponderada con pesos softmax ($\sum\alpha=1$); correcta.
+
+**Otras métricas (§3.2).** Se presentan como alternativas distintas:
+
+- **Fisher–Rao:** sobre gaussianas centradas $\mathcal N(0,\Sigma)$, la métrica de información de Fisher es $\tfrac12\operatorname{tr}(\Sigma^{-1}d\Sigma\,\Sigma^{-1}d\Sigma)$; es la métrica AI salvo un factor constante, así que $d_{FR}=\dAI/\sqrt2$. No es una geometría distinta `[VERIFICAR fuente primaria: Skovgaard 1984; Atkinson y Mitchell 1981]`.
+- **Métrica de Cholesky:** se cita un libro de estimación de covarianzas [68]; la métrica riemanniana de Cholesky suele atribuirse a Lin (2019, SIMAX) `[VERIFICAR]`.
+- **Procrustes:** sobre SPD se relaciona con la distancia de Bures–Wasserstein `[VERIFICAR]`.
+
+## Afirmaciones empíricas y bibliografía
+
+**Sin resultados cuantitativos.** Las mejoras («significant improvements», «superior performance») no se acompañan de cifras, conjuntos de datos ni protocolos de evaluación. El libro no reutiliza ninguna afirmación empírica de esta revisión; solo cita la fuente primaria verificada.
+
+**Recuento.** Se declaran 42 trabajos, pero la Tabla 1 contiene 41 entradas con [86] repetida (40 referencias distintas), y [118] se discute en §4.3 sin figurar en la tabla.
+
+**Referencias duplicadas** con números distintos: [20]=[76], [88]=[119], [97]=[120], [111]=[121].
+
+**Colisiones de siglas** (citas que no corresponden al concepto):
+
+- [33] trata del *canonical correspondence analysis* en ecología vegetal, pero se cita por el *canonical correlation analysis* (CCA);
+- [43] trata del *latent Dirichlet allocation* (modelos de tópicos), pero se cita por el *linear discriminant analysis* (LDA);
+- [45] trata del *contrastive spatial pre-training* geoespacial, pero se cita por el *common spatial patterns* (CSP).
+
+**Otras incidencias:**
+
+- HORC se atribuye a [104] en §4.1 y después a Gurve et al. [117] `[VERIFICAR autoría en ambas fuentes]`.
+- La Figura 2 (descenso de gradiente en una variedad producto) procede de un artículo de radar MIMO [125]. Las Figuras 1–2 son de terceros: el libro no las reproduce.
+- (T39) Gradientes de GLRSQ. Con $\nabla_W d^2(X,W)=-2\Log_W(X)$ y $\partial\mu/\partial\delta_J>0$, la actualización del prototipo correcto debería acercarlo a $X_i$, pero los signos de (T39)–(T41) lo alejan. Además, el factor 4 depende de si $\delta$ denota la distancia o su cuadrado `[VERIFICAR contra Tang, Fan y Tiňo, IEEE TNNLS 2020]`.
+- (T45) $L_P$ con signo negativo sobre pares de la misma clase, y (T46) $\min(10^{-4},\cdot)$ (¿$\max$?): probablemente erratas `[VERIFICAR contra Suh y Kim, AAAI 2021]`.
+- (T32): $\sigma$ y $\mathcal N(v)$ se definen pero no aparecen; RBN no se define. (T42): índices $k$ y $s$ mezclados; además, que $X_k$ sea SPD exige que $W_s$ tenga rango por filas completo.
+- (T28): la red elástica suele escribirse con $\tfrac{1-\alpha}{2}\|b\|_2^2$; el factor es convencional, pero debe declararse.
+
+## Qué aprovecha el libro
+
+- La taxonomía en cinco categorías y la lista de trabajos 2019–2024 como **mapa de lectura**, siempre a través de las fuentes primarias.
+- Contraejemplos didácticos derivados de los errores anteriores, que se convertirán en ejercicios y tests:
+
+| Error del preprint | Test / ejercicio en el libro |
+|---|---|
+| $\|\Logm(A^{-1}B)\|_F=\dAI$ | @prp-tib-frobenius; test: igualdad si y solo si conmutan |
+| vec sin $\sqrt2$ | test de isometría de la vectorización (cap. 12) |
+| covarianza con referencia promedio «SPD» | test de rango $\le n-1$ (cap. 16) |
+| mediana llamada media | ejemplo en $\SPD_1$; media frente a mediana (cap. 8) |
+| LE «curva» | curvatura nula de LE (cap. 6) |
+| Fisher–Rao como métrica distinta | factor $1/\sqrt2$ (cap. 6) |
+
+## Pendientes `[VERIFICAR]`
+
+1. Fuentes primarias [101], [104]/[117], [116], [87] y [118] para las discrepancias señaladas.
+2. Referencias de Fisher–Rao (Skovgaard; Atkinson y Mitchell), de la métrica de Cholesky (Lin) y de Procrustes/Bures–Wasserstein, con DOI verificado antes de entrar en `bib/references.bib`.
+3. Enunciado exacto del rango tras ICA (cap. 16).

@@ -1,0 +1,14 @@
+{{< include /_macros.qmd >}}
+
+# Geometría de matrices SPD
+
+El cono $\SPD_n$ como espacio homogéneo $\GL(n)/\Orth(n)$ y espacio simétrico de curvatura no positiva; las métricas euclídea, log-euclídea, afín-invariante y de Bures–Wasserstein; las aplicaciones $\Exp_P$ y $\Log_P$; y la estadística de medias de Fréchet.
+
+::: {.callout-note}
+## Capítulos previstos
+
+5. Estructura geométrica del cono SPD
+6. Métricas sobre SPD (capítulo piloto)
+7. Exponencial y logaritmo riemannianos, geodésicas y transporte paralelo
+8. Medias de Fréchet y estadística
+:::

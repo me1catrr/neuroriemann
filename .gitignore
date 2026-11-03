@@ -198,3 +198,5 @@ htmlcov/
 .cursor/
 .claude/
 .Rhistory
+
+**/*.quarto_ipynb

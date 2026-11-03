@@ -1,0 +1,14 @@
+{{< include /_macros.qmd >}}
+
+# Fundamentos matemáticos
+
+Esta parte reúne las herramientas de álgebra lineal, análisis matricial y geometría diferencial que el resto del libro da por conocidas: espectro y condicionamiento, el cono de matrices SPD, las funciones matriciales $\Expm$, $\Logm$ y la raíz principal, variedades diferenciables y geometría riemanniana hasta las variedades de Hadamard.
+
+::: {.callout-note}
+## Capítulos previstos
+
+1. Álgebra lineal y análisis espectral
+2. Matrices simétricas, PSD/SPD y funciones matriciales
+3. Variedades diferenciables y espacios tangentes
+4. Geometría riemanniana
+:::

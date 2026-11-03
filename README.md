@@ -2,7 +2,29 @@
 
 **NeuroRiemann** es un proyecto científico dedicado al estudio de señales neurofisiológicas (EEG) mediante herramientas de **geometría de Riemann**: matrices de covarianza simétricas definidas positivas, variedades SPD, métricas y medias riemannianas, espacio tangente y métodos de clasificación y análisis estadístico sobre variedades.
 
-> Estado: fase inicial de planificación. La arquitectura matemática, las herramientas computacionales y la estructura del proyecto se definirán próximamente.
+> Estado: esqueleto del libro (Etapa 2). Próximo hito: capítulo piloto «Métricas sobre SPD».
+
+## Estructura
+
+| Ruta | Contenido |
+|---|---|
+| `_quarto.yml`, `index.qmd`, `parts/`, `chapters/`, `appendices/` | Libro Quarto (HTML; Typst previsto) |
+| `_macros.qmd` | Macros LaTeX comunes (`\SPD_n`, `\Logm`, `\Log_P`, `\dAI`…) |
+| `julia/NeuroRiemann.jl/` | Paquete Julia de referencia con tests |
+| `Project.toml`, `Manifest.toml` | Entorno Julia del libro (versiones fijadas) |
+| `fixtures/` | Resultados de Julia con semilla fija para la validación cruzada |
+| `python/validation/` | Validación independiente (SciPy, pyRiemann) |
+| `bib/` | Bibliografía verificada (`scripts/verify_bib.py`) |
+
+## Reproducir
+
+```bash
+julia --project=. -e 'using Pkg; Pkg.instantiate()'
+julia --project=julia/NeuroRiemann.jl -e 'using Pkg; Pkg.test()'
+quarto render && scripts/check-site.sh
+```
+
+Instrucciones completas, incluida la validación en Python, en el apéndice «Entorno y reproducibilidad».
 
 ## Relación con NeuroMIND
 

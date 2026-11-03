@@ -1,0 +1,14 @@
+{{< include /_macros.qmd >}}
+
+# Aprendizaje geométrico
+
+Proyección al espacio tangente y vectorización isométrica, clasificación por distancia mínima a la media, kernels sobre $\SPD_n$, optimización en variedades y redes neuronales que operan sobre matrices SPD.
+
+::: {.callout-note}
+## Capítulos previstos
+
+12. Espacio tangente y extracción de características
+13. Clasificación riemanniana: MDRM, kernels y regresión
+14. Optimización sobre variedades
+15. Aprendizaje profundo geométrico
+:::

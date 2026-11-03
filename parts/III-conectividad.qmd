@@ -1,0 +1,13 @@
+{{< include /_macros.qmd >}}
+
+# Correlación y conectividad funcional
+
+Antes de aplicar la geometría SPD a la conectividad hay que saber qué medidas la admiten. Esta parte clasifica las matrices de conectividad EEG por simetría, diagonal, rango y signo espectral, estudia la variedad de correlación $\Corr_n$ y propone representaciones alternativas para las medidas que no son semidefinidas positivas.
+
+::: {.callout-note}
+## Capítulos previstos
+
+9. Matrices de conectividad EEG: definiciones y propiedades algebraicas
+10. Variedad de matrices de correlación
+11. Representaciones alternativas de la conectividad
+:::

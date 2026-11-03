@@ -1,0 +1,40 @@
+{{< include /_macros.qmd >}}
+
+# Notación y convenciones {#sec-notacion}
+
+## Espacios de matrices
+
+| Símbolo | Macro | Significado |
+|---|---|---|
+| $\Sym_n$ | `\Sym_n` | Matrices reales simétricas $n\times n$ |
+| $\SPD_n$ | `\SPD_n` | Matrices simétricas definidas positivas (cono abierto en $\Sym_n$) |
+| $\Corr_n$ | `\Corr_n` | Matrices de correlación de rango completo: SPD con diagonal unitaria |
+| $\Diag_n^+$ | `\Diag_n^+` | Matrices diagonales con diagonal positiva |
+| $\GL(n)$, $\Orth(n)$ | `\GL(n)`, `\Orth(n)` | Grupo lineal general y grupo ortogonal |
+
+Las **matrices de conectividad funcional** (coherencia, PLV, PLI, wPLI…) no reciben símbolo propio: en general no pertenecen a $\SPD_n$ ni a $\Corr_n$, y sus propiedades se estudian caso a caso.
+
+## Funciones matriciales frente a aplicaciones riemannianas
+
+| Símbolo | Macro | Significado |
+|---|---|---|
+| $\Expm S$ | `\Expm` | Exponencial **matricial** de $S\in\Sym_n$ |
+| $\Logm P$ | `\Logm` | Logaritmo matricial **principal** de $P\in\SPD_n$ |
+| $P^{1/2}$, $P^t$ | — | Raíz y potencias principales (únicas en $\SPD_n$) |
+| $\Exp_P$ | `\Exp_P` | Aplicación exponencial **riemanniana** en $P$ (depende de la métrica) |
+| $\Log_P$ | `\Log_P` | Aplicación logarítmica **riemanniana** en $P$ |
+| $\dAI$, $\dLE$ | `\dAI`, `\dLE` | Distancias afín-invariante y log-euclídea |
+
+Para $S\in\Sym_n$ con descomposición espectral $S=U\diag(\lambda)U^\top$ y $f$ definida sobre el espectro, $f(S)=U\diag(f(\lambda_1),\dots,f(\lambda_n))U^\top$. No se usa la notación $\Exp$/$\Log$ (mayúscula, sin subíndice) para las funciones matriciales.
+
+## Convenciones declaradas
+
+- **Distancia afín-invariante:** $\dAI(A,B)=\|\Logm(A^{-1/2}BA^{-1/2})\|_F=\big(\sum_i\log^2\lambda_i(A^{-1}B)\big)^{1/2}$, sin factores adicionales. La expresión $\|\Logm(A^{-1}B)\|_F$ **no** es equivalente salvo que $A$ y $B$ conmuten (apéndice [-@sec-tibermacine]).
+- **Distancia log-euclídea:** $\dLE(A,B)=\|\Logm A-\Logm B\|_F$.
+- **Producto interior de Frobenius:** $\langle X,Y\rangle=\tr(X^\top Y)$.
+- **Vectorización isométrica** de $S\in\Sym_n$: diagonal sin cambios y entradas $i<j$ multiplicadas por $\sqrt2$, de modo que la norma euclídea del vector coincide con $\|S\|_F$.
+- **Covarianza muestral:** se indica siempre la normalización ($1/T$ o $1/(T-1)$) y si los datos están centrados.
+
+## Entornos matemáticos
+
+Teoremas, definiciones y demostraciones usan los divs de Quarto (`#thm-`, `#def-`, `#lem-`, `#prp-`, `#cor-`, `#exm-`, `#exr-`, `.proof`); las ecuaciones numeradas usan `{#eq-…}` y todas las referencias cruzadas usan `@`.

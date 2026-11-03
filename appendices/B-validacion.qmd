@@ -1,0 +1,24 @@
+{{< include /_macros.qmd >}}
+
+# Validación cruzada Julia–Python {#sec-validacion}
+
+`NeuroRiemann.jl` es la implementación de referencia del libro. Para detectar errores que los tests de un único lenguaje no ven (convenciones, factores constantes, ramas del logaritmo), cada algoritmo se recalcula de forma **independiente** en Python a partir de los mismos datos.
+
+## Protocolo
+
+1. **Generación.** `julia/scripts/generate_fixtures.jl` calcula, con semilla fija (`StableRNG(20261103)`), entradas y salidas de cada función y las escribe en `fixtures/*.json`. Los números se guardan con la representación decimal más corta que reproduce exactamente cada `Float64`.
+2. **Recálculo.** `python/validation/tests/` lee los fixtures y recalcula las salidas con implementaciones que no comparten código con Julia: SciPy y, cuando existe la función equivalente, pyRiemann.
+3. **Criterio.** Error relativo $\|A_{\text{Julia}}-A_{\text{Python}}\|_F/\max(\|A_{\text{Python}}\|_F,1) < 10^{-10}$. Además, las salidas declaradas simétricas deben serlo **exactamente** (bit a bit).
+4. **Regeneración.** Si cambia una implementación, se regeneran los fixtures y se revisa el diff: un cambio en los valores sin cambio en la definición matemática es un error.
+
+## Cobertura actual
+
+| Fixture | Funciones | Referencias Python |
+|---|---|---|
+| `matfun_spd.json` | `expm`, `logm`, `sqrtm`, `invsqrtm`, `powm(·, 0.3)` en $n\in\{2,3,5,8\}$ | `scipy.linalg.expm`, `logm`, `sqrtm`, `fractional_matrix_power`; `pyriemann.utils.base` |
+
+SciPy calcula estas funciones por métodos genéricos (Padé con escalado y cuadrado, Schur), distintos del método espectral de `NeuroRiemann.jl` ($f(S)=U\diag(f(\lambda))U^\top$). La concordancia entre ambos es, por tanto, una comprobación no trivial.
+
+## Lo que la validación no cubre
+
+La validación cruzada confirma que dos implementaciones calculan lo mismo, no que lo calculado sea lo correcto. Las identidades matemáticas (por ejemplo, $\Expm(\Logm P)=P$, la equivariancia ortogonal $f(QPQ^\top)=Qf(P)Q^\top$ o la @prp-tib-frobenius) se comprueban en los tests de propiedades de `julia/NeuroRiemann.jl/test/`.

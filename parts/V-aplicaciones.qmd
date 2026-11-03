@@ -1,0 +1,14 @@
+{{< include /_macros.qmd >}}
+
+# Aplicaciones EEG
+
+Estimación y regularización de covarianzas (incluidos los problemas de rango por referencia promedio e ICA), filtrado espacial y CSP, aprendizaje por transferencia mediante re-centrado y transporte paralelo, y el diseño de análisis longitudinales geométricos con datos sintéticos.
+
+::: {.callout-note}
+## Capítulos previstos
+
+16. Estimación y regularización de covarianzas
+17. Filtrado espacial, CSP y BCI
+18. Transfer learning y alineamiento
+19. Puente metodológico con NeuroMIND
+:::

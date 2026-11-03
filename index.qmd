@@ -1,0 +1,38 @@
+{{< include /_macros.qmd >}}
+
+# Prefacio {.unnumbered}
+
+::: {.callout-note}
+## Libro en construcción
+Este es el esqueleto del libro. Los capítulos se irán incorporando según la hoja de ruta; el primero será el capítulo piloto sobre métricas en $\SPD_n$.
+:::
+
+*NeuroRiemann* es un libro científico y educativo sobre **geometría riemanniana de matrices simétricas definidas positivas** y sus aplicaciones al análisis de señales de **electroencefalografía (EEG)**.
+
+Las matrices de covarianza de un registro EEG multicanal no viven en un espacio vectorial, sino en el cono abierto $\SPD_n$. Tratarlas con la geometría euclídea produce artefactos bien conocidos: interpolaciones que «hinchan» el determinante, medias que no respetan invariancias físicas, distancias que dependen de la escala de cada canal. La geometría riemanniana ofrece herramientas (distancias invariantes, medias de Fréchet, espacios tangentes, transporte paralelo) que sí respetan esa estructura y que hoy son estándar en interfaces cerebro-computadora.
+
+## Qué distingue a este libro
+
+- **Rigor matemático.** Cada resultado se enuncia con sus hipótesis y se demuestra o se cita con una referencia verificada. Las convenciones (factores $1/2$, $\sqrt2$ en la vectorización, normalizaciones) se declaran siempre de forma explícita (apéndice [-@sec-notacion]).
+- **Distinciones que importan.** Se separan con cuidado las matrices SPD, las matrices de correlación ($\Corr_n$, SPD con diagonal unitaria) y las matrices de conectividad funcional, que **no** son necesariamente semidefinidas positivas. Por ejemplo, la matriz wPLI tiene diagonal nula y, salvo que sea nula, siempre tiene algún autovalor negativo.
+- **Algoritmos reproducibles.** Cada algoritmo se presenta con su definición matemática, su pseudocódigo, una implementación en Julia (`NeuroRiemann.jl`), tests de propiedades e invariancias y una validación cruzada independiente en Python con tolerancia declarada (apéndices [-@sec-entorno] y [-@sec-validacion]).
+- **Laboratorios y simuladores.** Los capítulos incluyen laboratorios con datos sintéticos generados con semilla fija y simuladores interactivos en $\SPD_2$.
+
+## Estructura
+
+| Parte | Contenido |
+|---|---|
+| I. Fundamentos matemáticos | Álgebra lineal, matrices SPD y funciones matriciales, variedades, geometría riemanniana |
+| II. Geometría de matrices SPD | Estructura del cono, métricas, exponencial y logaritmo, medias de Fréchet |
+| III. Correlación y conectividad | Propiedades algebraicas de las medidas de conectividad, variedad de correlación, alternativas |
+| IV. Aprendizaje geométrico | Espacio tangente, clasificación, optimización en variedades, aprendizaje profundo geométrico |
+| V. Aplicaciones EEG | Estimación de covarianzas, filtrado espacial y BCI, transferencia, puente metodológico con NeuroMIND |
+| VI. Investigación | Problemas abiertos y limitaciones |
+
+## Datos y material de terceros
+
+El libro solo utiliza **datos sintéticos** generados con semilla y script versionado. No contiene datos EEG reales, ni datos clínicos, ni material protegido por derechos de autor; las figuras inspiradas en otros trabajos se recrean con código propio y se cita su fuente.
+
+## Licencias
+
+El código se distribuye con licencia [MIT](https://github.com/me1catrr/neuroriemann/blob/main/LICENSE). El texto y las figuras originales, con licencia [CC BY 4.0](https://github.com/me1catrr/neuroriemann/blob/main/LICENSE-CONTENT.md).

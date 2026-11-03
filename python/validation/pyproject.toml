@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "neuroriemann-val"
+version = "0.1.0"
+description = "Validación cruzada independiente de NeuroRiemann.jl (no produce resultados del libro)"
+authors = [{ name = "Rafael Castro Triguero" }]
+license = "MIT"
+requires-python = ">=3.11"
+# Versiones exactas fijadas en requirements.lock (pip freeze).
+dependencies = [
+    "numpy>=1.26",
+    "scipy>=1.11",
+    "pyriemann>=0.6",
+    "pytest>=8",
+]
+
+[tool.setuptools.packages.find]
+include = ["neuroriemann_val*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

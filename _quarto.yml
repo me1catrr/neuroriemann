@@ -1,0 +1,59 @@
+project:
+  type: book
+  output-dir: _book
+  # Lista explícita: Quarto no descubre ni renderiza nada fuera de estas rutas
+  # (en particular, nunca docs/). No usar `resources:` con comodines.
+  render:
+    - index.qmd
+    - parts/*.qmd
+    - appendices/*.qmd
+
+lang: es
+
+book:
+  title: "NeuroRiemann"
+  subtitle: "Geometría riemanniana para el análisis de EEG"
+  author: "Rafael Castro Triguero"
+  repo-url: https://github.com/me1catrr/neuroriemann
+  repo-actions: [issue, source]
+  license: "CC BY 4.0"
+  search: true
+  chapters:
+    - index.qmd
+    - part: parts/I-fundamentos.qmd
+    - part: parts/II-spd.qmd
+    - part: parts/III-conectividad.qmd
+    - part: parts/IV-aprendizaje.qmd
+    - part: parts/V-aplicaciones.qmd
+    - part: parts/VI-investigacion.qmd
+  appendices:
+    - appendices/A-entorno.qmd
+    - appendices/B-validacion.qmd
+    - appendices/C-notacion.qmd
+    - appendices/D-analisis-tibermacine.qmd
+
+bibliography: bib/references.bib
+
+execute:
+  freeze: auto
+
+format:
+  html:
+    theme:
+      light: [cosmo, assets/scss/neuroriemann.scss]
+      dark: [darkly, assets/scss/neuroriemann-dark.scss]
+    html-math-method: mathjax
+    number-sections: true
+    number-depth: 3
+    toc: true
+    toc-depth: 3
+    code-fold: show
+    code-tools: true
+    code-link: false
+    link-citations: true
+    reference-location: margin
+    citation-location: document
+  # Prototipo futuro (Etapa 5):
+  # typst:
+  #   toc: true
+  #   number-sections: true

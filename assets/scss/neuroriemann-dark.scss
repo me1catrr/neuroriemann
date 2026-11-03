@@ -1,0 +1,27 @@
+/*-- scss:defaults --*/
+$font-family-serif: "Charter", "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
+$font-family-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+$font-family-monospace: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+$font-family-base: $font-family-serif;
+$font-size-root: 17px;
+$line-height-base: 1.6;
+$primary: #7fb2e0;
+
+/*-- scss:rules --*/
+h1, h2, h3, h4, .navbar, .sidebar, .quarto-title-meta, .callout-title-container {
+  font-family: $font-family-sans-serif;
+}
+
+.theorem, .proposition, .lemma, .corollary, .definition {
+  border-left: 3px solid $primary;
+  padding: 0.25rem 0 0.25rem 1rem;
+  margin: 1.25rem 0;
+}
+.proof {
+  margin: 0.5rem 0 1.25rem 1rem;
+}
+
+mjx-container[display="true"] {
+  overflow-x: auto;
+  overflow-y: hidden;
+}

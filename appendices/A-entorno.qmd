@@ -1,0 +1,56 @@
+---
+engine: julia
+---
+
+{{< include /_macros.qmd >}}
+
+# Entorno y reproducibilidad {#sec-entorno}
+
+## Componentes
+
+| Componente | Ubicación | Papel |
+|---|---|---|
+| Libro (Quarto) | `_quarto.yml`, `index.qmd`, `parts/`, `chapters/`, `appendices/` | Texto, ecuaciones y laboratorios |
+| `NeuroRiemann.jl` | `julia/NeuroRiemann.jl/` | Implementación de referencia; los capítulos llaman a sus funciones |
+| Entorno Julia del libro | `Project.toml`, `Manifest.toml` (raíz) | Versiones fijadas; enlaza `NeuroRiemann.jl` por ruta |
+| Fixtures | `fixtures/*.json` | Resultados de Julia con semilla fija, para la validación cruzada |
+| Validación Python | `python/validation/` | Recalcula los fixtures con NumPy/SciPy y pyRiemann; **no** produce resultados del libro |
+| Bibliografía | `bib/references.bib`, `bib/VERIFICATION.md` | Solo entradas con DOI, arXiv o ISBN verificados |
+
+## Reproducir
+
+Desde la raíz del repositorio:
+
+```bash
+# Julia: instanciar el entorno del libro y ejecutar los tests del paquete
+julia --project=. -e 'using Pkg; Pkg.instantiate()'
+julia --project=julia/NeuroRiemann.jl -e 'using Pkg; Pkg.test()'
+
+# Fixtures (semilla fija) y validación cruzada en Python
+julia --project=. julia/scripts/generate_fixtures.jl
+cd python/validation && python3 -m venv .venv \
+  && .venv/bin/pip install -r requirements.lock && .venv/bin/pip install -e . \
+  && .venv/bin/pytest && cd ../..
+
+# Bibliografía, libro y comprobación del sitio
+python3 scripts/verify_bib.py
+quarto render
+scripts/check-site.sh
+```
+
+## Comprobación del entorno
+
+La celda siguiente se ejecuta al renderizar el libro con el motor Julia nativo de Quarto y comprueba que el paquete está disponible:
+
+```{julia}
+using NeuroRiemann, LinearAlgebra
+
+P = [2.0 1.0; 1.0 2.0]
+(julia = VERSION, isspd = isspd(P), exp_log_id = expm(logm(P)) ≈ P)
+```
+
+## Semillas y tolerancias
+
+- Todo dato aleatorio se genera con `StableRNGs.StableRNG`, cuyo flujo no cambia entre versiones de Julia; la semilla de los fixtures es `20261103`.
+- La tolerancia relativa de la validación cruzada Julia–Python es $10^{-10}$ en norma de Frobenius, normalizada por $\max(\|B\|_F, 1)$.
+- `isspd` considera SPD una matriz simétrica con $\lambda_{\min} > 10^{-12}\,\lambda_{\max}$ (número de condición menor que $10^{12}$); por debajo, la matriz se trata como numéricamente singular.
