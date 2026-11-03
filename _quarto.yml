@@ -15,6 +15,7 @@ book:
   title: "NeuroRiemann"
   subtitle: "Geometría riemanniana para el análisis de EEG"
   author: "Rafael Castro Triguero"
+  site-url: https://me1catrr.github.io/neuroriemann/
   repo-url: https://github.com/me1catrr/neuroriemann
   repo-actions: [issue, source]
   license: "CC BY 4.0"

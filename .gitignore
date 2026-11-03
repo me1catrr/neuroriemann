@@ -128,7 +128,8 @@ outputs/tmp/
 /.quarto/
 _site/
 _book/
-_freeze/
+# _freeze/ SÍ se versiona: resultados de ejecución de Julia que permiten
+# renderizar y publicar el libro en CI sin volver a ejecutar el código.
 *_files/
 *.quarto_ipynb
 /.luarc.json

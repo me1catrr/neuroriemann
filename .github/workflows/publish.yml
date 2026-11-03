@@ -1,0 +1,53 @@
+name: publish
+
+# Publica el libro en GitHub Pages. El código Julia NO se ejecuta aquí:
+# Quarto reutiliza los resultados congelados en _freeze/ (generados en local
+# con `quarto render`). Antes de desplegar, check-site.sh revisa el sitio.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Renderizar y comprobar
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: 1.10.19
+
+      - name: Renderizar (desde _freeze, sin ejecutar Julia)
+        run: quarto render
+
+      - name: Comprobar el sitio antes de publicar
+        run: bash scripts/check-site.sh _book
+
+      - name: Subir artefacto de Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _book
+
+  deploy:
+    name: Desplegar en GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
