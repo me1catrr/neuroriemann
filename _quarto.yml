@@ -6,6 +6,7 @@ project:
   render:
     - index.qmd
     - parts/*.qmd
+    - chapters/*.qmd
     - appendices/*.qmd
 
 lang: es
@@ -22,6 +23,8 @@ book:
     - index.qmd
     - part: parts/I-fundamentos.qmd
     - part: parts/II-spd.qmd
+      chapters:
+        - chapters/06-metricas-spd.qmd
     - part: parts/III-conectividad.qmd
     - part: parts/IV-aprendizaje.qmd
     - part: parts/V-aplicaciones.qmd

@@ -95,4 +95,6 @@ const RTOL = 1e-12
             @test norm(real(log(Ac \ Bc))) ≈ sqrt(sum(abs2, log.(eigvals(Bc, Ac)))) rtol = 1e-10
         end
     end
+
+    include("test_metrics.jl")
 end

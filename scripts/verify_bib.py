@@ -23,6 +23,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import difflib
+import http.client
 import json
 import re
 import sys
@@ -103,7 +104,10 @@ def norm_title(s: str) -> str:
 
 
 def similarity(a: str, b: str) -> float:
-    return difflib.SequenceMatcher(None, norm_title(a), norm_title(b)).ratio()
+    """Similitud de títulos; tolera la serie entre paréntesis que añaden algunos registros."""
+    na = norm_title(a)
+    candidates = {norm_title(b), norm_title(re.sub(r"\([^)]*\)", " ", b))}
+    return max(difflib.SequenceMatcher(None, na, nb).ratio() for nb in candidates)
 
 
 def isbn_ok(raw: str) -> bool:
@@ -118,12 +122,18 @@ def isbn_ok(raw: str) -> bool:
 
 def http_get(url: str, accept: str = "application/json") -> bytes:
     req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT, "Accept": accept})
-    for attempt in range(3):
+    for attempt in range(4):
         try:
             with urllib.request.urlopen(req, timeout=20) as r:
                 return r.read()
         except urllib.error.HTTPError as e:
-            if e.code in (429, 503) and attempt < 2:
+            if e.code in (429, 502, 503, 504) and attempt < 3:
+                time.sleep(2 * (attempt + 1))
+                continue
+            raise
+        except (urllib.error.URLError, http.client.HTTPException, ConnectionError, TimeoutError):
+            # fallos transitorios de red (conexión cerrada, reinicio, tiempo agotado)
+            if attempt < 3:
                 time.sleep(2 * (attempt + 1))
                 continue
             raise

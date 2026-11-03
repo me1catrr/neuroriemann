@@ -1,0 +1,370 @@
+---
+engine: julia
+---
+
+{{< include /_macros.qmd >}}
+
+# Métricas sobre SPD: tres maneras de interpolar {#sec-metricas-spd}
+
+::: {.callout-note}
+## En este capítulo
+**Objetivos.** Comparar las geometrías euclídea, log-euclídea y afín-invariante de $\SPD_n$ a través de un problema concreto: interpolar entre dos matrices de covarianza.
+Demostrar qué conserva cada una (determinante, invariancias) y qué no (el «hinchamiento» euclídeo).
+
+**Prerrequisitos.** Matrices SPD y funciones matriciales espectrales ($\Expm$, $\Logm$, raíz y potencias principales). Las nociones de métrica riemanniana y geodésica se usan aquí a nivel de resultados; se desarrollan en los capítulos de fundamentos.
+
+**Código.** Todas las funciones proceden de `NeuroRiemann.jl`; las identidades del capítulo están comprobadas en `julia/NeuroRiemann.jl/test/test_metrics.jl` y validadas frente a pyRiemann (apéndice [-@sec-validacion]).
+:::
+
+## Motivación
+
+Una matriz de covarianza $P\in\SPD_2$ se visualiza como la elipse $\{x: x^\top P^{-1}x=1\}$: sus semiejes miden $\sqrt{\lambda_1}$ y $\sqrt{\lambda_2}$ en las direcciones de los autovectores, y su área es $\pi\sqrt{\det P}$. Si $A$ y $B$ son las covarianzas de un registro EEG en dos momentos, ¿cuál es la covarianza «a medio camino»? La respuesta depende de la geometría que se elija sobre $\SPD_n$, y no es una cuestión de gusto: cada elección conserva unas propiedades y rompe otras.
+
+## Tres geometrías
+
+::: {#def-tres-metricas}
+## Distancias y geodésicas en $\SPD_n$
+Sean $A,B\in\SPD_n$ y $t\in[0,1]$. Se definen:
+
+1. **Euclídea** (de Frobenius):
+$$
+d_E(A,B)=\|A-B\|_F,\qquad \gamma_E(t)=(1-t)A+tB.
+$$ {#eq-euclidea}
+2. **Log-euclídea** [@arsigny2007geometric]:
+$$
+\dLE(A,B)=\|\Logm A-\Logm B\|_F,\qquad \gamma_{LE}(t)=\Expm\big((1-t)\Logm A+t\Logm B\big).
+$$ {#eq-logeuclidea}
+3. **Afín-invariante** [@pennec2006riemannian; @moakher2005differential]:
+$$
+\dAI(A,B)=\big\|\Logm\big(A^{-1/2}BA^{-1/2}\big)\big\|_F,\qquad \gamma_{AI}(t)=A^{1/2}\big(A^{-1/2}BA^{-1/2}\big)^{t}A^{1/2}.
+$$ {#eq-afin}
+:::
+
+Las tres curvas cumplen $\gamma(0)=A$ y $\gamma(1)=B$, y cada una es la geodésica de su métrica riemanniana [@arsigny2007geometric; @pennec2006riemannian; @bhatia2007positive]. La geometría euclídea es plana pero no completa en $\SPD_n$: si se prolonga $\gamma_E(t)$ fuera de $[0,1]$ puede salir del cono. La log-euclídea también es plana, porque $\Logm$ es una isometría de $(\SPD_n,\dLE)$ sobre el espacio euclídeo $(\Sym_n,\|\cdot\|_F)$. La afín-invariante tiene curvatura no positiva [@bhatia2007positive].
+
+**Convenciones.** No se usan factores constantes adicionales. Como $A^{-1/2}BA^{-1/2}$ es semejante a $A^{-1}B$, se cumple
+$$
+\dAI(A,B)=\Big(\sum_{i=1}^n\log^2\lambda_i\big(A^{-1}B\big)\Big)^{1/2},
+$$ {#eq-dai-espectral}
+donde los $\lambda_i>0$ son los autovalores del problema generalizado simétrico $Bv=\lambda Av$. Es la forma que usa `NeuroRiemann.jl`. Atención: @eq-dai-espectral **no** es $\|\Logm(A^{-1}B)\|_F$ salvo que $A$ y $B$ conmuten (@prp-tib-frobenius).
+
+**Algoritmo** (geodésica afín-invariante, `interpolate(AffineInvariant(), A, B, t)`):
+
+```
+Entrada: A, B ∈ SPD(n), t ∈ ℝ
+1. (λ, U) ← eig(A);  A^{1/2} ← U diag(√λ) Uᵀ;  A^{-1/2} ← U diag(1/√λ) Uᵀ
+2. C ← sym(A^{-1/2} B A^{-1/2})            # sym(M) = (M + Mᵀ)/2
+3. (μ, V) ← eig(C);  C^t ← V diag(μᵗ) Vᵀ
+4. devolver sym(A^{1/2} C^t A^{1/2})
+Coste: dos descomposiciones espectrales simétricas, O(n³).
+```
+
+La simetrización de los pasos 2 y 4 no cambia el resultado exacto; elimina la asimetría de redondeo, de modo que la salida es simétrica bit a bit.
+
+## El determinante a lo largo de las geodésicas
+
+::: {#thm-det-geodesicas}
+## Determinante en las geodésicas LE y AI
+Para $A,B\in\SPD_n$ y todo $t\in\R$,
+$$
+\det\gamma_{LE}(t)=\det\gamma_{AI}(t)=\det(A)^{1-t}\det(B)^{t}.
+$$
+:::
+
+::: {.proof}
+Para $X\in\Sym_n$, $\det\Expm X=e^{\tr X}$ (ambos lados son $\prod_i e^{\mu_i}$, con $\mu_i$ los autovalores de $X$), y $\tr\Logm P=\log\det P$. Por linealidad de la traza,
+$\det\gamma_{LE}(t)=\exp\big((1-t)\log\det A+t\log\det B\big)=\det(A)^{1-t}\det(B)^t$.
+
+Para la afín-invariante, sea $C=A^{-1/2}BA^{-1/2}$, con $\det C=\det B/\det A$. Por la multiplicatividad del determinante,
+$\det\gamma_{AI}(t)=\det(A)\det(C)^t=\det(A)^{1-t}\det(B)^t$.
+:::
+
+El logaritmo del determinante, es decir, el log-volumen de la elipse, varía, pues, **linealmente** en $t$ para LE y AI. La interpolación euclídea, en cambio, lo hincha.
+
+::: {#thm-hinchamiento}
+## Hinchamiento euclídeo
+Para $A,B\in\SPD_n$ y $t\in[0,1]$,
+$$
+\det\big((1-t)A+tB\big)\;\ge\;\det(A)^{1-t}\det(B)^{t},
+$$
+con igualdad para $t\in(0,1)$ si y solo si $A=B$.
+:::
+
+::: {.proof}
+Sea $C=A^{-1/2}BA^{-1/2}$, con autovalores $\mu_1,\dots,\mu_n>0$. Como $(1-t)A+tB=A^{1/2}\big((1-t)I+tC\big)A^{1/2}$,
+$$
+\det\big((1-t)A+tB\big)=\det A\prod_{i=1}^n\big((1-t)+t\mu_i\big).
+$$
+Por la desigualdad entre las medias aritmética y geométrica ponderadas, $(1-t)\cdot1+t\mu_i\ge\mu_i^{t}$, con igualdad para $t\in(0,1)$ si y solo si $\mu_i=1$. Por tanto, el producto es al menos $\prod_i\mu_i^t=(\det C)^t=(\det B/\det A)^t$, lo que da la desigualdad. La igualdad exige $\mu_i=1$ para todo $i$, es decir, $C=I$, que equivale a $A=B$.
+:::
+
+Equivalentemente, $\log\det$ es estrictamente cóncava en $\SPD_n$. En EEG, el hinchamiento significa que promediar covarianzas en sentido euclídeo **sobrestima la potencia generalizada** (el determinante) de los estados intermedios.
+
+::: {#exm-rotacion-pura}
+## Rotación pura
+Sean $A=\diag(4,\tfrac14)$ y $B=\diag(\tfrac14,4)$: la misma elipse girada $90^\circ$, con $\det A=\det B=1$. Entonces $\gamma_E(\tfrac12)=\tfrac{17}{8}I$ tiene determinante $(17/8)^2\approx4{,}52$: el punto medio euclídeo es un círculo cuya área, $\pi\sqrt{\det}$, es $17/8\approx2{,}1$ veces la de cada extremo. En cambio, $\gamma_{LE}(\tfrac12)=\gamma_{AI}(\tfrac12)=I$ conserva $\det=1$.
+:::
+
+## Cuándo coinciden las geometrías log-euclídea y afín-invariante
+
+::: {#prp-conmutan}
+Si $AB=BA$, entonces $\gamma_{LE}(t)=\gamma_{AI}(t)$ para todo $t$ y $\dLE(A,B)=\dAI(A,B)$.
+:::
+
+::: {.proof}
+Dos matrices simétricas que conmutan son diagonalizables simultáneamente por una misma $U$ ortogonal: $A=U\diag(a)U^\top$ y $B=U\diag(b)U^\top$, con $a_i,b_i>0$. Entonces:
+
+- $\gamma_{LE}(t)=U\diag\big(a_i^{1-t}b_i^{t}\big)U^\top$;
+- $A^{-1/2}BA^{-1/2}=U\diag(b_i/a_i)U^\top$, de donde $\gamma_{AI}(t)=U\diag\big(a_i(b_i/a_i)^t\big)U^\top$, que es la misma matriz.
+
+Ambas distancias valen $\big(\sum_i(\log b_i-\log a_i)^2\big)^{1/2}$.
+:::
+
+En el @exm-rotacion-pura las dos matrices son diagonales, así que conmutan, y por eso coinciden las dos curvas. Para matrices que no conmutan, $\gamma_{LE}$ y $\gamma_{AI}$ son en general distintas (véase el laboratorio).
+
+## Media geométrica y ecuación de Riccati
+
+::: {#prp-riccati}
+## Media geométrica $A\#B$
+$A\#B:=\gamma_{AI}(\tfrac12)=A^{1/2}\big(A^{-1/2}BA^{-1/2}\big)^{1/2}A^{1/2}$ es la única solución en $\SPD_n$ de la ecuación de Riccati
+$$
+XA^{-1}X=B.
+$$ {#eq-riccati}
+Además, $A\#B=B\#A$.
+:::
+
+::: {.proof}
+Sea $C=A^{-1/2}BA^{-1/2}$ y $X=A^{1/2}C^{1/2}A^{1/2}$. Entonces $XA^{-1}X=A^{1/2}C^{1/2}C^{1/2}A^{1/2}=A^{1/2}CA^{1/2}=B$.
+
+Unicidad: si $X\in\SPD_n$ cumple @eq-riccati, la matriz $Y=A^{-1/2}XA^{-1/2}$ es SPD y cumple $Y^2=C$. Por la unicidad de la raíz cuadrada SPD, $Y=C^{1/2}$, de modo que $X=A\#B$.
+
+Simetría: invirtiendo @eq-riccati, $X^{-1}AX^{-1}=B^{-1}$, es decir, $XB^{-1}X=A$. Por tanto, $X$ resuelve la ecuación con $A$ y $B$ intercambiadas, y por unicidad $X=B\#A$.
+:::
+
+Para $n=1$, $a\#b=\sqrt{ab}$: la media geométrica usual.
+
+## Invariancias
+
+::: {#prp-congruencia}
+## Invariancia afín
+Para todo $W\in\GL(n)$ y todo $t$,
+$$
+\gamma_{AI}\big(t;\,WAW^\top,WBW^\top\big)=W\,\gamma_{AI}(t;A,B)\,W^\top,\qquad \dAI\big(WAW^\top,WBW^\top\big)=\dAI(A,B).
+$$
+:::
+
+::: {.proof}
+Sea $A'=WAW^\top$ y $B'=WBW^\top$. La matriz $A'^{-1}B'=W^{-\top}(A^{-1}B)W^\top$ es semejante a $A^{-1}B$, así que tiene los mismos autovalores. Por @eq-dai-espectral, las distancias coinciden.
+
+Para la geodésica, $A^{-1}B=A^{-1/2}CA^{1/2}$ es diagonalizable con autovalores positivos, y su potencia principal cumple $(A^{-1}B)^t=A^{-1/2}C^tA^{1/2}$. Por tanto, $\gamma_{AI}(t)=A(A^{-1}B)^t$. Las funciones matriciales primarias conmutan con la semejanza, $f(XMX^{-1})=Xf(M)X^{-1}$ [@higham2008functions, cap. 1], así que
+$$
+\gamma_{AI}(t;A',B')=WAW^\top\,W^{-\top}(A^{-1}B)^tW^\top=W\,A(A^{-1}B)^t\,W^\top=W\gamma_{AI}(t;A,B)W^\top .
+$$
+:::
+
+| Transformación | $d_E$ | $\dLE$ | $\dAI$ |
+|---|---|---|---|
+| Similitud ortogonal $P\mapsto QPQ^\top$ | invariante | invariante | invariante |
+| Escala común $P\mapsto cP$, $c>0$ | se multiplica por $c$ | invariante | invariante |
+| Congruencia $P\mapsto WPW^\top$, $W\in\GL(n)$ | no | **no** | invariante |
+| Inversión $P\mapsto P^{-1}$ | no | invariante | invariante |
+
+: Invariancias de las tres distancias. Las de $\dLE$ se deducen de $\Logm(QPQ^\top)=Q\Logm(P)Q^\top$, $\Logm(cP)=\Logm P+(\log c)I$ y $\Logm(P^{-1})=-\Logm P$; las de $\dAI$, de la @prp-congruencia y de que los autovalores de $A^{-1}B$ se invierten al pasar a $(A^{-1})^{-1}B^{-1}=AB^{-1}$. {#tbl-invariancias}
+
+En EEG, una congruencia $P\mapsto WPW^\top$ modela cualquier transformación lineal invertible de los canales: cambio de referencia (si conserva el rango), reescalado de cada electrodo o mezcla lineal. La invariancia afín garantiza que $\dAI$ no depende de esas elecciones; $\dLE$ solo es insensible a rotaciones y a una escala global.
+
+::: {#prp-velocidad}
+## Velocidad constante
+Para cada una de las tres geometrías y para $s,t\in[0,1]$, $d\big(\gamma(s),\gamma(t)\big)=|t-s|\,d(A,B)$.
+:::
+
+::: {.proof}
+En los casos euclídeo y log-euclídeo es inmediato, porque $\gamma_E$ y $\Logm\gamma_{LE}$ son segmentos rectos en $\Sym_n$. En el afín-invariante, por la @prp-congruencia con $W=A^{-1/2}$ basta tomar $A=I$, de modo que $\gamma_{AI}(t)=C^t$. Como $C^s$ y $C^t$ conmutan, $\dAI(C^s,C^t)=\|\Logm C^{t-s}\|_F=|t-s|\,\|\Logm C\|_F=|t-s|\,\dAI(I,C)$.
+:::
+
+## Laboratorio
+
+Tomamos dos matrices de $\SPD_2$ parametrizadas por sus autovalores y el ángulo del primer autovector, $P=R_\theta\diag(\lambda_1,\lambda_2)R_\theta^\top$ (función `spd2`). Ambas son anisótropas y sus ejes forman un ángulo de $1{,}2$ rad, de modo que no conmutan y las tres geometrías se distinguen con claridad. El par es el caso `anisotropo_no_conmutan` de los fixtures de validación.
+
+```{julia}
+#| label: lab-setup
+#| output: false
+using NeuroRiemann, LinearAlgebra, CairoMakie
+
+const METRICAS = [Euclidean() => "Euclídea",
+                  LogEuclidean() => "Log-euclídea",
+                  AffineInvariant() => "Afín-invariante"]
+
+A = spd2(4.0, 0.2, 0.0)   # λ₁ = 4, λ₂ = 0,2, θ = 0
+B = spd2(2.0, 0.4, 1.2)   # λ₁ = 2, λ₂ = 0,4, θ = 1,2 rad
+nothing
+```
+
+Las tres distancias entre $A$ y $B$ no son comparables entre sí en valor absoluto (miden cosas distintas), pero cada una es la longitud de su geodésica:
+
+```{julia}
+#| label: lab-distancias
+#| output: asis
+println("| Métrica | d(A, B) |\n|---|---|")
+for (m, nombre) in METRICAS
+    println("| ", nombre, " | ", round(distance(m, A, B); digits = 4), " |")
+end
+```
+
+```{julia}
+#| label: fig-elipses
+#| fig-cap: "Elipses $\\{x: x^\\top\\gamma(t)^{-1}x=1\\}$ a lo largo de las tres geodésicas entre $A$ ($t=0$) y $B$ ($t=1$)."
+ts = 0:0.25:1
+colores = Makie.wong_colors()
+fig = Figure(size = (900, 250))
+ejes = [Axis(fig[1, j]; title = nombre, aspect = DataAspect()) for (j, (_, nombre)) in enumerate(METRICAS)]
+for ((m, _), ax) in zip(METRICAS, ejes)
+    for (k, t) in enumerate(ts)
+        E = ellipse(interpolate(m, A, B, t))
+        lines!(ax, E[1, :], E[2, :]; color = colores[k], linewidth = 2, label = "t = $t")
+    end
+end
+linkaxes!(ejes...)
+Legend(fig[1, 4], ejes[1])
+fig
+```
+
+```{julia}
+#| label: fig-curvas
+#| fig-cap: "Determinante, traza, anisotropía $\\lambda_{\\min}/\\lambda_{\\max}$ y ángulo del autovector principal a lo largo de las tres geodésicas. En el panel del determinante, la curva discontinua es $\\det(A)^{1-t}\\det(B)^t$ (@thm-det-geodesicas)."
+"Ángulo (grados, en (−90, 90]) del autovector del mayor autovalor."
+function angulo(P)
+    v = eigen(Symmetric(P)).vectors[:, end]
+    θ = rad2deg(atan(v[2], v[1]))
+    θ > 90 ? θ - 180 : (θ <= -90 ? θ + 180 : θ)
+end
+propiedades = [("det γ(t)", det), ("tr γ(t)", tr),
+               ("λ_min / λ_max", P -> (λ = eigvals(Symmetric(P)); λ[1] / λ[end])),
+               ("ángulo principal (°)", angulo)]
+tt = range(0, 1; length = 101)
+estilos = (:solid, :dash, :solid)   # LE discontinua, para distinguirla de AI donde se acercan
+fig = Figure(size = (900, 600))
+for (k, (titulo, f)) in enumerate(propiedades)
+    ax = Axis(fig[fldmod1(k, 2)...]; title = titulo, xlabel = "t")
+    for (j, (m, nombre)) in enumerate(METRICAS)
+        lines!(ax, tt, [f(interpolate(m, A, B, t)) for t in tt];
+               color = colores[j], linestyle = estilos[j], linewidth = 2.5, label = nombre)
+    end
+    k == 1 && lines!(ax, tt, det(A) .^ (1 .- tt) .* det(B) .^ tt; color = :black, linestyle = :dash)
+end
+Legend(fig[3, 1:2], fig.content[1]; orientation = :horizontal, framevisible = false)
+fig
+```
+
+La @fig-curvas ilustra los resultados del capítulo. El determinante euclídeo se separa de $\det(A)^{1-t}\det(B)^t$ (@thm-hinchamiento), mientras que LE y AI lo siguen exactamente (@thm-det-geodesicas). Además, LE y AI comparten el determinante pero no la traza, la anisotropía ni el ángulo: son geodésicas distintas porque $A$ y $B$ no conmutan (@prp-conmutan).
+
+Comprobación numérica de los teoremas en este ejemplo (errores relativos):
+
+```{julia}
+#| label: lab-comprobaciones
+t = 0.37
+objetivo = det(A)^(1 - t) * det(B)^t
+X = geomean(A, B)
+(det_LE = abs(det(interpolate(LogEuclidean(), A, B, t)) / objetivo - 1),
+ det_AI = abs(det(interpolate(AffineInvariant(), A, B, t)) / objetivo - 1),
+ hinchamiento_E = det(interpolate(Euclidean(), A, B, t)) / objetivo,   # > 1
+ riccati = norm(X * inv(A) * X - B) / norm(B),
+ LE_vs_AI = norm(interpolate(LogEuclidean(), A, B, 0.5) - X) / norm(X))  # ≠ 0: no conmutan
+```
+
+## Simulador
+
+::: {.content-visible when-format="html"}
+Mueve los autovalores y ángulos de $A$ y $B$ y el parámetro $t$. Las elipses discontinuas son $A$ y $B$; las de color, $\gamma(t)$ para cada geometría. El simulador usa las fórmulas cerradas en $\SPD_2$ de `simulators/spd2/spd2.js`, validadas frente a los fixtures generados por `NeuroRiemann.jl` (apéndice [-@sec-validacion]).
+
+```{ojs}
+//| echo: false
+import {spd2, interpolate, distance, ellipse, summary} from "../simulators/spd2/spd2.js"
+```
+
+```{ojs}
+//| echo: false
+viewof pa = Inputs.form({
+  l1: Inputs.range([0.05, 5], {value: 4, step: 0.05, label: "λ₁(A)"}),
+  l2: Inputs.range([0.05, 5], {value: 0.2, step: 0.05, label: "λ₂(A)"}),
+  th: Inputs.range([-90, 90], {value: 0, step: 1, label: "θ(A) (°)"})
+})
+viewof pb = Inputs.form({
+  l1: Inputs.range([0.05, 5], {value: 2, step: 0.05, label: "λ₁(B)"}),
+  l2: Inputs.range([0.05, 5], {value: 0.4, step: 0.05, label: "λ₂(B)"}),
+  th: Inputs.range([-90, 90], {value: 69, step: 1, label: "θ(B) (°)"})
+})
+viewof t = Inputs.range([0, 1], {value: 0.5, step: 0.01, label: "t"})
+```
+
+```{ojs}
+//| echo: false
+A = spd2(pa.l1, pa.l2, pa.th * Math.PI / 180)
+B = spd2(pb.l1, pb.l2, pb.th * Math.PI / 180)
+metricas = [
+  {key: "E", nombre: "Euclídea"},
+  {key: "LE", nombre: "Log-euclídea"},
+  {key: "AI", nombre: "Afín-invariante"}
+]
+curvas = metricas.flatMap(m =>
+  ellipse(interpolate(m.key, A, B, t)).map(p => ({...p, curva: m.nombre})))
+extremos = [
+  ...ellipse(A).map(p => ({...p, curva: "A"})),
+  ...ellipse(B).map(p => ({...p, curva: "B"}))
+]
+R = 1.1 * Math.sqrt(Math.max(pa.l1, pa.l2, pb.l1, pb.l2))
+Plot.plot({
+  width: Math.min(width, 540), height: Math.min(width, 540),
+  x: {domain: [-R, R]}, y: {domain: [-R, R]}, grid: true,
+  color: {legend: true, domain: metricas.map(m => m.nombre)},
+  marks: [
+    Plot.line(extremos, {x: "x", y: "y", z: "curva", stroke: "currentColor", strokeOpacity: 0.45, strokeDasharray: "4 3"}),
+    Plot.line(curvas, {x: "x", y: "y", z: "curva", stroke: "curva", strokeWidth: 2})
+  ]
+})
+```
+
+```{ojs}
+//| echo: false
+Inputs.table(metricas.map(m => {
+  const s = summary(interpolate(m.key, A, B, t));
+  return {
+    "Geometría": m.nombre,
+    "d(A, B)": distance(m.key, A, B).toFixed(4),
+    "det γ(t)": s.det.toFixed(4),
+    "λ_min/λ_max": (1 / s.anisotropy).toFixed(4)
+  };
+}), {layout: "auto"})
+```
+
+```{ojs}
+//| echo: false
+md`Referencia (teorema del determinante): det(A)<sup>1−t</sup> · det(B)<sup>t</sup> = ${(Math.pow(summary(A).det, 1 - t) * Math.pow(summary(B).det, t)).toFixed(4)}. Las geometrías log-euclídea y afín-invariante la reproducen; la euclídea la supera.`
+```
+:::
+
+::: {.content-visible unless-format="html"}
+El simulador interactivo está disponible en la versión HTML del libro. La @fig-elipses y la @fig-curvas muestran su contenido para un par fijo $(A,B)$.
+:::
+
+## Ejercicios
+
+::: {#exr-escalar}
+Para $n=1$, $a,b>0$, escribe las tres geodésicas y distancias. Comprueba que $\gamma_{LE}=\gamma_{AI}$ es la interpolación geométrica $a^{1-t}b^t$ y que $\dLE=\dAI=|\log a-\log b|$.
+:::
+
+::: {#exr-inversion}
+Demuestra que $\dAI(A^{-1},B^{-1})=\dAI(A,B)$ y que $\gamma_{AI}(t;A^{-1},B^{-1})=\gamma_{AI}(t;A,B)^{-1}$. ¿Se cumple lo mismo para la geometría euclídea?
+:::
+
+::: {#exr-extrapolacion}
+Encuentra $A,B\in\SPD_2$ y $t>1$ tales que $\gamma_E(t)\notin\SPD_2$. Demuestra que $\gamma_{LE}(t)$ y $\gamma_{AI}(t)$ son SPD para todo $t\in\R$.
+:::
+
+::: {#exr-orden}
+(Laboratorio) Busca con `NeuroRiemann.jl` tres matrices $A,B,C\in\SPD_2$ tales que $d_E(A,B)<d_E(A,C)$ pero $\dAI(A,B)>\dAI(A,C)$. Interpreta el resultado con las elipses: ¿qué tipo de diferencia penaliza más cada distancia?
+:::
+
+::: {#exr-congruencia-le}
+(Laboratorio) Construye un ejemplo numérico en que $\dLE(WAW^\top,WBW^\top)\neq\dLE(A,B)$ para cierta $W\in\GL(2)$, y comprueba que $\dAI$ no cambia.
+:::

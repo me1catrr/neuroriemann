@@ -17,7 +17,10 @@ module NeuroRiemann
 using LinearAlgebra
 
 export symmetrize, isspd, spdfun, expm, logm, sqrtm, invsqrtm, powm
+export SPDMetric, Euclidean, LogEuclidean, AffineInvariant
+export distance, interpolate, geomean, ellipse, spd2
 
 include("matfun.jl")
+include("metrics.jl")
 
 end # module

@@ -16,6 +16,9 @@
 | Fixture | Funciones | Referencias Python |
 |---|---|---|
 | `matfun_spd.json` | `expm`, `logm`, `sqrtm`, `invsqrtm`, `powm(·, 0.3)` en $n\in\{2,3,5,8\}$ | `scipy.linalg.expm`, `logm`, `sqrtm`, `fractional_matrix_power`; `pyriemann.utils.base` |
+| `spd2_interp.json` | `distance` e `interpolate` (E, LE, AI) y `geomean` en $\SPD_2$: caso genérico, rotación pura, matrices que conmutan, mal condicionado ($\kappa=10^6$), isótropo frente a anisótropo y el par del laboratorio de @sec-metricas-spd | fórmulas directas con SciPy; `pyriemann.utils.geodesic`, `pyriemann.utils.distance`; ecuación de Riccati |
+
+Los simuladores OJS se validan igual: `simulators/spd2/spd2.test.mjs` comprueba con `node --test` (sin dependencias) que las fórmulas cerradas en $\SPD_2$ de `spd2.js` reproducen `spd2_interp.json` con la misma tolerancia. Así, Julia sigue siendo la única fuente de verdad, y el código JavaScript solo traslada al navegador lo necesario para la interacción.
 
 SciPy calcula estas funciones por métodos genéricos (Padé con escalado y cuadrado, Schur), distintos del método espectral de `NeuroRiemann.jl` ($f(S)=U\diag(f(\lambda))U^\top$). La concordancia entre ambos es, por tanto, una comprobación no trivial.
 
