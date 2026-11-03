@@ -1,0 +1,21 @@
+{{< include /_macros.qmd >}}
+
+# Puente metodológico con NeuroMIND
+
+::: {.callout-note .en-preparacion title="Capítulo en preparación"}
+Este capítulo forma parte de la hoja de ruta del libro y todavía no está escrito. Esta página resume lo que tratará.
+:::
+
+**Prerrequisitos.** Capítulos 8 a 18.
+
+## Objetivos
+
+- Diseñar análisis longitudinales sobre trayectorias en SPD.
+- Separar métodos publicables de datos que no lo son.
+
+## Contenidos previstos
+
+- Trayectorias en SPD y distancias intra- e intersujeto.
+- Modelos mixtos sobre el espacio tangente.
+- Protocolos y datos sintéticos que imitan la estructura de un estudio longitudinal.
+- Qué se publica y qué no: métodos frente a datos.

@@ -1,0 +1,21 @@
+{{< include /_macros.qmd >}}
+
+# Exponencial y logaritmo riemannianos, geodésicas y transporte paralelo
+
+::: {.callout-note .en-preparacion title="Capítulo en preparación"}
+Este capítulo forma parte de la hoja de ruta del libro y todavía no está escrito. Esta página resume lo que tratará.
+:::
+
+**Prerrequisitos.** Capítulos 4 y 6.
+
+## Objetivos
+
+- Derivar las aplicaciones exponencial y logarítmica de cada métrica.
+- Implementar y comprobar el transporte paralelo afín-invariante.
+
+## Contenidos previstos
+
+- Exp y Log para las métricas log-euclídea y afín-invariante.
+- Transporte paralelo e isometrías.
+- Completitud y unicidad de geodésicas.
+- Laboratorio: Exp ∘ Log = id; el transporte paralelo conserva la norma.

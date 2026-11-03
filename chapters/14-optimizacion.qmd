@@ -1,0 +1,22 @@
+{{< include /_macros.qmd >}}
+
+# Optimización sobre variedades
+
+::: {.callout-note .en-preparacion title="Capítulo en preparación"}
+Este capítulo forma parte de la hoja de ruta del libro y todavía no está escrito. Esta página resume lo que tratará.
+:::
+
+**Prerrequisitos.** Capítulos 4 y 7.
+
+## Objetivos
+
+- Formular problemas de optimización en SPD de forma intrínseca.
+- Comparar algoritmos riemannianos con el punto fijo de Karcher.
+
+## Contenidos previstos
+
+- Gradiente y hessiano riemannianos.
+- Retracciones y transporte vectorial.
+- Descenso de gradiente, gradiente conjugado y región de confianza.
+- Convexidad geodésica y convergencia.
+- Laboratorio: media de Karcher por optimización frente a punto fijo.

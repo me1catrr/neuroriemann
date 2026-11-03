@@ -1,0 +1,22 @@
+{{< include /_macros.qmd >}}
+
+# Variedades diferenciables y espacios tangentes
+
+::: {.callout-note .en-preparacion title="Capítulo en preparación"}
+Este capítulo forma parte de la hoja de ruta del libro y todavía no está escrito. Esta página resume lo que tratará.
+:::
+
+**Prerrequisitos.** Cálculo en varias variables.
+
+## Objetivos
+
+- Adquirir el lenguaje de variedades necesario para la geometría de SPD.
+- Identificar el espacio tangente de SPD con las matrices simétricas.
+
+## Contenidos previstos
+
+- Cartas, atlas y subvariedades.
+- Espacio tangente, diferencial y fibrado tangente.
+- Campos vectoriales y corchete de Lie.
+- Grupos de Lie matriciales: GL(n) y O(n).
+- Laboratorio: espacios tangentes numéricos a curvas matriciales.

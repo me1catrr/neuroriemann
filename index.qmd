@@ -1,38 +1,205 @@
+---
+subtitle: "Geometría riemanniana para el análisis de EEG"
+description: "Teoría rigurosa, algoritmos en Julia y simuladores interactivos para trabajar con matrices de covarianza y conectividad cerebral respetando su geometría."
+title-block-banner: true
+toc: false
+categories: [Geometría riemanniana, Matrices SPD, EEG, Julia]
+---
+
+# NeuroRiemann {.unnumbered}
+
 {{< include /_macros.qmd >}}
 
-# Prefacio {.unnumbered}
+Las matrices de covarianza de un registro EEG multicanal no viven en un espacio vectorial, sino en el cono de las matrices simétricas definidas positivas, $\SPD_n$. Tratarlas con la geometría euclídea produce artefactos conocidos: interpolaciones que hinchan el determinante, medias que no respetan las invariancias físicas, distancias que dependen de la escala de cada canal. Este libro desarrolla la geometría riemanniana que sí respeta esa estructura y la lleva, paso a paso y con código verificable, hasta las aplicaciones al EEG.
 
-::: {.callout-note}
-## Libro en construcción
-Este es el esqueleto del libro. Los capítulos se irán incorporando según la hoja de ruta; el primero será el capítulo piloto sobre métricas en $\SPD_n$.
+::: {.acciones}
+[Empezar por el capítulo piloto](chapters/06-metricas-spd.qmd){.btn .btn-primary}
+[Ver el índice completo](#indice){.btn .btn-outline-primary}
+[Código en GitHub](https://github.com/me1catrr/neuroriemann){.btn .btn-outline-secondary}
 :::
 
-*NeuroRiemann* es un libro científico y educativo sobre **geometría riemanniana de matrices simétricas definidas positivas** y sus aplicaciones al análisis de señales de **electroencefalografía (EEG)**.
+::: {.callout-note title="Libro en construcción"}
+El capítulo 6, *Métricas sobre SPD*, está disponible como capítulo piloto. El resto de capítulos tiene su página con objetivos y contenidos previstos, y se irán publicando según la hoja de ruta.
+:::
 
-Las matrices de covarianza de un registro EEG multicanal no viven en un espacio vectorial, sino en el cono abierto $\SPD_n$. Tratarlas con la geometría euclídea produce artefactos bien conocidos: interpolaciones que «hinchan» el determinante, medias que no respetan invariancias físicas, distancias que dependen de la escala de cada canal. La geometría riemanniana ofrece herramientas (distancias invariantes, medias de Fréchet, espacios tangentes, transporte paralelo) que sí respetan esa estructura y que hoy son estándar en interfaces cerebro-computadora.
+## Seis partes {.unnumbered}
 
-## Qué distingue a este libro
+::: {.partes}
 
-- **Rigor matemático.** Cada resultado se enuncia con sus hipótesis y se demuestra o se cita con una referencia verificada. Las convenciones (factores $1/2$, $\sqrt2$ en la vectorización, normalizaciones) se declaran siempre de forma explícita (apéndice [-@sec-notacion]).
-- **Distinciones que importan.** Se separan con cuidado las matrices SPD, las matrices de correlación ($\Corr_n$, SPD con diagonal unitaria) y las matrices de conectividad funcional, que **no** son necesariamente semidefinidas positivas. Por ejemplo, la matriz wPLI tiene diagonal nula y, salvo que sea nula, siempre tiene algún autovalor negativo.
-- **Algoritmos reproducibles.** Cada algoritmo se presenta con su definición matemática, su pseudocódigo, una implementación en Julia (`NeuroRiemann.jl`), tests de propiedades e invariancias y una validación cruzada independiente en Python con tolerancia declarada (apéndices [-@sec-entorno] y [-@sec-validacion]).
-- **Laboratorios y simuladores.** Los capítulos incluyen laboratorios con datos sintéticos generados con semilla fija y simuladores interactivos en $\SPD_2$.
+::: {.parte .parte-i}
+[I]{.parte-id} [Fundamentos matemáticos](parts/I-fundamentos.qmd){.parte-titulo}
 
-## Estructura
+Álgebra lineal espectral, matrices SPD y funciones matriciales, variedades y geometría riemanniana.
 
-| Parte | Contenido |
-|---|---|
-| I. Fundamentos matemáticos | Álgebra lineal, matrices SPD y funciones matriciales, variedades, geometría riemanniana |
-| II. Geometría de matrices SPD | Estructura del cono, métricas, exponencial y logaritmo, medias de Fréchet |
-| III. Correlación y conectividad | Propiedades algebraicas de las medidas de conectividad, variedad de correlación, alternativas |
-| IV. Aprendizaje geométrico | Espacio tangente, clasificación, optimización en variedades, aprendizaje profundo geométrico |
-| V. Aplicaciones EEG | Estimación de covarianzas, filtrado espacial y BCI, transferencia, puente metodológico con NeuroMIND |
-| VI. Investigación | Problemas abiertos y limitaciones |
+[Capítulos 1–4]{.parte-meta}
+:::
 
-## Datos y material de terceros
+::: {.parte .parte-ii}
+[II]{.parte-id} [Geometría de matrices SPD](parts/II-spd.qmd){.parte-titulo}
 
-El libro solo utiliza **datos sintéticos** generados con semilla y script versionado. No contiene datos EEG reales, ni datos clínicos, ni material protegido por derechos de autor; las figuras inspiradas en otros trabajos se recrean con código propio y se cita su fuente.
+El cono SPD, sus métricas, la exponencial y el logaritmo riemannianos y las medias de Fréchet.
 
-## Licencias
+[Capítulos 5–8]{.parte-meta}
+:::
 
-El código se distribuye con licencia [MIT](https://github.com/me1catrr/neuroriemann/blob/main/LICENSE). El texto y las figuras originales, con licencia [CC BY 4.0](https://github.com/me1catrr/neuroriemann/blob/main/LICENSE-CONTENT.md).
+::: {.parte .parte-iii}
+[III]{.parte-id} [Correlación y conectividad](parts/III-conectividad.qmd){.parte-titulo}
+
+Qué medidas de conectividad admiten geometría SPD, la variedad de correlación y alternativas.
+
+[Capítulos 9–11]{.parte-meta}
+:::
+
+::: {.parte .parte-iv}
+[IV]{.parte-id} [Aprendizaje geométrico](parts/IV-aprendizaje.qmd){.parte-titulo}
+
+Espacio tangente, clasificación, optimización en variedades y aprendizaje profundo sobre SPD.
+
+[Capítulos 12–15]{.parte-meta}
+:::
+
+::: {.parte .parte-v}
+[V]{.parte-id} [Aplicaciones EEG](parts/V-aplicaciones.qmd){.parte-titulo}
+
+Estimación de covarianzas, filtrado espacial e interfaces cerebro-computadora, transferencia y estudios longitudinales.
+
+[Capítulos 16–19]{.parte-meta}
+:::
+
+::: {.parte .parte-vi}
+[VI]{.parte-id} [Investigación](parts/VI-investigacion.qmd){.parte-titulo}
+
+Problemas abiertos y limitaciones de los métodos geométricos.
+
+[Capítulo 20]{.parte-meta}
+:::
+
+:::
+
+## Cómo es cada capítulo {.unnumbered}
+
+::: {.piezas}
+
+::: {.pieza}
+**Teoría rigurosa.** Definiciones, teoremas y demostraciones con las hipótesis y convenciones declaradas.
+:::
+
+::: {.pieza}
+**Algoritmos.** Pseudocódigo con su coste y una implementación de referencia en `NeuroRiemann.jl`.
+:::
+
+::: {.pieza}
+**Laboratorio en Julia.** Código que se ejecuta al construir el libro, con figuras y comprobaciones numéricas de los teoremas.
+:::
+
+::: {.pieza}
+**Simulador interactivo.** Controles en el navegador (OJS) para explorar la geometría en $\SPD_2$.
+:::
+
+::: {.pieza}
+**Validación cruzada.** Cada resultado se recalcula de forma independiente en Python y en el simulador, con tolerancia declarada.
+:::
+
+::: {.pieza}
+**Ejercicios.** Problemas de demostración y de laboratorio al final de cada capítulo.
+:::
+
+:::
+
+## Distinciones que importan {.unnumbered}
+
+El libro separa siempre tres tipos de objeto: las **matrices SPD** (por ejemplo, covarianzas de rango completo), las **matrices de correlación** $\Corr_n$ (SPD con diagonal unitaria) y las **matrices de conectividad funcional**, que no son necesariamente semidefinidas positivas. La matriz wPLI, por ejemplo, tiene diagonal nula y, salvo que sea nula, siempre tiene algún autovalor negativo. Aplicar geometría SPD a un objeto que no lo es produce resultados sin sentido; por eso la Parte III estudia primero qué medidas la admiten.
+
+## Índice completo {#indice .unnumbered}
+
+<!-- INDICE:inicio -->
+
+### [Parte I · Fundamentos matemáticos](parts/I-fundamentos.qmd)
+
+::: {.indice-capitulos .parte-i}
+
+| Cap. | Capítulo | Contenido | Estado |
+|---|---|---|---|
+| 1 | [Álgebra lineal y análisis espectral](chapters/01-algebra-lineal.qmd) | Teorema espectral, SVD, cociente de Rayleigh, condicionamiento y autoproblema generalizado. | [En preparación]{.estado .estado-preparacion} |
+| 2 | [Matrices simétricas, PSD/SPD y funciones matriciales](chapters/02-matrices-spd.qmd) | Criterios de definición positiva, orden de Loewner, producto de Schur y funciones matriciales exp, log y raíz. | [En preparación]{.estado .estado-preparacion} |
+| 3 | [Variedades diferenciables y espacios tangentes](chapters/03-variedades.qmd) | Cartas, espacio tangente, diferencial, campos vectoriales y grupos de Lie matriciales. | [En preparación]{.estado .estado-preparacion} |
+| 4 | [Geometría riemanniana](chapters/04-geometria-riemanniana.qmd) | Métrica, conexión de Levi-Civita, geodésicas, curvatura, variedades de Hadamard y espacios simétricos. | [En preparación]{.estado .estado-preparacion} |
+
+:::
+
+### [Parte II · Geometría de matrices SPD](parts/II-spd.qmd)
+
+::: {.indice-capitulos .parte-ii}
+
+| Cap. | Capítulo | Contenido | Estado |
+|---|---|---|---|
+| 5 | [Estructura geométrica del cono SPD](chapters/05-cono-spd.qmd) | SPD(n) como cono convexo, espacio homogéneo GL(n)/O(n) y espacio simétrico. | [En preparación]{.estado .estado-preparacion} |
+| 6 | [Métricas sobre SPD: tres maneras de interpolar](chapters/06-metricas-spd.qmd) | Geodésicas y distancias euclídea, log-euclídea y afín-invariante; determinante, hinchamiento, media geométrica e invariancias. | [Disponible]{.estado .estado-disponible} |
+| 7 | [Exponencial y logaritmo riemannianos, geodésicas y transporte paralelo](chapters/07-exp-log.qmd) | Fórmulas explícitas de Exp, Log y transporte paralelo para las métricas log-euclídea y afín-invariante. | [En preparación]{.estado .estado-preparacion} |
+| 8 | [Medias de Fréchet y estadística](chapters/08-medias-frechet.qmd) | Media y mediana de Fréchet, algoritmo de punto fijo, PCA geodésico y tests de permutación. | [En preparación]{.estado .estado-preparacion} |
+
+:::
+
+### [Parte III · Correlación y conectividad funcional](parts/III-conectividad.qmd)
+
+::: {.indice-capitulos .parte-iii}
+
+| Cap. | Capítulo | Contenido | Estado |
+|---|---|---|---|
+| 9 | [Matrices de conectividad EEG: definiciones y propiedades algebraicas](chapters/09-conectividad.qmd) | Covarianza, correlación, coherencia, PLV, PLI y wPLI clasificadas por simetría, diagonal, rango y signo espectral. | [En preparación]{.estado .estado-preparacion} |
+| 10 | [Variedad de matrices de correlación](chapters/10-correlacion.qmd) | Corr(n) como subvariedad y como cociente de SPD; geometrías propias de las matrices de correlación. | [En preparación]{.estado .estado-preparacion} |
+| 11 | [Representaciones alternativas de la conectividad](chapters/11-alternativas.qmd) | Laplacianos de grafos, regularización, desplazamiento espectral y distancias entre grafos para medidas no SPD. | [En preparación]{.estado .estado-preparacion} |
+
+:::
+
+### [Parte IV · Aprendizaje geométrico](parts/IV-aprendizaje.qmd)
+
+::: {.indice-capitulos .parte-iv}
+
+| Cap. | Capítulo | Contenido | Estado |
+|---|---|---|---|
+| 12 | [Espacio tangente y extracción de características](chapters/12-espacio-tangente.qmd) | Proyección en la media, blanqueamiento, vectorización isométrica y distorsión de la linealización. | [En preparación]{.estado .estado-preparacion} |
+| 13 | [Clasificación riemanniana: distancia mínima a la media, kernels y regresión](chapters/13-clasificacion.qmd) | Clasificador de distancia mínima a la media, kernels definidos positivos sobre SPD y regresión geodésica. | [En preparación]{.estado .estado-preparacion} |
+| 14 | [Optimización sobre variedades](chapters/14-optimizacion.qmd) | Gradiente riemanniano, retracciones, descenso de gradiente, región de confianza y convexidad geodésica. | [En preparación]{.estado .estado-preparacion} |
+| 15 | [Aprendizaje profundo geométrico](chapters/15-aprendizaje-profundo.qmd) | Capas que operan sobre matrices SPD, retropropagación con derivadas espectrales y normalización riemanniana. | [En preparación]{.estado .estado-preparacion} |
+
+:::
+
+### [Parte V · Aplicaciones EEG](parts/V-aplicaciones.qmd)
+
+::: {.indice-capitulos .parte-v}
+
+| Cap. | Capítulo | Contenido | Estado |
+|---|---|---|---|
+| 16 | [Estimación y regularización de covarianzas](chapters/16-covarianzas.qmd) | Covarianza muestral, contracción, efecto del tamaño muestral en la distancia afín-invariante y problemas de rango. | [En preparación]{.estado .estado-preparacion} |
+| 17 | [Filtrado espacial, CSP e interfaces cerebro-computadora](chapters/17-csp-bci.qmd) | Patrones espaciales comunes como autoproblema generalizado y su relación con la geometría afín-invariante. | [En preparación]{.estado .estado-preparacion} |
+| 18 | [Aprendizaje por transferencia y alineamiento](chapters/18-transferencia.qmd) | Re-centrado, Procrustes riemanniano, alineamiento euclídeo y transporte paralelo entre sesiones y sujetos. | [En preparación]{.estado .estado-preparacion} |
+| 19 | [Puente metodológico con NeuroMIND](chapters/19-neuromind.qmd) | Diseño de análisis longitudinales geométricos con código genérico y datos sintéticos. | [En preparación]{.estado .estado-preparacion} |
+
+:::
+
+### [Parte VI · Investigación](parts/VI-investigacion.qmd)
+
+::: {.indice-capitulos .parte-vi}
+
+| Cap. | Capítulo | Contenido | Estado |
+|---|---|---|---|
+| 20 | [Problemas abiertos y limitaciones](chapters/20-problemas-abiertos.qmd) | Alta dimensión, no estacionariedad, conectividad no SPD, interpretabilidad y coste computacional. | [En preparación]{.estado .estado-preparacion} |
+
+:::
+
+<!-- INDICE:fin -->
+
+## Sobre el proyecto {.unnumbered}
+
+**Autoría.** Rafael Castro Triguero, Universidad de Córdoba.
+
+**Repositorio.** Código, textos e historial de cambios en [github.com/me1catrr/neuroriemann](https://github.com/me1catrr/neuroriemann); los errores y sugerencias, en sus [issues](https://github.com/me1catrr/neuroriemann/issues).
+
+**Datos.** El libro solo usa datos sintéticos generados con semilla fija y script versionado. No contiene datos EEG reales ni datos clínicos.
+
+**Licencias.** Texto y figuras originales con licencia [CC BY 4.0](https://github.com/me1catrr/neuroriemann/blob/main/LICENSE-CONTENT.md); código con licencia [MIT](https://github.com/me1catrr/neuroriemann/blob/main/LICENSE). Las obras citadas pertenecen a sus autores y se recogen en la [bibliografía](bibliografia.qmd).
+
+::: {.creditos}
+Este libro se elabora con apoyo de Claude Code (Anthropic) como herramienta de asistencia para programación, redacción y producción de contenidos interactivos. La selección, revisión y responsabilidad académica de los materiales corresponden al autor.
+:::

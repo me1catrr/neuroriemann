@@ -1,0 +1,23 @@
+{{< include /_macros.qmd >}}
+
+# Matrices simétricas, PSD/SPD y funciones matriciales
+
+::: {.callout-note .en-preparacion title="Capítulo en preparación"}
+Este capítulo forma parte de la hoja de ruta del libro y todavía no está escrito. Esta página resume lo que tratará.
+:::
+
+**Prerrequisitos.** Capítulo 1.
+
+## Objetivos
+
+- Caracterizar los conos PSD y SPD y su orden parcial.
+- Definir y calcular las funciones matriciales espectrales y sus derivadas.
+
+## Contenidos previstos
+
+- Criterios de Sylvester y de Cholesky; complemento de Schur.
+- Orden de Loewner y producto de Schur (Hadamard).
+- Funciones matriciales espectrales: exponencial, logaritmo y raíz principales.
+- Derivada de Fréchet y fórmula de Daleckii–Krein.
+- Deficiencia de rango de las covarianzas EEG con referencia promedio.
+- Laboratorio: funciones matriciales simétricas y su derivada por diferencias finitas.

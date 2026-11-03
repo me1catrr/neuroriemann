@@ -201,3 +201,6 @@ htmlcov/
 .Rhistory
 
 **/*.quarto_ipynb
+
+# Notas de trabajo locales (no se publican)
+_notas/

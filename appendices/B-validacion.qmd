@@ -24,4 +24,4 @@ SciPy calcula estas funciones por métodos genéricos (Padé con escalado y cuad
 
 ## Lo que la validación no cubre
 
-La validación cruzada confirma que dos implementaciones calculan lo mismo, no que lo calculado sea lo correcto. Las identidades matemáticas (por ejemplo, $\Expm(\Logm P)=P$, la equivariancia ortogonal $f(QPQ^\top)=Qf(P)Q^\top$ o la @prp-tib-frobenius) se comprueban en los tests de propiedades de `julia/NeuroRiemann.jl/test/`.
+La validación cruzada confirma que dos implementaciones calculan lo mismo, no que lo calculado sea lo correcto. Las identidades matemáticas (por ejemplo, $\Expm(\Logm P)=P$, la equivariancia ortogonal $f(QPQ^\top)=Qf(P)Q^\top$ o la @prp-frobenius-log) se comprueban en los tests de propiedades de `julia/NeuroRiemann.jl/test/`.

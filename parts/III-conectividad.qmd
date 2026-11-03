@@ -2,12 +2,14 @@
 
 # Correlación y conectividad funcional
 
-Antes de aplicar la geometría SPD a la conectividad hay que saber qué medidas la admiten. Esta parte clasifica las matrices de conectividad EEG por simetría, diagonal, rango y signo espectral, estudia la variedad de correlación $\Corr_n$ y propone representaciones alternativas para las medidas que no son semidefinidas positivas.
+Antes de aplicar la geometría SPD a la conectividad hay que saber qué medidas la admiten: clasificación algebraica de las matrices de conectividad EEG, la variedad de correlación y representaciones alternativas para las medidas que no son semidefinidas positivas.
 
-::: {.callout-note}
-## Capítulos previstos
+::: {.indice-capitulos .parte-iii}
 
-9. Matrices de conectividad EEG: definiciones y propiedades algebraicas
-10. Variedad de matrices de correlación
-11. Representaciones alternativas de la conectividad
+| Cap. | Capítulo | Contenido | Estado |
+|---|---|---|---|
+| 9 | [Matrices de conectividad EEG: definiciones y propiedades algebraicas](../chapters/09-conectividad.qmd) | Covarianza, correlación, coherencia, PLV, PLI y wPLI clasificadas por simetría, diagonal, rango y signo espectral. | [En preparación]{.estado .estado-preparacion} |
+| 10 | [Variedad de matrices de correlación](../chapters/10-correlacion.qmd) | Corr(n) como subvariedad y como cociente de SPD; geometrías propias de las matrices de correlación. | [En preparación]{.estado .estado-preparacion} |
+| 11 | [Representaciones alternativas de la conectividad](../chapters/11-alternativas.qmd) | Laplacianos de grafos, regularización, desplazamiento espectral y distancias entre grafos para medidas no SPD. | [En preparación]{.estado .estado-preparacion} |
+
 :::

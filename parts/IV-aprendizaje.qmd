@@ -2,13 +2,15 @@
 
 # Aprendizaje geométrico
 
-Proyección al espacio tangente y vectorización isométrica, clasificación por distancia mínima a la media, kernels sobre $\SPD_n$, optimización en variedades y redes neuronales que operan sobre matrices SPD.
+Proyección al espacio tangente y vectorización isométrica, clasificación por distancia mínima a la media, kernels sobre SPD, optimización en variedades y redes neuronales que operan sobre matrices SPD.
 
-::: {.callout-note}
-## Capítulos previstos
+::: {.indice-capitulos .parte-iv}
 
-12. Espacio tangente y extracción de características
-13. Clasificación riemanniana: MDRM, kernels y regresión
-14. Optimización sobre variedades
-15. Aprendizaje profundo geométrico
+| Cap. | Capítulo | Contenido | Estado |
+|---|---|---|---|
+| 12 | [Espacio tangente y extracción de características](../chapters/12-espacio-tangente.qmd) | Proyección en la media, blanqueamiento, vectorización isométrica y distorsión de la linealización. | [En preparación]{.estado .estado-preparacion} |
+| 13 | [Clasificación riemanniana: distancia mínima a la media, kernels y regresión](../chapters/13-clasificacion.qmd) | Clasificador de distancia mínima a la media, kernels definidos positivos sobre SPD y regresión geodésica. | [En preparación]{.estado .estado-preparacion} |
+| 14 | [Optimización sobre variedades](../chapters/14-optimizacion.qmd) | Gradiente riemanniano, retracciones, descenso de gradiente, región de confianza y convexidad geodésica. | [En preparación]{.estado .estado-preparacion} |
+| 15 | [Aprendizaje profundo geométrico](../chapters/15-aprendizaje-profundo.qmd) | Capas que operan sobre matrices SPD, retropropagación con derivadas espectrales y normalización riemanniana. | [En preparación]{.estado .estado-preparacion} |
+
 :::

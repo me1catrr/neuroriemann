@@ -1,0 +1,23 @@
+{{< include /_macros.qmd >}}
+
+# Geometría riemanniana
+
+::: {.callout-note .en-preparacion title="Capítulo en preparación"}
+Este capítulo forma parte de la hoja de ruta del libro y todavía no está escrito. Esta página resume lo que tratará.
+:::
+
+**Prerrequisitos.** Capítulo 3.
+
+## Objetivos
+
+- Entender métrica, geodésicas, exponencial y curvatura con ejemplos calculables.
+- Reconocer las propiedades de las variedades de curvatura no positiva que garantizan medias únicas.
+
+## Contenidos previstos
+
+- Métrica riemanniana, longitud y distancia; teorema de Hopf–Rinow.
+- Conexión de Levi-Civita, geodésicas y aplicaciones exponencial y logarítmica.
+- Transporte paralelo y curvatura seccional.
+- Variedades de Hadamard y teorema de Cartan–Hadamard.
+- Submersiones riemannianas, cocientes y espacios homogéneos y simétricos.
+- Laboratorio: geodésicas numéricas frente a fórmulas cerradas.

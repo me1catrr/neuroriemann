@@ -2,13 +2,15 @@
 
 # Aplicaciones EEG
 
-Estimación y regularización de covarianzas (incluidos los problemas de rango por referencia promedio e ICA), filtrado espacial y CSP, aprendizaje por transferencia mediante re-centrado y transporte paralelo, y el diseño de análisis longitudinales geométricos con datos sintéticos.
+Estimación y regularización de covarianzas, filtrado espacial e interfaces cerebro-computadora, aprendizaje por transferencia mediante re-centrado y transporte paralelo, y diseño de análisis longitudinales con datos sintéticos.
 
-::: {.callout-note}
-## Capítulos previstos
+::: {.indice-capitulos .parte-v}
 
-16. Estimación y regularización de covarianzas
-17. Filtrado espacial, CSP y BCI
-18. Transfer learning y alineamiento
-19. Puente metodológico con NeuroMIND
+| Cap. | Capítulo | Contenido | Estado |
+|---|---|---|---|
+| 16 | [Estimación y regularización de covarianzas](../chapters/16-covarianzas.qmd) | Covarianza muestral, contracción, efecto del tamaño muestral en la distancia afín-invariante y problemas de rango. | [En preparación]{.estado .estado-preparacion} |
+| 17 | [Filtrado espacial, CSP e interfaces cerebro-computadora](../chapters/17-csp-bci.qmd) | Patrones espaciales comunes como autoproblema generalizado y su relación con la geometría afín-invariante. | [En preparación]{.estado .estado-preparacion} |
+| 18 | [Aprendizaje por transferencia y alineamiento](../chapters/18-transferencia.qmd) | Re-centrado, Procrustes riemanniano, alineamiento euclídeo y transporte paralelo entre sesiones y sujetos. | [En preparación]{.estado .estado-preparacion} |
+| 19 | [Puente metodológico con NeuroMIND](../chapters/19-neuromind.qmd) | Diseño de análisis longitudinales geométricos con código genérico y datos sintéticos. | [En preparación]{.estado .estado-preparacion} |
+
 :::

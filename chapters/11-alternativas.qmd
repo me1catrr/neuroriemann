@@ -1,0 +1,21 @@
+{{< include /_macros.qmd >}}
+
+# Representaciones alternativas de la conectividad
+
+::: {.callout-note .en-preparacion title="Capítulo en preparación"}
+Este capítulo forma parte de la hoja de ruta del libro y todavía no está escrito. Esta página resume lo que tratará.
+:::
+
+**Prerrequisitos.** Capítulos 9 y 10.
+
+## Objetivos
+
+- Elegir una representación geométrica válida para medidas que no son PSD.
+- Evaluar el coste interpretativo de regularizar.
+
+## Contenidos previstos
+
+- Grafos ponderados y laplacianos (PSD por construcción).
+- Regularización y desplazamiento espectral: qué se gana y qué se pierde.
+- Matrices de diagonal nula y distancias entre grafos.
+- Laboratorio: comparación de distancias entre representaciones.

@@ -1,0 +1,21 @@
+{{< include /_macros.qmd >}}
+
+# Estructura geométrica del cono SPD
+
+::: {.callout-note .en-preparacion title="Capítulo en preparación"}
+Este capítulo forma parte de la hoja de ruta del libro y todavía no está escrito. Esta página resume lo que tratará.
+:::
+
+**Prerrequisitos.** Capítulos 2 y 4.
+
+## Objetivos
+
+- Describir la acción de congruencia y sus invariantes.
+- Interpretar el cambio de referencia y el reescalado de canales como congruencias.
+
+## Contenidos previstos
+
+- Acción de congruencia de GL(n) y grupo de isotropía.
+- Estructura de espacio simétrico y curvatura no positiva.
+- Frontera del cono y órbitas en SPD(2).
+- Laboratorio: invariancias bajo congruencia.

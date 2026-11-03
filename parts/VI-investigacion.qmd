@@ -2,10 +2,12 @@
 
 # Investigación
 
-Problemas abiertos y limitaciones: alta dimensión, no estacionariedad, geometrías para conectividad no SPD, interpretabilidad y coste computacional.
+Problemas abiertos y limitaciones de la geometría riemanniana aplicada al EEG.
 
-::: {.callout-note}
-## Capítulos previstos
+::: {.indice-capitulos .parte-vi}
 
-20. Problemas abiertos y limitaciones
+| Cap. | Capítulo | Contenido | Estado |
+|---|---|---|---|
+| 20 | [Problemas abiertos y limitaciones](../chapters/20-problemas-abiertos.qmd) | Alta dimensión, no estacionariedad, conectividad no SPD, interpretabilidad y coste computacional. | [En preparación]{.estado .estado-preparacion} |
+
 :::

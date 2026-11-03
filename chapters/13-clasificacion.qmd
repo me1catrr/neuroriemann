@@ -1,0 +1,21 @@
+{{< include /_macros.qmd >}}
+
+# Clasificación riemanniana: distancia mínima a la media, kernels y regresión
+
+::: {.callout-note .en-preparacion title="Capítulo en preparación"}
+Este capítulo forma parte de la hoja de ruta del libro y todavía no está escrito. Esta página resume lo que tratará.
+:::
+
+**Prerrequisitos.** Capítulos 8 y 12.
+
+## Objetivos
+
+- Implementar y analizar el clasificador de distancia mínima a la media riemanniana.
+- Decidir cuándo un kernel sobre SPD es definido positivo.
+
+## Contenidos previstos
+
+- Clasificador de distancia mínima a la media.
+- Kernels sobre SPD y condiciones de definición positiva.
+- Regresión geodésica.
+- Laboratorio: interfaz cerebro-computadora de imaginación motora con datos sintéticos.

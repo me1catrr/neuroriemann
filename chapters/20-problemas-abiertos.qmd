@@ -1,0 +1,22 @@
+{{< include /_macros.qmd >}}
+
+# Problemas abiertos y limitaciones
+
+::: {.callout-note .en-preparacion title="Capítulo en preparación"}
+Este capítulo forma parte de la hoja de ruta del libro y todavía no está escrito. Esta página resume lo que tratará.
+:::
+
+**Prerrequisitos.** El resto del libro.
+
+## Objetivos
+
+- Identificar los límites actuales de los métodos geométricos.
+- Formular preguntas de investigación concretas.
+
+## Contenidos previstos
+
+- Alta dimensión y pocas muestras.
+- No estacionariedad.
+- Geometrías para conectividad no SPD.
+- Interpretabilidad de las características geométricas.
+- Coste computacional.

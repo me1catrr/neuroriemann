@@ -2,13 +2,15 @@
 
 # Geometría de matrices SPD
 
-El cono $\SPD_n$ como espacio homogéneo $\GL(n)/\Orth(n)$ y espacio simétrico de curvatura no positiva; las métricas euclídea, log-euclídea, afín-invariante y de Bures–Wasserstein; las aplicaciones $\Exp_P$ y $\Log_P$; y la estadística de medias de Fréchet.
+El cono SPD como espacio homogéneo y simétrico de curvatura no positiva; las métricas euclídea, log-euclídea y afín-invariante; las aplicaciones exponencial y logarítmica; y la estadística de medias de Fréchet.
 
-::: {.callout-note}
-## Capítulos previstos
+::: {.indice-capitulos .parte-ii}
 
-5. Estructura geométrica del cono SPD
-6. Métricas sobre SPD (capítulo piloto)
-7. Exponencial y logaritmo riemannianos, geodésicas y transporte paralelo
-8. Medias de Fréchet y estadística
+| Cap. | Capítulo | Contenido | Estado |
+|---|---|---|---|
+| 5 | [Estructura geométrica del cono SPD](../chapters/05-cono-spd.qmd) | SPD(n) como cono convexo, espacio homogéneo GL(n)/O(n) y espacio simétrico. | [En preparación]{.estado .estado-preparacion} |
+| 6 | [Métricas sobre SPD: tres maneras de interpolar](../chapters/06-metricas-spd.qmd) | Geodésicas y distancias euclídea, log-euclídea y afín-invariante; determinante, hinchamiento, media geométrica e invariancias. | [Disponible]{.estado .estado-disponible} |
+| 7 | [Exponencial y logaritmo riemannianos, geodésicas y transporte paralelo](../chapters/07-exp-log.qmd) | Fórmulas explícitas de Exp, Log y transporte paralelo para las métricas log-euclídea y afín-invariante. | [En preparación]{.estado .estado-preparacion} |
+| 8 | [Medias de Fréchet y estadística](../chapters/08-medias-frechet.qmd) | Media y mediana de Fréchet, algoritmo de punto fijo, PCA geodésico y tests de permutación. | [En preparación]{.estado .estado-preparacion} |
+
 :::

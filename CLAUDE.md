@@ -11,6 +11,7 @@ Libro científico y educativo público (Quarto) sobre geometría riemanniana y s
 ## Material protegido
 - `docs/` es una carpeta local de consulta: permanentemente excluida de Git y del sitio. No mover, copiar, citar textualmente en extenso ni enlazar sus archivos.
 - No publicar artículos, libros, PDF, figuras, tablas o fragmentos protegidos sin licencia compatible. Las figuras se recrean con código propio y se cita la fuente.
+- No reproducir ni comentar en el libro el contenido de artículos concretos (resúmenes, análisis críticos, ecuaciones con su numeración, tablas, recuentos). Los conceptos se desarrollan con redacción, demostraciones, código y ejemplos propios; las fuentes solo se citan y aparecen en la bibliografía. Los análisis de artículos son notas de trabajo locales (`_notas/`, ignorada).
 - Licencias: código MIT (`LICENSE`); texto y figuras originales CC BY 4.0 (`LICENSE-CONTENT.md`).
 
 ## Integridad científica
@@ -27,6 +28,9 @@ Libro científico y educativo público (Quarto) sobre geometría riemanniana y s
 - `data/synthetic/`: solo datos sintéticos generados con semilla y script versionado.
 - `bib/references.bib`, `_macros.qmd` (macros LaTeX comunes).
 - `_quarto.yml` con `project.render` explícito; nunca renderizar ni declarar como recurso nada fuera de las carpetas públicas.
+- Estructura del libro: fuente única en `temario.toml`; `julia julia/scripts/generar_indice.jl` regenera la lista de capítulos de `_quarto.yml`, `parts/*.qmd`, el índice de `index.qmd` y las páginas «en preparación» que falten. No editar a mano esos bloques.
+- Estética: `assets/scss/marca.scss` (variables) y `assets/css/styles.css` (componentes), inspirada en JuliaDo.
+- Publicación: `.github/workflows/publish.yml` renderiza desde `_freeze/` (versionado); tras cambiar código de un capítulo, `quarto render` en local y commit de `_freeze/`.
 
 ## Notación
 - Usar exclusivamente las macros de `_macros.qmd` (`\Sym_n`, `\SPD_n`, `\Corr_n`, `\Expm`, `\Logm`, `\Exp_P`, `\Log_P`, `\dAI`, `\dLE`).

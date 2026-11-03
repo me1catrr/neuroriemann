@@ -1,0 +1,21 @@
+{{< include /_macros.qmd >}}
+
+# Espacio tangente y extracción de características
+
+::: {.callout-note .en-preparacion title="Capítulo en preparación"}
+Este capítulo forma parte de la hoja de ruta del libro y todavía no está escrito. Esta página resume lo que tratará.
+:::
+
+**Prerrequisitos.** Capítulos 7 y 8.
+
+## Objetivos
+
+- Linealizar datos SPD sin perder la geometría en la medida de lo posible.
+- Cuantificar la distorsión de la proyección tangente.
+
+## Contenidos previstos
+
+- Proyección en el espacio tangente de la media.
+- Blanqueamiento y vectorización isométrica (factor √2 fuera de la diagonal).
+- Distorsión de la proyección y su relación con la dispersión.
+- Laboratorio: características tangentes y comparación con pyRiemann.

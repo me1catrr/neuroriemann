@@ -29,7 +29,7 @@ Para $S\in\Sym_n$ con descomposición espectral $S=U\diag(\lambda)U^\top$ y $f$ 
 
 ## Convenciones declaradas
 
-- **Distancia afín-invariante:** $\dAI(A,B)=\|\Logm(A^{-1/2}BA^{-1/2})\|_F=\big(\sum_i\log^2\lambda_i(A^{-1}B)\big)^{1/2}$, sin factores adicionales. La expresión $\|\Logm(A^{-1}B)\|_F$ **no** es equivalente salvo que $A$ y $B$ conmuten (apéndice [-@sec-tibermacine]).
+- **Distancia afín-invariante:** $\dAI(A,B)=\|\Logm(A^{-1/2}BA^{-1/2})\|_F=\big(\sum_i\log^2\lambda_i(A^{-1}B)\big)^{1/2}$, sin factores adicionales. La expresión $\|\Logm(A^{-1}B)\|_F$ **no** es equivalente salvo que $A$ y $B$ conmuten (@prp-frobenius-log).
 - **Distancia log-euclídea:** $\dLE(A,B)=\|\Logm A-\Logm B\|_F$.
 - **Producto interior de Frobenius:** $\langle X,Y\rangle=\tr(X^\top Y)$.
 - **Vectorización isométrica** de $S\in\Sym_n$: diagonal sin cambios y entradas $i<j$ multiplicadas por $\sqrt2$, de modo que la norma euclídea del vector coincide con $\|S\|_F$.

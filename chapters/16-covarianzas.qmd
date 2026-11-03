@@ -1,0 +1,22 @@
+{{< include /_macros.qmd >}}
+
+# Estimación y regularización de covarianzas
+
+::: {.callout-note .en-preparacion title="Capítulo en preparación"}
+Este capítulo forma parte de la hoja de ruta del libro y todavía no está escrito. Esta página resume lo que tratará.
+:::
+
+**Prerrequisitos.** Capítulos 2 y 9.
+
+## Objetivos
+
+- Elegir un estimador de covarianza adecuado al número de muestras y canales.
+- Tratar la deficiencia de rango por referencia promedio y eliminación de componentes.
+
+## Contenidos previstos
+
+- Covarianza muestral y estimadores de contracción.
+- Sesgo de la covarianza muestral en la distancia afín-invariante.
+- Rango, referencia promedio y eliminación de componentes independientes.
+- Ventanas temporales y no estacionariedad.
+- Laboratorio: sesgo frente al tamaño muestral.

@@ -81,9 +81,9 @@ const RTOL = 1e-12
         @test_throws DimensionMismatch expm(zeros(2, 3))
     end
 
-    # Apéndice D, @prp-tib-frobenius: ‖log(A⁻¹B)‖_F ≥ (Σ log² λᵢ)^{1/2},
+    # Capítulo «Métricas sobre SPD», @prp-frobenius-log: ‖log(A⁻¹B)‖_F ≥ (Σ log² λᵢ)^{1/2},
     # con igualdad si y solo si A y B conmutan.
-    @testset "Proposición D.1 (norma de Frobenius de log(A⁻¹B))" begin
+    @testset "‖log(A⁻¹B)‖_F ≥ dAI, igualdad si conmutan" begin
         for n in (2, 4, 6)
             A, B = randspd(rng, n), randspd(rng, n)
             spectral = sqrt(sum(abs2, log.(eigvals(B, A))))

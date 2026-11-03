@@ -1,0 +1,22 @@
+{{< include /_macros.qmd >}}
+
+# Aprendizaje profundo geométrico
+
+::: {.callout-note .en-preparacion title="Capítulo en preparación"}
+Este capítulo forma parte de la hoja de ruta del libro y todavía no está escrito. Esta página resume lo que tratará.
+:::
+
+**Prerrequisitos.** Capítulos 13 y 14.
+
+## Objetivos
+
+- Entender las capas bilineal, de rectificación espectral y logarítmica sobre SPD.
+- Derivar y verificar sus gradientes.
+
+## Contenidos previstos
+
+- Capas bilineal, de rectificación de autovalores y logarítmica.
+- Retropropagación a través de descomposiciones espectrales.
+- Normalización riemanniana por lotes.
+- Redes sobre grafos de conectividad.
+- Laboratorio: capas mínimas con verificación de gradientes.

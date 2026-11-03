@@ -1,0 +1,244 @@
+# Temario de NeuroRiemann: fuente única de la estructura del libro.
+#
+# A partir de este archivo, julia/scripts/generar_indice.jl genera:
+#   · la lista de capítulos de _quarto.yml (entre los marcadores INDICE),
+#   · las páginas de cada parte (parts/*.qmd),
+#   · las tablas del índice de la portada (index.qmd, entre marcadores),
+#   · una página «en preparación» para cada capítulo cuyo archivo no exista.
+# Los capítulos ya escritos nunca se sobrescriben.
+#
+# estado: "disponible" | "borrador" | "en-preparacion"
+
+[[partes]]
+id = "I"
+titulo = "Fundamentos matemáticos"
+archivo = "parts/I-fundamentos.qmd"
+resumen = "Las herramientas de álgebra lineal, análisis matricial y geometría diferencial que el resto del libro usa: espectro y condicionamiento, el cono de matrices SPD y sus funciones matriciales, variedades y geometría riemanniana hasta las variedades de Hadamard."
+
+  [[partes.capitulos]]
+  num = 1
+  slug = "01-algebra-lineal"
+  titulo = "Álgebra lineal y análisis espectral"
+  estado = "en-preparacion"
+  resumen = "Teorema espectral, SVD, cociente de Rayleigh, condicionamiento y autoproblema generalizado."
+  prerrequisitos = "Álgebra lineal básica."
+  objetivos = ["Manejar la descomposición espectral y la SVD como herramientas de cálculo y de prueba.", "Relacionar el condicionamiento de una matriz de covarianza con la estabilidad de los algoritmos."]
+  contenidos = ["Teorema espectral para matrices simétricas; SVD.", "Cociente de Rayleigh, caracterización de Courant–Fischer y desigualdades de Weyl.", "Normas matriciales y número de condición.", "Autoproblema generalizado simétrico.", "Laboratorio: espectro y condicionamiento de covarianzas sintéticas."]
+
+  [[partes.capitulos]]
+  num = 2
+  slug = "02-matrices-spd"
+  titulo = "Matrices simétricas, PSD/SPD y funciones matriciales"
+  estado = "en-preparacion"
+  resumen = "Criterios de definición positiva, orden de Loewner, producto de Schur y funciones matriciales exp, log y raíz."
+  prerrequisitos = "Capítulo 1."
+  objetivos = ["Caracterizar los conos PSD y SPD y su orden parcial.", "Definir y calcular las funciones matriciales espectrales y sus derivadas."]
+  contenidos = ["Criterios de Sylvester y de Cholesky; complemento de Schur.", "Orden de Loewner y producto de Schur (Hadamard).", "Funciones matriciales espectrales: exponencial, logaritmo y raíz principales.", "Derivada de Fréchet y fórmula de Daleckii–Krein.", "Deficiencia de rango de las covarianzas EEG con referencia promedio.", "Laboratorio: funciones matriciales simétricas y su derivada por diferencias finitas."]
+
+  [[partes.capitulos]]
+  num = 3
+  slug = "03-variedades"
+  titulo = "Variedades diferenciables y espacios tangentes"
+  estado = "en-preparacion"
+  resumen = "Cartas, espacio tangente, diferencial, campos vectoriales y grupos de Lie matriciales."
+  prerrequisitos = "Cálculo en varias variables."
+  objetivos = ["Adquirir el lenguaje de variedades necesario para la geometría de SPD.", "Identificar el espacio tangente de SPD con las matrices simétricas."]
+  contenidos = ["Cartas, atlas y subvariedades.", "Espacio tangente, diferencial y fibrado tangente.", "Campos vectoriales y corchete de Lie.", "Grupos de Lie matriciales: GL(n) y O(n).", "Laboratorio: espacios tangentes numéricos a curvas matriciales."]
+
+  [[partes.capitulos]]
+  num = 4
+  slug = "04-geometria-riemanniana"
+  titulo = "Geometría riemanniana"
+  estado = "en-preparacion"
+  resumen = "Métrica, conexión de Levi-Civita, geodésicas, curvatura, variedades de Hadamard y espacios simétricos."
+  prerrequisitos = "Capítulo 3."
+  objetivos = ["Entender métrica, geodésicas, exponencial y curvatura con ejemplos calculables.", "Reconocer las propiedades de las variedades de curvatura no positiva que garantizan medias únicas."]
+  contenidos = ["Métrica riemanniana, longitud y distancia; teorema de Hopf–Rinow.", "Conexión de Levi-Civita, geodésicas y aplicaciones exponencial y logarítmica.", "Transporte paralelo y curvatura seccional.", "Variedades de Hadamard y teorema de Cartan–Hadamard.", "Submersiones riemannianas, cocientes y espacios homogéneos y simétricos.", "Laboratorio: geodésicas numéricas frente a fórmulas cerradas."]
+
+[[partes]]
+id = "II"
+titulo = "Geometría de matrices SPD"
+archivo = "parts/II-spd.qmd"
+resumen = "El cono SPD como espacio homogéneo y simétrico de curvatura no positiva; las métricas euclídea, log-euclídea y afín-invariante; las aplicaciones exponencial y logarítmica; y la estadística de medias de Fréchet."
+
+  [[partes.capitulos]]
+  num = 5
+  slug = "05-cono-spd"
+  titulo = "Estructura geométrica del cono SPD"
+  estado = "en-preparacion"
+  resumen = "SPD(n) como cono convexo, espacio homogéneo GL(n)/O(n) y espacio simétrico."
+  prerrequisitos = "Capítulos 2 y 4."
+  objetivos = ["Describir la acción de congruencia y sus invariantes.", "Interpretar el cambio de referencia y el reescalado de canales como congruencias."]
+  contenidos = ["Acción de congruencia de GL(n) y grupo de isotropía.", "Estructura de espacio simétrico y curvatura no positiva.", "Frontera del cono y órbitas en SPD(2).", "Laboratorio: invariancias bajo congruencia."]
+
+  [[partes.capitulos]]
+  num = 6
+  slug = "06-metricas-spd"
+  titulo = "Métricas sobre SPD: tres maneras de interpolar"
+  estado = "disponible"
+  resumen = "Geodésicas y distancias euclídea, log-euclídea y afín-invariante; determinante, hinchamiento, media geométrica e invariancias."
+  prerrequisitos = "Capítulos 2 y 5."
+
+  [[partes.capitulos]]
+  num = 7
+  slug = "07-exp-log"
+  titulo = "Exponencial y logaritmo riemannianos, geodésicas y transporte paralelo"
+  estado = "en-preparacion"
+  resumen = "Fórmulas explícitas de Exp, Log y transporte paralelo para las métricas log-euclídea y afín-invariante."
+  prerrequisitos = "Capítulos 4 y 6."
+  objetivos = ["Derivar las aplicaciones exponencial y logarítmica de cada métrica.", "Implementar y comprobar el transporte paralelo afín-invariante."]
+  contenidos = ["Exp y Log para las métricas log-euclídea y afín-invariante.", "Transporte paralelo e isometrías.", "Completitud y unicidad de geodésicas.", "Laboratorio: Exp ∘ Log = id; el transporte paralelo conserva la norma."]
+
+  [[partes.capitulos]]
+  num = 8
+  slug = "08-medias-frechet"
+  titulo = "Medias de Fréchet y estadística"
+  estado = "en-preparacion"
+  resumen = "Media y mediana de Fréchet, algoritmo de punto fijo, PCA geodésico y tests de permutación."
+  prerrequisitos = "Capítulos 6 y 7."
+  objetivos = ["Definir media y mediana en una variedad y probar su unicidad en curvatura no positiva.", "Implementar el algoritmo de punto fijo con criterio de parada justificado."]
+  contenidos = ["Media de Fréchet (Karcher): existencia y unicidad en variedades de Hadamard.", "Mediana geométrica y su diferencia con la media.", "Algoritmo de punto fijo y su convergencia.", "Análisis de componentes principales geodésico y tests de permutación.", "Laboratorio: medias afín-invariante, log-euclídea y aritmética de una nube de covarianzas."]
+
+[[partes]]
+id = "III"
+titulo = "Correlación y conectividad funcional"
+archivo = "parts/III-conectividad.qmd"
+resumen = "Antes de aplicar la geometría SPD a la conectividad hay que saber qué medidas la admiten: clasificación algebraica de las matrices de conectividad EEG, la variedad de correlación y representaciones alternativas para las medidas que no son semidefinidas positivas."
+
+  [[partes.capitulos]]
+  num = 9
+  slug = "09-conectividad"
+  titulo = "Matrices de conectividad EEG: definiciones y propiedades algebraicas"
+  estado = "en-preparacion"
+  resumen = "Covarianza, correlación, coherencia, PLV, PLI y wPLI clasificadas por simetría, diagonal, rango y signo espectral."
+  prerrequisitos = "Capítulo 2 y nociones de análisis espectral de señales."
+  objetivos = ["Decidir, para cada medida de conectividad, si es SPD, PSD o ninguna de las dos.", "Demostrar las propiedades espectrales de las medidas más usadas."]
+  contenidos = ["Covarianza y correlación de Pearson.", "Coherencia compleja y coherencia de magnitud al cuadrado (producto de Schur).", "Coherencia imaginaria, PLV, PLI y wPLI.", "Matrices de diagonal nula: por qué wPLI nunca es PSD salvo que sea nula.", "Laboratorio: osciladores acoplados y espectro de cada matriz de conectividad."]
+
+  [[partes.capitulos]]
+  num = 10
+  slug = "10-correlacion"
+  titulo = "Variedad de matrices de correlación"
+  estado = "en-preparacion"
+  resumen = "Corr(n) como subvariedad y como cociente de SPD; geometrías propias de las matrices de correlación."
+  prerrequisitos = "Capítulos 4, 6 y 9."
+  objetivos = ["Mostrar que las geodésicas de SPD no conservan la diagonal unitaria.", "Construir geometrías adaptadas a las matrices de correlación."]
+  contenidos = ["Normalización D^{-1/2} C D^{-1/2} y el elíptopo.", "Corr(n) como subvariedad y como cociente SPD/Diag⁺.", "La métrica afín-invariante restringida no es totalmente geodésica.", "Geometrías cociente y log-euclídeas de correlación.", "Laboratorio: deriva de la diagonal a lo largo de una geodésica afín-invariante."]
+
+  [[partes.capitulos]]
+  num = 11
+  slug = "11-alternativas"
+  titulo = "Representaciones alternativas de la conectividad"
+  estado = "en-preparacion"
+  resumen = "Laplacianos de grafos, regularización, desplazamiento espectral y distancias entre grafos para medidas no SPD."
+  prerrequisitos = "Capítulos 9 y 10."
+  objetivos = ["Elegir una representación geométrica válida para medidas que no son PSD.", "Evaluar el coste interpretativo de regularizar."]
+  contenidos = ["Grafos ponderados y laplacianos (PSD por construcción).", "Regularización y desplazamiento espectral: qué se gana y qué se pierde.", "Matrices de diagonal nula y distancias entre grafos.", "Laboratorio: comparación de distancias entre representaciones."]
+
+[[partes]]
+id = "IV"
+titulo = "Aprendizaje geométrico"
+archivo = "parts/IV-aprendizaje.qmd"
+resumen = "Proyección al espacio tangente y vectorización isométrica, clasificación por distancia mínima a la media, kernels sobre SPD, optimización en variedades y redes neuronales que operan sobre matrices SPD."
+
+  [[partes.capitulos]]
+  num = 12
+  slug = "12-espacio-tangente"
+  titulo = "Espacio tangente y extracción de características"
+  estado = "en-preparacion"
+  resumen = "Proyección en la media, blanqueamiento, vectorización isométrica y distorsión de la linealización."
+  prerrequisitos = "Capítulos 7 y 8."
+  objetivos = ["Linealizar datos SPD sin perder la geometría en la medida de lo posible.", "Cuantificar la distorsión de la proyección tangente."]
+  contenidos = ["Proyección en el espacio tangente de la media.", "Blanqueamiento y vectorización isométrica (factor √2 fuera de la diagonal).", "Distorsión de la proyección y su relación con la dispersión.", "Laboratorio: características tangentes y comparación con pyRiemann."]
+
+  [[partes.capitulos]]
+  num = 13
+  slug = "13-clasificacion"
+  titulo = "Clasificación riemanniana: distancia mínima a la media, kernels y regresión"
+  estado = "en-preparacion"
+  resumen = "Clasificador de distancia mínima a la media, kernels definidos positivos sobre SPD y regresión geodésica."
+  prerrequisitos = "Capítulos 8 y 12."
+  objetivos = ["Implementar y analizar el clasificador de distancia mínima a la media riemanniana.", "Decidir cuándo un kernel sobre SPD es definido positivo."]
+  contenidos = ["Clasificador de distancia mínima a la media.", "Kernels sobre SPD y condiciones de definición positiva.", "Regresión geodésica.", "Laboratorio: interfaz cerebro-computadora de imaginación motora con datos sintéticos."]
+
+  [[partes.capitulos]]
+  num = 14
+  slug = "14-optimizacion"
+  titulo = "Optimización sobre variedades"
+  estado = "en-preparacion"
+  resumen = "Gradiente riemanniano, retracciones, descenso de gradiente, región de confianza y convexidad geodésica."
+  prerrequisitos = "Capítulos 4 y 7."
+  objetivos = ["Formular problemas de optimización en SPD de forma intrínseca.", "Comparar algoritmos riemannianos con el punto fijo de Karcher."]
+  contenidos = ["Gradiente y hessiano riemannianos.", "Retracciones y transporte vectorial.", "Descenso de gradiente, gradiente conjugado y región de confianza.", "Convexidad geodésica y convergencia.", "Laboratorio: media de Karcher por optimización frente a punto fijo."]
+
+  [[partes.capitulos]]
+  num = 15
+  slug = "15-aprendizaje-profundo"
+  titulo = "Aprendizaje profundo geométrico"
+  estado = "en-preparacion"
+  resumen = "Capas que operan sobre matrices SPD, retropropagación con derivadas espectrales y normalización riemanniana."
+  prerrequisitos = "Capítulos 13 y 14."
+  objetivos = ["Entender las capas bilineal, de rectificación espectral y logarítmica sobre SPD.", "Derivar y verificar sus gradientes."]
+  contenidos = ["Capas bilineal, de rectificación de autovalores y logarítmica.", "Retropropagación a través de descomposiciones espectrales.", "Normalización riemanniana por lotes.", "Redes sobre grafos de conectividad.", "Laboratorio: capas mínimas con verificación de gradientes."]
+
+[[partes]]
+id = "V"
+titulo = "Aplicaciones EEG"
+archivo = "parts/V-aplicaciones.qmd"
+resumen = "Estimación y regularización de covarianzas, filtrado espacial e interfaces cerebro-computadora, aprendizaje por transferencia mediante re-centrado y transporte paralelo, y diseño de análisis longitudinales con datos sintéticos."
+
+  [[partes.capitulos]]
+  num = 16
+  slug = "16-covarianzas"
+  titulo = "Estimación y regularización de covarianzas"
+  estado = "en-preparacion"
+  resumen = "Covarianza muestral, contracción, efecto del tamaño muestral en la distancia afín-invariante y problemas de rango."
+  prerrequisitos = "Capítulos 2 y 9."
+  objetivos = ["Elegir un estimador de covarianza adecuado al número de muestras y canales.", "Tratar la deficiencia de rango por referencia promedio y eliminación de componentes."]
+  contenidos = ["Covarianza muestral y estimadores de contracción.", "Sesgo de la covarianza muestral en la distancia afín-invariante.", "Rango, referencia promedio y eliminación de componentes independientes.", "Ventanas temporales y no estacionariedad.", "Laboratorio: sesgo frente al tamaño muestral."]
+
+  [[partes.capitulos]]
+  num = 17
+  slug = "17-csp-bci"
+  titulo = "Filtrado espacial, CSP e interfaces cerebro-computadora"
+  estado = "en-preparacion"
+  resumen = "Patrones espaciales comunes como autoproblema generalizado y su relación con la geometría afín-invariante."
+  prerrequisitos = "Capítulos 1, 6 y 16."
+  objetivos = ["Formular CSP como autoproblema generalizado.", "Relacionar CSP con la distancia afín-invariante entre clases."]
+  contenidos = ["CSP como autoproblema generalizado.", "Relación con la distancia afín-invariante.", "CSP regularizado y filtros riemannianos.", "Laboratorio: CSP frente a clasificación riemanniana con datos sintéticos."]
+
+  [[partes.capitulos]]
+  num = 18
+  slug = "18-transferencia"
+  titulo = "Aprendizaje por transferencia y alineamiento"
+  estado = "en-preparacion"
+  resumen = "Re-centrado, Procrustes riemanniano, alineamiento euclídeo y transporte paralelo entre sesiones y sujetos."
+  prerrequisitos = "Capítulos 8 y 12."
+  objetivos = ["Distinguir re-centrado, alineamiento y proyección tangente.", "Corregir corrimientos entre sesiones con herramientas geométricas."]
+  contenidos = ["Re-centrado por congruencia.", "Procrustes riemanniano y alineamiento euclídeo.", "Transporte paralelo entre dominios.", "Laboratorio: corrimiento simulado entre sesiones."]
+
+  [[partes.capitulos]]
+  num = 19
+  slug = "19-neuromind"
+  titulo = "Puente metodológico con NeuroMIND"
+  estado = "en-preparacion"
+  resumen = "Diseño de análisis longitudinales geométricos con código genérico y datos sintéticos."
+  prerrequisitos = "Capítulos 8 a 18."
+  objetivos = ["Diseñar análisis longitudinales sobre trayectorias en SPD.", "Separar métodos publicables de datos que no lo son."]
+  contenidos = ["Trayectorias en SPD y distancias intra- e intersujeto.", "Modelos mixtos sobre el espacio tangente.", "Protocolos y datos sintéticos que imitan la estructura de un estudio longitudinal.", "Qué se publica y qué no: métodos frente a datos."]
+
+[[partes]]
+id = "VI"
+titulo = "Investigación"
+archivo = "parts/VI-investigacion.qmd"
+resumen = "Problemas abiertos y limitaciones de la geometría riemanniana aplicada al EEG."
+
+  [[partes.capitulos]]
+  num = 20
+  slug = "20-problemas-abiertos"
+  titulo = "Problemas abiertos y limitaciones"
+  estado = "en-preparacion"
+  resumen = "Alta dimensión, no estacionariedad, conectividad no SPD, interpretabilidad y coste computacional."
+  prerrequisitos = "El resto del libro."
+  objetivos = ["Identificar los límites actuales de los métodos geométricos.", "Formular preguntas de investigación concretas."]
+  contenidos = ["Alta dimensión y pocas muestras.", "No estacionariedad.", "Geometrías para conectividad no SPD.", "Interpretabilidad de las características geométricas.", "Coste computacional."]

@@ -1,0 +1,21 @@
+{{< include /_macros.qmd >}}
+
+# Aprendizaje por transferencia y alineamiento
+
+::: {.callout-note .en-preparacion title="Capítulo en preparación"}
+Este capítulo forma parte de la hoja de ruta del libro y todavía no está escrito. Esta página resume lo que tratará.
+:::
+
+**Prerrequisitos.** Capítulos 8 y 12.
+
+## Objetivos
+
+- Distinguir re-centrado, alineamiento y proyección tangente.
+- Corregir corrimientos entre sesiones con herramientas geométricas.
+
+## Contenidos previstos
+
+- Re-centrado por congruencia.
+- Procrustes riemanniano y alineamiento euclídeo.
+- Transporte paralelo entre dominios.
+- Laboratorio: corrimiento simulado entre sesiones.

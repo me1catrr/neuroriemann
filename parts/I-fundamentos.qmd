@@ -2,13 +2,15 @@
 
 # Fundamentos matemáticos
 
-Esta parte reúne las herramientas de álgebra lineal, análisis matricial y geometría diferencial que el resto del libro da por conocidas: espectro y condicionamiento, el cono de matrices SPD, las funciones matriciales $\Expm$, $\Logm$ y la raíz principal, variedades diferenciables y geometría riemanniana hasta las variedades de Hadamard.
+Las herramientas de álgebra lineal, análisis matricial y geometría diferencial que el resto del libro usa: espectro y condicionamiento, el cono de matrices SPD y sus funciones matriciales, variedades y geometría riemanniana hasta las variedades de Hadamard.
 
-::: {.callout-note}
-## Capítulos previstos
+::: {.indice-capitulos .parte-i}
 
-1. Álgebra lineal y análisis espectral
-2. Matrices simétricas, PSD/SPD y funciones matriciales
-3. Variedades diferenciables y espacios tangentes
-4. Geometría riemanniana
+| Cap. | Capítulo | Contenido | Estado |
+|---|---|---|---|
+| 1 | [Álgebra lineal y análisis espectral](../chapters/01-algebra-lineal.qmd) | Teorema espectral, SVD, cociente de Rayleigh, condicionamiento y autoproblema generalizado. | [En preparación]{.estado .estado-preparacion} |
+| 2 | [Matrices simétricas, PSD/SPD y funciones matriciales](../chapters/02-matrices-spd.qmd) | Criterios de definición positiva, orden de Loewner, producto de Schur y funciones matriciales exp, log y raíz. | [En preparación]{.estado .estado-preparacion} |
+| 3 | [Variedades diferenciables y espacios tangentes](../chapters/03-variedades.qmd) | Cartas, espacio tangente, diferencial, campos vectoriales y grupos de Lie matriciales. | [En preparación]{.estado .estado-preparacion} |
+| 4 | [Geometría riemanniana](../chapters/04-geometria-riemanniana.qmd) | Métrica, conexión de Levi-Civita, geodésicas, curvatura, variedades de Hadamard y espacios simétricos. | [En preparación]{.estado .estado-preparacion} |
+
 :::

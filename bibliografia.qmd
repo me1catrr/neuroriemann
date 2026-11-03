@@ -1,0 +1,11 @@
+---
+nocite: |
+  @*
+---
+
+# Bibliografía {.unnumbered}
+
+Obras citadas en el libro y obras de referencia para los capítulos en preparación. Todas las entradas tienen un DOI, un identificador arXiv o un ISBN comprobado automáticamente contra Crossref, arXiv u Open Library con `scripts/verify_bib.py`; el registro de cada comprobación está en [`bib/VERIFICATION.md`](https://github.com/me1catrr/neuroriemann/blob/main/bib/VERIFICATION.md).
+
+::: {#refs}
+:::

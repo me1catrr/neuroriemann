@@ -1,0 +1,22 @@
+{{< include /_macros.qmd >}}
+
+# Variedad de matrices de correlación
+
+::: {.callout-note .en-preparacion title="Capítulo en preparación"}
+Este capítulo forma parte de la hoja de ruta del libro y todavía no está escrito. Esta página resume lo que tratará.
+:::
+
+**Prerrequisitos.** Capítulos 4, 6 y 9.
+
+## Objetivos
+
+- Mostrar que las geodésicas de SPD no conservan la diagonal unitaria.
+- Construir geometrías adaptadas a las matrices de correlación.
+
+## Contenidos previstos
+
+- Normalización D^{-1/2} C D^{-1/2} y el elíptopo.
+- Corr(n) como subvariedad y como cociente SPD/Diag⁺.
+- La métrica afín-invariante restringida no es totalmente geodésica.
+- Geometrías cociente y log-euclídeas de correlación.
+- Laboratorio: deriva de la diagonal a lo largo de una geodésica afín-invariante.

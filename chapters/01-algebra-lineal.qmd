@@ -1,0 +1,22 @@
+{{< include /_macros.qmd >}}
+
+# Álgebra lineal y análisis espectral
+
+::: {.callout-note .en-preparacion title="Capítulo en preparación"}
+Este capítulo forma parte de la hoja de ruta del libro y todavía no está escrito. Esta página resume lo que tratará.
+:::
+
+**Prerrequisitos.** Álgebra lineal básica.
+
+## Objetivos
+
+- Manejar la descomposición espectral y la SVD como herramientas de cálculo y de prueba.
+- Relacionar el condicionamiento de una matriz de covarianza con la estabilidad de los algoritmos.
+
+## Contenidos previstos
+
+- Teorema espectral para matrices simétricas; SVD.
+- Cociente de Rayleigh, caracterización de Courant–Fischer y desigualdades de Weyl.
+- Normas matriciales y número de condición.
+- Autoproblema generalizado simétrico.
+- Laboratorio: espectro y condicionamiento de covarianzas sintéticas.

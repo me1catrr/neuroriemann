@@ -46,7 +46,22 @@ Las tres curvas cumplen $\gamma(0)=A$ y $\gamma(1)=B$, y cada una es la geodési
 $$
 \dAI(A,B)=\Big(\sum_{i=1}^n\log^2\lambda_i\big(A^{-1}B\big)\Big)^{1/2},
 $$ {#eq-dai-espectral}
-donde los $\lambda_i>0$ son los autovalores del problema generalizado simétrico $Bv=\lambda Av$. Es la forma que usa `NeuroRiemann.jl`. Atención: @eq-dai-espectral **no** es $\|\Logm(A^{-1}B)\|_F$ salvo que $A$ y $B$ conmuten (@prp-tib-frobenius).
+donde los $\lambda_i>0$ son los autovalores del problema generalizado simétrico $Bv=\lambda Av$. Es la forma que usa `NeuroRiemann.jl`. Conviene no confundirla con la norma de Frobenius del logaritmo de la matriz no simétrica $A^{-1}B$, una simplificación tentadora pero incorrecta:
+
+::: {#prp-frobenius-log}
+## $\|\Logm(A^{-1}B)\|_F$ no es la distancia afín-invariante
+Sean $A,B\in\SPD_n$ y $\lambda_1,\dots,\lambda_n>0$ los autovalores de $A^{-1}B$. Entonces
+$$
+\|\Logm(A^{-1}B)\|_F\;\ge\;\Big(\sum_{i=1}^n\log^2\lambda_i\Big)^{1/2}=\dAI(A,B),
+$$
+con igualdad si y solo si $AB=BA$.
+:::
+
+::: {.proof}
+$A^{-1}B=A^{-1/2}CA^{1/2}$ con $C=A^{-1/2}BA^{-1/2}\in\SPD_n$, así que $A^{-1}B$ es diagonalizable con autovalores $\lambda_i>0$. Su logaritmo principal es $\Logm(A^{-1}B)=A^{-1/2}\Logm(C)A^{1/2}$, con autovalores $\log\lambda_i$. La desigualdad de Schur ($\|M\|_F^2\ge\sum_i|\lambda_i(M)|^2$, con igualdad si y solo si $M$ es normal) da la desigualdad.
+
+Para la igualdad, observemos que una matriz real normal con autovalores reales es simétrica. Como $\log$ es inyectiva en $(0,\infty)$, $\Logm(A^{-1}B)$ y $A^{-1}B$ tienen los mismos autoespacios, así que una es normal si y solo si lo es la otra. Por tanto, hay igualdad si y solo si $A^{-1}B$ es simétrica, es decir, $A^{-1}B=BA^{-1}$, lo que equivale a $AB=BA$. Por último, $\sum_i\log^2\lambda_i=\|\Logm C\|_F^2=\dAI(A,B)^2$.
+:::
 
 **Algoritmo** (geodésica afín-invariante, `interpolate(AffineInvariant(), A, B, t)`):
 
@@ -274,7 +289,7 @@ X = geomean(A, B)
 
 ## Simulador
 
-::: {.content-visible when-format="html"}
+::: {.content-visible .laboratorio when-format="html"}
 Mueve los autovalores y ángulos de $A$ y $B$ y el parámetro $t$. Las elipses discontinuas son $A$ y $B$; las de color, $\gamma(t)$ para cada geometría. El simulador usa las fórmulas cerradas en $\SPD_2$ de `simulators/spd2/spd2.js`, validadas frente a los fixtures generados por `NeuroRiemann.jl` (apéndice [-@sec-validacion]).
 
 ```{ojs}

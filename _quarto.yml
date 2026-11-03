@@ -2,9 +2,10 @@ project:
   type: book
   output-dir: _book
   # Lista explícita: Quarto no descubre ni renderiza nada fuera de estas rutas
-  # (en particular, nunca docs/). No usar `resources:` con comodines.
+  # (en particular, nunca docs/ ni _notas/). No usar `resources:` con comodines.
   render:
     - index.qmd
+    - bibliografia.qmd
     - parts/*.qmd
     - chapters/*.qmd
     - appendices/*.qmd
@@ -14,29 +15,78 @@ lang: es
 book:
   title: "NeuroRiemann"
   subtitle: "Geometría riemanniana para el análisis de EEG"
+  description: "Libro abierto sobre geometría riemanniana de matrices simétricas definidas positivas y sus aplicaciones al EEG: teoría rigurosa, algoritmos en Julia y simuladores interactivos."
   author: "Rafael Castro Triguero"
   site-url: https://me1catrr.github.io/neuroriemann/
   repo-url: https://github.com/me1catrr/neuroriemann
   repo-actions: [issue, source]
   license: "CC BY 4.0"
   search: true
+  favicon: assets/img/marca.svg
+  sidebar:
+    style: docked
+    logo: assets/img/marca.svg
+    logo-alt: "NeuroRiemann"
+  page-footer:
+    left: "© 2026 Rafael Castro Triguero · Universidad de Córdoba"
+    right: "Texto y figuras [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.es) · Código MIT"
+  # La lista de capítulos la genera julia/scripts/generar_indice.jl a partir de
+  # temario.toml. No editar a mano entre los marcadores.
   chapters:
+    # INDICE:inicio
     - index.qmd
     - part: parts/I-fundamentos.qmd
+      chapters:
+        - chapters/01-algebra-lineal.qmd
+        - chapters/02-matrices-spd.qmd
+        - chapters/03-variedades.qmd
+        - chapters/04-geometria-riemanniana.qmd
     - part: parts/II-spd.qmd
       chapters:
+        - chapters/05-cono-spd.qmd
         - chapters/06-metricas-spd.qmd
+        - chapters/07-exp-log.qmd
+        - chapters/08-medias-frechet.qmd
     - part: parts/III-conectividad.qmd
+      chapters:
+        - chapters/09-conectividad.qmd
+        - chapters/10-correlacion.qmd
+        - chapters/11-alternativas.qmd
     - part: parts/IV-aprendizaje.qmd
+      chapters:
+        - chapters/12-espacio-tangente.qmd
+        - chapters/13-clasificacion.qmd
+        - chapters/14-optimizacion.qmd
+        - chapters/15-aprendizaje-profundo.qmd
     - part: parts/V-aplicaciones.qmd
+      chapters:
+        - chapters/16-covarianzas.qmd
+        - chapters/17-csp-bci.qmd
+        - chapters/18-transferencia.qmd
+        - chapters/19-neuromind.qmd
     - part: parts/VI-investigacion.qmd
+      chapters:
+        - chapters/20-problemas-abiertos.qmd
+    - bibliografia.qmd
+    # INDICE:fin
   appendices:
     - appendices/A-entorno.qmd
     - appendices/B-validacion.qmd
     - appendices/C-notacion.qmd
-    - appendices/D-analisis-tibermacine.qmd
 
 bibliography: bib/references.bib
+
+crossref:
+  fig-title: "Figura"
+  tbl-title: "Tabla"
+  eq-prefix: "ecuación"
+  thm-title: "Teorema"
+  prp-title: "Proposición"
+  def-title: "Definición"
+  exm-title: "Ejemplo"
+  exr-title: "Ejercicio"
+  lem-title: "Lema"
+  cor-title: "Corolario"
 
 execute:
   freeze: auto
@@ -44,19 +94,28 @@ execute:
 format:
   html:
     theme:
-      light: [cosmo, assets/scss/neuroriemann.scss]
-      dark: [darkly, assets/scss/neuroriemann-dark.scss]
+      - cosmo
+      - assets/scss/marca.scss
+    css: assets/css/styles.css
+    grid:
+      sidebar-width: 290px
+      body-width: 860px
+      margin-width: 260px
+      gutter-width: 1.5rem
     html-math-method: mathjax
     number-sections: true
     number-depth: 3
     toc: true
     toc-depth: 3
+    toc-title: "En esta página"
     code-fold: show
     code-tools: true
+    code-copy: true
     code-link: false
     link-citations: true
+    citations-hover: true
+    crossrefs-hover: true
     reference-location: margin
-    citation-location: document
   # Prototipo futuro (Etapa 5):
   # typst:
   #   toc: true

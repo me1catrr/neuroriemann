@@ -1,0 +1,22 @@
+{{< include /_macros.qmd >}}
+
+# Medias de Fréchet y estadística
+
+::: {.callout-note .en-preparacion title="Capítulo en preparación"}
+Este capítulo forma parte de la hoja de ruta del libro y todavía no está escrito. Esta página resume lo que tratará.
+:::
+
+**Prerrequisitos.** Capítulos 6 y 7.
+
+## Objetivos
+
+- Definir media y mediana en una variedad y probar su unicidad en curvatura no positiva.
+- Implementar el algoritmo de punto fijo con criterio de parada justificado.
+
+## Contenidos previstos
+
+- Media de Fréchet (Karcher): existencia y unicidad en variedades de Hadamard.
+- Mediana geométrica y su diferencia con la media.
+- Algoritmo de punto fijo y su convergencia.
+- Análisis de componentes principales geodésico y tests de permutación.
+- Laboratorio: medias afín-invariante, log-euclídea y aritmética de una nube de covarianzas.

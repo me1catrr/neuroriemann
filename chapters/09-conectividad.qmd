@@ -1,0 +1,22 @@
+{{< include /_macros.qmd >}}
+
+# Matrices de conectividad EEG: definiciones y propiedades algebraicas
+
+::: {.callout-note .en-preparacion title="Capítulo en preparación"}
+Este capítulo forma parte de la hoja de ruta del libro y todavía no está escrito. Esta página resume lo que tratará.
+:::
+
+**Prerrequisitos.** Capítulo 2 y nociones de análisis espectral de señales.
+
+## Objetivos
+
+- Decidir, para cada medida de conectividad, si es SPD, PSD o ninguna de las dos.
+- Demostrar las propiedades espectrales de las medidas más usadas.
+
+## Contenidos previstos
+
+- Covarianza y correlación de Pearson.
+- Coherencia compleja y coherencia de magnitud al cuadrado (producto de Schur).
+- Coherencia imaginaria, PLV, PLI y wPLI.
+- Matrices de diagonal nula: por qué wPLI nunca es PSD salvo que sea nula.
+- Laboratorio: osciladores acoplados y espectro de cada matriz de conectividad.

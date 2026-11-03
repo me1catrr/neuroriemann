@@ -2,13 +2,16 @@
 
 **NeuroRiemann** es un proyecto científico dedicado al estudio de señales neurofisiológicas (EEG) mediante herramientas de **geometría de Riemann**: matrices de covarianza simétricas definidas positivas, variedades SPD, métricas y medias riemannianas, espacio tangente y métodos de clasificación y análisis estadístico sobre variedades.
 
-> Estado: esqueleto del libro (Etapa 2). Próximo hito: capítulo piloto «Métricas sobre SPD».
+> Estado: capítulo piloto «Métricas sobre SPD» disponible; el resto, en preparación.
+> Libro en línea: <https://me1catrr.github.io/neuroriemann/>
 
 ## Estructura
 
 | Ruta | Contenido |
 |---|---|
 | `_quarto.yml`, `index.qmd`, `parts/`, `chapters/`, `appendices/` | Libro Quarto (HTML; Typst previsto) |
+| `temario.toml`, `julia/scripts/generar_indice.jl` | Estructura del libro (fuente única) y su generador |
+| `assets/` | Identidad visual: `scss/marca.scss`, `css/styles.css`, `img/marca.svg` |
 | `_macros.qmd` | Macros LaTeX comunes (`\SPD_n`, `\Logm`, `\Log_P`, `\dAI`…) |
 | `julia/NeuroRiemann.jl/` | Paquete Julia de referencia con tests |
 | `Project.toml`, `Manifest.toml` | Entorno Julia del libro (versiones fijadas) |

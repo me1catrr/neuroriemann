@@ -1,0 +1,21 @@
+{{< include /_macros.qmd >}}
+
+# Filtrado espacial, CSP e interfaces cerebro-computadora
+
+::: {.callout-note .en-preparacion title="Capítulo en preparación"}
+Este capítulo forma parte de la hoja de ruta del libro y todavía no está escrito. Esta página resume lo que tratará.
+:::
+
+**Prerrequisitos.** Capítulos 1, 6 y 16.
+
+## Objetivos
+
+- Formular CSP como autoproblema generalizado.
+- Relacionar CSP con la distancia afín-invariante entre clases.
+
+## Contenidos previstos
+
+- CSP como autoproblema generalizado.
+- Relación con la distancia afín-invariante.
+- CSP regularizado y filtros riemannianos.
+- Laboratorio: CSP frente a clasificación riemanniana con datos sintéticos.
