@@ -1,0 +1,172 @@
+# =====================================================================
+# NeuroRiemann — .gitignore
+# =====================================================================
+
+# ---------------------------------------------------------------------
+# Datos EEG originales y datos científicos (NUNCA versionar)
+# ---------------------------------------------------------------------
+data/
+datos/
+raw/
+rawdata/
+sourcedata/
+derivatives/
+# Formatos EEG / MEG / neurofisiología
+*.edf
+*.edf+
+*.bdf
+*.gdf
+*.vhdr
+*.vmrk
+*.eeg
+*.set
+*.fdt
+*.cnt
+*.mff
+*.xdf
+*.fif
+*.fif.gz
+*.nwb
+*.dat
+*.raw
+# Formatos de datos científicos / matrices
+*.mat
+*.h5
+*.hdf5
+*.nc
+*.npy
+*.npz
+*.parquet
+*.feather
+*.arrow
+*.jld
+*.jld2
+*.bson
+*.pkl
+*.pickle
+*.joblib
+*.csv.gz
+*.tsv.gz
+# Neuroimagen
+*.nii
+*.nii.gz
+
+# ---------------------------------------------------------------------
+# Información sensible y credenciales
+# ---------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+id_rsa*
+id_ed25519*
+credentials*
+secrets*
+*.secret
+*.token
+.netrc
+# Información de participantes / pacientes
+participants_private*
+*_private.*
+private/
+confidential/
+
+# ---------------------------------------------------------------------
+# Resultados temporales y salidas
+# ---------------------------------------------------------------------
+tmp/
+temp/
+scratch/
+cache/
+.cache/
+results/tmp/
+outputs/tmp/
+*.tmp
+*.bak
+*.swp
+*.swo
+*~
+*.log
+
+# ---------------------------------------------------------------------
+# Quarto
+# ---------------------------------------------------------------------
+/.quarto/
+_site/
+_book/
+_freeze/
+*_files/
+*.quarto_ipynb
+/.luarc.json
+
+# ---------------------------------------------------------------------
+# Julia
+# ---------------------------------------------------------------------
+*.jl.cov
+*.jl.*.cov
+*.jl.mem
+deps/deps.jl
+deps/build.log
+docs/build/
+docs/site/
+.julia/
+# Manifest.toml: descomentar si se decide no versionarlo
+# Manifest.toml
+
+# ---------------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+.venv/
+venv/
+env/
+.python-version
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.ipynb_checkpoints/
+
+# ---------------------------------------------------------------------
+# LaTeX (artefactos de compilación)
+# ---------------------------------------------------------------------
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.out
+*.synctex.gz
+*.toc
+
+# ---------------------------------------------------------------------
+# macOS
+# ---------------------------------------------------------------------
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# ---------------------------------------------------------------------
+# Editores / herramientas
+# ---------------------------------------------------------------------
+.vscode/
+.idea/
+.cursor/
+.claude/settings.local.json
+.claude/.cc-writes/
