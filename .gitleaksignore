@@ -1,0 +1,7 @@
+# Falsos positivos de gitleaks revisados a mano (una huella por línea).
+# Formato: <commit>:<archivo>:<regla>:<línea>
+#
+# Manifest.toml: UUID público del paquete Julia AxisKeys (registro General),
+# dependencia débil de Accessors.jl arrastrada por CairoMakie. La regla
+# generic-api-key se activa por el nombre «...Keys = "<uuid>"». No es un secreto.
+e95923bbc3449883ca5c0bd8746d0041af9d1453:Manifest.toml:generic-api-key:42
