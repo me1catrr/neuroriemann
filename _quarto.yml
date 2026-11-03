@@ -108,8 +108,11 @@ format:
     toc: true
     toc-depth: 3
     toc-title: "En esta página"
+    # Código visible por defecto; las celdas largas llevan `#| code-fold: true`.
     code-fold: show
-    code-tools: true
+    # Sin «Ver el código fuente» incrustado: insertaría el .qmd entero (YAML,
+    # include…) en el HTML. El fuente está enlazado en GitHub (repo-actions).
+    code-tools: false
     code-copy: true
     code-link: false
     link-citations: true

@@ -66,6 +66,17 @@ const TS = (0.0, 0.1, 0.25, 0.5, 0.8, 1.0)
         @test det(interpolate(LogEuclidean(), A, B, 0.5)) ≈ 1.0 rtol = 1e-12
     end
 
+    @testset "potencia total: γ_AI ⪯ γ_E y tr γ_LE, tr γ_AI ≤ tr γ_E (@prp-traza)" begin
+        for n in (2, 3, 6), t in (0.1, 0.5, 0.9)
+            A, B = randspd(rng, n), randspd(rng, n)
+            E, L, G = (interpolate(m, A, B, t) for m in METRICS)
+            @test minimum(eigvals(Symmetric(E - G))) >= -1e-12 * norm(E)   # orden de Loewner
+            @test tr(G) <= tr(E) + 1e-12
+            @test tr(L) <= tr(E) + 1e-12
+            @test tr(E) ≈ (1 - t) * tr(A) + t * tr(B) rtol = 1e-12
+        end
+    end
+
     @testset "matrices que conmutan: γ_LE = γ_AI y d_LE = d_AI" begin
         for n in (2, 5)
             Q = randorth(rng, n)

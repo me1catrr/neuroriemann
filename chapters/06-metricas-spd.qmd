@@ -20,6 +20,13 @@ Demostrar qué conserva cada una (determinante, invariancias) y qué no (el «hi
 
 Una matriz de covarianza $P\in\SPD_2$ se visualiza como la elipse $\{x: x^\top P^{-1}x=1\}$: sus semiejes miden $\sqrt{\lambda_1}$ y $\sqrt{\lambda_2}$ en las direcciones de los autovectores, y su área es $\pi\sqrt{\det P}$. Si $A$ y $B$ son las covarianzas de un registro EEG en dos momentos, ¿cuál es la covarianza «a medio camino»? La respuesta depende de la geometría que se elija sobre $\SPD_n$, y no es una cuestión de gusto: cada elección conserva unas propiedades y rompe otras.
 
+**De las señales a la matriz.** Si $X\in\R^{n\times T}$ contiene $T$ muestras de $n$ canales, centradas (media nula en cada canal), la covarianza muestral es $P=\tfrac{1}{T-1}XX^\top$. Siempre es simétrica y semidefinida positiva, porque $v^\top Pv=\|X^\top v\|^2/(T-1)\ge0$. Sin embargo, solo es definida positiva si las filas de $X$ son linealmente independientes, y eso falla en dos situaciones frecuentes:
+
+- con **pocas muestras**: al centrar, $X\mathbf 1=0$, así que $\operatorname{rank}P\le T-1$ y hacen falta al menos $T\ge n+1$ muestras;
+- con **dependencias lineales exactas** entre canales, como en la referencia promedio, donde los canales suman cero en cada instante y $\operatorname{rank}P\le n-1$.
+
+Además, $P$ es una *estimación* ruidosa de la covarianza verdadera. Con pocas muestras sus autovalores extremos se dispersan (el menor tiende a subestimarse), y eso afecta a cualquier distancia que dependa de $\log\lambda$. En este capítulo trabajamos con matrices SPD dadas; la estimación y la regularización se estudian en el [capítulo 16](16-covarianzas.qmd).
+
 ## Tres geometrías
 
 ::: {#def-tres-metricas}
@@ -113,7 +120,31 @@ $$
 Por la desigualdad entre las medias aritmética y geométrica ponderadas, $(1-t)\cdot1+t\mu_i\ge\mu_i^{t}$, con igualdad para $t\in(0,1)$ si y solo si $\mu_i=1$. Por tanto, el producto es al menos $\prod_i\mu_i^t=(\det C)^t=(\det B/\det A)^t$, lo que da la desigualdad. La igualdad exige $\mu_i=1$ para todo $i$, es decir, $C=I$, que equivale a $A=B$.
 :::
 
-Equivalentemente, $\log\det$ es estrictamente cóncava en $\SPD_n$. En EEG, el hinchamiento significa que promediar covarianzas en sentido euclídeo **sobrestima la potencia generalizada** (el determinante) de los estados intermedios.
+Equivalentemente, $\log\det$ es estrictamente cóncava en $\SPD_n$.
+
+Conviene precisar *qué* se hincha. En estadística, $\det P$ es la **varianza generalizada** de la señal multicanal: mide el volumen de la elipse de covarianza, y es pequeña cuando los canales están muy correlacionados, aunque cada uno tenga mucha potencia. La **potencia total** es otra cantidad: $\tr P=\sum_iP_{ii}$, la suma de las varianzas de los canales. La interpolación euclídea no sobrestima la potencia total, que varía linealmente, $\tr\gamma_E(t)=(1-t)\tr A+t\tr B$; lo que sobrestima es el volumen. Las geometrías log-euclídea y afín-invariante hacen lo contrario: interpolan el volumen de forma geométrica y, a cambio, la potencia total de los estados intermedios queda por debajo de la lineal.
+
+::: {#prp-traza}
+## Potencia total a lo largo de las geodésicas
+Para $A,B\in\SPD_n$ y $t\in[0,1]$,
+$$
+\gamma_{AI}(t)\preceq\gamma_E(t)\ \text{(orden de Loewner)},\qquad
+\tr\gamma_{AI}(t)\le\tr\gamma_E(t),\qquad
+\tr\gamma_{LE}(t)\le\tr\gamma_E(t)=(1-t)\tr A+t\tr B .
+$$
+:::
+
+::: {.proof}
+*Afín-invariante.* Sea $C=A^{-1/2}BA^{-1/2}$. La desigualdad escalar $\mu^t\le(1-t)+t\mu$ ($\mu>0$, $t\in[0,1]$), aplicada a cada autovalor en la base de autovectores de $C$, da $C^t\preceq(1-t)I+tC$. La congruencia por $A^{1/2}$ conserva el orden de Loewner, de modo que $\gamma_{AI}(t)=A^{1/2}C^tA^{1/2}\preceq A^{1/2}\big((1-t)I+tC\big)A^{1/2}=\gamma_E(t)$. Tomando trazas se obtiene la segunda desigualdad.
+
+*Log-euclídea.* Veamos primero que $X\mapsto\tr\Expm X$ es convexa en $\Sym_n$. Sea $X=\sum_j\lambda_jv_jv_j^\top$ y sea $\{u_i\}$ una base ortonormal cualquiera. Con $c_{ij}=\langle u_i,v_j\rangle$ se tiene $\langle u_i,Xu_i\rangle=\sum_j c_{ij}^2\lambda_j$, donde $\sum_jc_{ij}^2=1$. Por la convexidad de $\exp$ (desigualdad de Jensen),
+$$
+\textstyle\sum_i e^{\langle u_i,Xu_i\rangle}\le\sum_i\sum_jc_{ij}^2e^{\lambda_j}=\sum_je^{\lambda_j}=\tr\Expm X,
+$$
+con igualdad si $\{u_i\}$ es una base de autovectores. Así, $\tr\Expm X$ es el máximo, sobre las bases ortonormales, de funciones convexas de $X$, y por tanto es convexa. Aplicándolo a $X=(1-t)\Logm A+t\Logm B$ se obtiene $\tr\gamma_{LE}(t)\le(1-t)\tr A+t\tr B$.
+:::
+
+La desigualdad log-euclídea se cumple solo para la traza: el orden de Loewner $\gamma_{LE}(t)\preceq\gamma_E(t)$ no está garantizado en general, porque $\exp$ no es operador-convexa. La @fig-curvas muestra ambos efectos en el panel de la traza.
 
 ::: {#exm-rotacion-pura}
 ## Rotación pura
@@ -186,7 +217,9 @@ $$
 
 : Invariancias de las tres distancias. Las de $\dLE$ se deducen de $\Logm(QPQ^\top)=Q\Logm(P)Q^\top$, $\Logm(cP)=\Logm P+(\log c)I$ y $\Logm(P^{-1})=-\Logm P$; las de $\dAI$, de la @prp-congruencia y de que los autovalores de $A^{-1}B$ se invierten al pasar a $(A^{-1})^{-1}B^{-1}=AB^{-1}$. {#tbl-invariancias}
 
-En EEG, una congruencia $P\mapsto WPW^\top$ modela cualquier transformación lineal invertible de los canales: cambio de referencia (si conserva el rango), reescalado de cada electrodo o mezcla lineal. La invariancia afín garantiza que $\dAI$ no depende de esas elecciones; $\dLE$ solo es insensible a rotaciones y a una escala global.
+En EEG, una congruencia $P\mapsto WPW^\top$ con $W$ **invertible** modela, por ejemplo, el cambio de ganancia de cada electrodo ($W$ diagonal) o una mezcla lineal invertible de los canales. La invariancia afín garantiza que $\dAI$ no depende de esas elecciones; $\dLE$ solo es insensible a rotaciones y a una escala global.
+
+Las rereferenciaciones habituales, en cambio, **no** están cubiertas. La referencia promedio es la proyección $W=I-\tfrac1n\mathbf 1\mathbf 1^\top$, de rango $n-1$, y referir a un electrodo del propio montaje anula ese canal. En ambos casos $W$ es singular, $WPW^\top$ deja de ser SPD y la @prp-congruencia no se aplica. El [capítulo 16](16-covarianzas.qmd) trata cómo trabajar en ese caso: reducción a $n-1$ canales o regularización.
 
 ::: {#prp-velocidad}
 ## Velocidad constante
@@ -228,6 +261,7 @@ end
 
 ```{julia}
 #| label: fig-elipses
+#| code-fold: true
 #| fig-cap: "Elipses $\\{x: x^\\top\\gamma(t)^{-1}x=1\\}$ a lo largo de las tres geodésicas entre $A$ ($t=0$) y $B$ ($t=1$)."
 ts = 0:0.25:1
 colores = Makie.wong_colors()
@@ -246,6 +280,7 @@ fig
 
 ```{julia}
 #| label: fig-curvas
+#| code-fold: true
 #| fig-cap: "Determinante, traza, anisotropía $\\lambda_{\\min}/\\lambda_{\\max}$ y ángulo del autovector principal a lo largo de las tres geodésicas. En el panel del determinante, la curva discontinua es $\\det(A)^{1-t}\\det(B)^t$ (@thm-det-geodesicas)."
 "Ángulo (grados, en (−90, 90]) del autovector del mayor autovalor."
 function angulo(P)
@@ -286,6 +321,67 @@ X = geomean(A, B)
  riccati = norm(X * inv(A) * X - B) / norm(B),
  LE_vs_AI = norm(interpolate(LogEuclidean(), A, B, 0.5) - X) / norm(X))  # ≠ 0: no conmutan
 ```
+
+### Estabilidad numérica
+
+¿Cuánta precisión se pierde al calcular $\dAI$ con matrices mal condicionadas? Para medirlo usamos pares que conmutan, $A=Q\diag(a)Q^\top$ y $B=Q\diag(b)Q^\top$ con $Q$ ortogonal aleatoria, porque su distancia exacta es conocida: $\big(\sum_i\log^2(b_i/a_i)\big)^{1/2}$ (@prp-conmutan). El espectro de $A$ se reparte logarítmicamente entre $1$ y $\kappa$, de modo que $\kappa(A)=\kappa$. Comparamos tres formas de calcular la distancia:
+
+1. el autoproblema generalizado simétrico $Bv=\lambda Av$, que es lo que hace `distance(AffineInvariant(), A, B)` (LAPACK lo resuelve vía Cholesky);
+2. el blanqueo explícito: los autovalores de la matriz simétrica $A^{-1/2}BA^{-1/2}$;
+3. los autovalores de la matriz no simétrica $A^{-1}B$, con la inversa explícita.
+
+```{julia}
+#| label: fig-estabilidad
+#| code-fold: true
+#| fig-cap: "Error relativo mediano (20 pares por punto, $n=6$) al calcular $\\dAI$ por tres métodos, frente al número de condición de $A$. La recta discontinua es $\\varepsilon\\,\\kappa$, con $\\varepsilon\\approx2{,}2\\cdot10^{-16}$ el épsilon de máquina."
+using StableRNGs, Statistics
+
+function par_conmutante(rng, n, κ)
+    Q = Matrix(qr(randn(rng, n, n)).Q)
+    a = 10 .^ range(0, log10(κ); length = n)       # κ(A) = κ
+    b = a .* exp.(randn(rng, n))
+    A = Symmetric(Q * Diagonal(a) * Q')
+    B = Symmetric(Q * Diagonal(b) * Q')
+    return A, B, sqrt(sum(abs2, log.(b ./ a)))     # distancia exacta
+end
+
+metodos = [
+    "autoproblema generalizado" => (A, B) -> distance(AffineInvariant(), A, B),
+    "blanqueo A⁻¹ᐟ² B A⁻¹ᐟ²" => (A, B) -> (W = invsqrtm(A);
+        sqrt(sum(abs2, log.(eigvals(symmetrize(W * B * W)))))),
+    "autovalores de A⁻¹B (inversa explícita)" => (A, B) -> sqrt(sum(abs2, log.(real.(eigvals(inv(A) * B))))),
+]
+
+rng = StableRNG(2026)
+κs = 10.0 .^ (1:0.5:10)   # B tiene κ algo mayor que A; isspd rechaza κ ≥ 10¹²
+errores = Dict(nombre => Float64[] for (nombre, _) in metodos)
+for κ in κs
+    e = Dict(nombre => Float64[] for (nombre, _) in metodos)
+    for _ in 1:20
+        A, B, d = par_conmutante(rng, 6, κ)
+        for (nombre, f) in metodos
+            push!(e[nombre], max(abs(f(A, B) - d) / d, eps() / 10))
+        end
+    end
+    for (nombre, _) in metodos
+        push!(errores[nombre], median(e[nombre]))
+    end
+end
+
+fig = Figure(size = (760, 420))
+ax = Axis(fig[1, 1]; xscale = log10, yscale = log10, xlabel = "κ(A)",
+          ylabel = "error relativo de d_AI")
+for (j, (nombre, _)) in enumerate(metodos)
+    scatterlines!(ax, κs, errores[nombre]; color = colores[j], label = nombre, linestyle = estilos[j])
+end
+lines!(ax, κs, eps() .* κs; color = :black, linestyle = :dash, label = "ε κ")
+axislegend(ax; position = :lt, framevisible = false)
+fig
+```
+
+La @fig-estabilidad muestra que los tres métodos pierden precisión aproximadamente en proporción a $\kappa$, y que siempre quedan por debajo de $\varepsilon\kappa$. Esa pérdida no es un defecto de los algoritmos, sino un límite del propio problema. Al almacenar $A$ en coma flotante, sus entradas tienen un error relativo del orden de $\varepsilon$; eso puede desplazar el menor autovalor hasta $\varepsilon\lambda_{\max}$, es decir, cambiar $\log\lambda_{\min}$ en torno a $\varepsilon\kappa$. Ningún método puede recuperar esa información.
+
+Entre métodos, las diferencias son pequeñas y no sistemáticas, con una ligera ventaja del autoproblema generalizado en la mayoría de los puntos. Aun así, el método 1 es preferible por otras razones: no forma inversas explícitas, trabaja siempre con matrices simétricas (sus autovalores son reales por construcción, mientras que los de $A^{-1}B$ pueden salir complejos por redondeo) y su coste es el menor. Por eso `isspd` rechaza por defecto las matrices con $\kappa\ge10^{12}$: a partir de ahí, $\dAI$ conserva menos de unas cuatro cifras significativas, y lo que procede es regularizar la estimación (capítulo 16), no buscar un algoritmo más fino.
 
 ## Simulador
 
