@@ -1,11 +1,39 @@
 # =====================================================================
 # NeuroRiemann — .gitignore
+# Reforzado por scripts/check-publication.sh (ganchos locales + CI).
 # =====================================================================
 
 # ---------------------------------------------------------------------
-# Datos EEG originales y datos científicos (NUNCA versionar)
+# Material bibliográfico privado (NUNCA versionar ni publicar)
+# docs/ es la carpeta local de consulta: excluida por completo.
+# Excepciones de PDF propios: solo con !ruta/concreta.pdf, nunca comodines.
 # ---------------------------------------------------------------------
-data/
+docs/
+papers/
+literature/
+bibliografia-privada/
+zotero/
+storage/
+*.pdf
+*.epub
+*.djvu
+*.ps
+*.mobi
+*.azw3
+*.chm
+*.docx
+*.doc
+*.pptx
+*.ppt
+*.xlsx
+*.xls
+
+# ---------------------------------------------------------------------
+# Datos EEG originales y datos científicos (NUNCA versionar)
+# Solo data/synthetic/ (generado con semilla y script) es público.
+# ---------------------------------------------------------------------
+data/*
+!data/synthetic/
 datos/
 raw/
 rawdata/
@@ -50,6 +78,8 @@ derivatives/
 # Neuroimagen
 *.nii
 *.nii.gz
+*.sqlite
+*.db
 
 # ---------------------------------------------------------------------
 # Información sensible y credenciales
@@ -111,8 +141,6 @@ _freeze/
 *.jl.mem
 deps/deps.jl
 deps/build.log
-docs/build/
-docs/site/
 .julia/
 # Manifest.toml: descomentar si se decide no versionarlo
 # Manifest.toml
@@ -168,5 +196,5 @@ htmlcov/
 .vscode/
 .idea/
 .cursor/
-.claude/settings.local.json
-.claude/.cc-writes/
+.claude/
+.Rhistory

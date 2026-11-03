@@ -13,13 +13,21 @@ NeuroRiemann es un proyecto **conceptualmente relacionado pero independiente** d
 
 Ambos repositorios se mantienen separados. La conexión entre ellos se realizará mediante referencias, enlaces e interfaces reproducibles para compartir resultados, sin copiar datos ni crear dependencias innecesarias.
 
-## Datos
+## Datos y material protegido
 
-Este repositorio **no contiene datos EEG originales** ni información sensible. Los datos se gestionan fuera del control de versiones.
+Este repositorio **no contiene datos EEG originales**, información sensible ni artículos o libros protegidos por derechos de autor. Solo se publican datos sintéticos generados con semilla (`data/synthetic/`).
+
+Un guardián automático (`scripts/check-publication.sh`) lo verifica antes de cada commit, antes de cada push y en GitHub Actions. Para activar los ganchos locales tras clonar:
+
+```bash
+git config core.hooksPath .githooks
+```
 
 ## Licencia
 
-Pendiente de decisión.
+- Código: [MIT](LICENSE).
+- Texto y figuras originales: [CC BY 4.0](LICENSE-CONTENT.md).
+- El material de terceros queda excluido y pertenece a sus titulares.
 
 ## Autor
 

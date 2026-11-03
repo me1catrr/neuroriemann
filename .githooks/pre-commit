@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Gancho pre-commit de NeuroRiemann: bloquea material no publicable.
+# Activación local: git config core.hooksPath .githooks
+exec "$(git rev-parse --show-toplevel)/scripts/check-publication.sh" --staged

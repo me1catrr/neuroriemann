@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Gancho pre-push de NeuroRiemann: audita archivos versionados e historial.
+# Activación local: git config core.hooksPath .githooks
+exec "$(git rev-parse --show-toplevel)/scripts/check-publication.sh" --tracked --history
