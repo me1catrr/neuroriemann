@@ -158,23 +158,12 @@ window.Quarto = {
  <span class="menu-text">NeuroRiemann</span></a>
   </div>
 </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a href="../parts/II-spd.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Geometría de matrices SPD</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Alternar sección">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
+        <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/06-metricas-spd.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Métricas sobre SPD: tres maneras de interpolar</span></span></a>
+  <a href="../chapters/metricas-spd.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Métricas sobre SPD: tres maneras de interpolar</span></span></a>
   </div>
 </li>
-      </ul>
-  </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../bibliografia.html" class="sidebar-item-text sidebar-link">
@@ -183,13 +172,13 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
  <span class="menu-text">Apéndices</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Alternar sección">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../appendices/A-entorno.html" class="sidebar-item-text sidebar-link">
@@ -312,7 +301,7 @@ Convenciones: véase appendices/C-notacion.qmd.
 </tr>
 <tr class="even">
 <td><code>spd2_interp.json</code></td>
-<td><code>distance</code> e <code>interpolate</code> (E, LE, AI) y <code>geomean</code> en <span class="math inline">\(\SPD_2\)</span>: caso genérico, rotación pura, matrices que conmutan, mal condicionado (<span class="math inline">\(\kappa=10^6\)</span>), isótropo frente a anisótropo y el par del laboratorio de <a href="../chapters/06-metricas-spd.html" class="quarto-xref"><span>Capítulo 6</span></a></td>
+<td><code>distance</code> e <code>interpolate</code> (E, LE, AI) y <code>geomean</code> en <span class="math inline">\(\SPD_2\)</span>: caso genérico, rotación pura, matrices que conmutan, mal condicionado (<span class="math inline">\(\kappa=10^6\)</span>), isótropo frente a anisótropo y el par del laboratorio de <a href="../chapters/metricas-spd.html" class="quarto-xref"><span>Capítulo 3</span></a></td>
 <td>fórmulas directas con SciPy; <code>pyriemann.utils.geodesic</code>, <code>pyriemann.utils.distance</code>; ecuación de Riccati</td>
 </tr>
 </tbody>
@@ -322,7 +311,7 @@ Convenciones: véase appendices/C-notacion.qmd.
 </section>
 <section id="lo-que-la-validación-no-cubre" class="level2" data-number="B.3">
 <h2 data-number="B.3" class="anchored" data-anchor-id="lo-que-la-validación-no-cubre"><span class="header-section-number">B.3</span> Lo que la validación no cubre</h2>
-<p>La validación cruzada confirma que dos implementaciones calculan lo mismo, no que lo calculado sea lo correcto. Las identidades matemáticas (por ejemplo, <span class="math inline">\(\Expm(\Logm P)=P\)</span>, la equivariancia ortogonal <span class="math inline">\(f(QPQ^\top)=Qf(P)Q^\top\)</span> o la <a href="../chapters/06-metricas-spd.html#prp-frobenius-log" class="quarto-xref">Proposición&nbsp;<span>6.1</span></a>) se comprueban en los tests de propiedades de <code>julia/NeuroRiemann.jl/test/</code>.</p>
+<p>La validación cruzada confirma que dos implementaciones calculan lo mismo, no que lo calculado sea lo correcto. Las identidades matemáticas (por ejemplo, <span class="math inline">\(\Expm(\Logm P)=P\)</span>, la equivariancia ortogonal <span class="math inline">\(f(QPQ^\top)=Qf(P)Q^\top\)</span> o la <a href="../chapters/metricas-spd.html#prp-frobenius-log" class="quarto-xref">Proposición&nbsp;<span>3.1</span></a>) se comprueban en los tests de propiedades de <code>julia/NeuroRiemann.jl/test/</code>.</p>
 
 
 </section>

@@ -157,23 +157,12 @@ window.Quarto = {
  <span class="menu-text">NeuroRiemann</span></a>
   </div>
 </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a href="../parts/II-spd.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Geometría de matrices SPD</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Alternar sección">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
+        <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../chapters/06-metricas-spd.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Métricas sobre SPD: tres maneras de interpolar</span></span></a>
+  <a href="../chapters/metricas-spd.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Métricas sobre SPD: tres maneras de interpolar</span></span></a>
   </div>
 </li>
-      </ul>
-  </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../bibliografia.html" class="sidebar-item-text sidebar-link">
@@ -182,13 +171,13 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
  <span class="menu-text">Apéndices</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Alternar sección">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../appendices/A-entorno.html" class="sidebar-item-text sidebar-link">
@@ -376,7 +365,7 @@ Convenciones: véase appendices/C-notacion.qmd.
 <section id="convenciones-declaradas" class="level2" data-number="C.3">
 <h2 data-number="C.3" class="anchored" data-anchor-id="convenciones-declaradas"><span class="header-section-number">C.3</span> Convenciones declaradas</h2>
 <ul>
-<li><strong>Distancia afín-invariante:</strong> <span class="math inline">\(\dAI(A,B)=\|\Logm(A^{-1/2}BA^{-1/2})\|_F=\big(\sum_i\log^2\lambda_i(A^{-1}B)\big)^{1/2}\)</span>, sin factores adicionales. La expresión <span class="math inline">\(\|\Logm(A^{-1}B)\|_F\)</span> <strong>no</strong> es equivalente salvo que <span class="math inline">\(A\)</span> y <span class="math inline">\(B\)</span> conmuten (<a href="../chapters/06-metricas-spd.html#prp-frobenius-log" class="quarto-xref">Proposición&nbsp;<span>6.1</span></a>).</li>
+<li><strong>Distancia afín-invariante:</strong> <span class="math inline">\(\dAI(A,B)=\|\Logm(A^{-1/2}BA^{-1/2})\|_F=\big(\sum_i\log^2\lambda_i(A^{-1}B)\big)^{1/2}\)</span>, sin factores adicionales. La expresión <span class="math inline">\(\|\Logm(A^{-1}B)\|_F\)</span> <strong>no</strong> es equivalente salvo que <span class="math inline">\(A\)</span> y <span class="math inline">\(B\)</span> conmuten (<a href="../chapters/metricas-spd.html#prp-frobenius-log" class="quarto-xref">Proposición&nbsp;<span>3.1</span></a>).</li>
 <li><strong>Distancia log-euclídea:</strong> <span class="math inline">\(\dLE(A,B)=\|\Logm A-\Logm B\|_F\)</span>.</li>
 <li><strong>Producto interior de Frobenius:</strong> <span class="math inline">\(\langle X,Y\rangle=\tr(X^\top Y)\)</span>.</li>
 <li><strong>Vectorización isométrica</strong> de <span class="math inline">\(S\in\Sym_n\)</span>: diagonal sin cambios y entradas <span class="math inline">\(i&lt;j\)</span> multiplicadas por <span class="math inline">\(\sqrt2\)</span>, de modo que la norma euclídea del vector coincide con <span class="math inline">\(\|S\|_F\)</span>.</li>

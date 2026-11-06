@@ -50,9 +50,10 @@
 .theorem > :last-child, .definition > :last-child, .example > :last-child,
 .proposition > :last-child, .exercise > :last-child { margin-bottom: 0; }
 .theorem-title, .proposition-title, .lemma-title, .corollary-title { font-weight: 700; color: var(--caja-thm-texto); }
-.definition .definition-title { font-weight: 700; color: var(--caja-def-texto); }
-.example .example-title { font-weight: 700; color: var(--caja-exm-texto); }
-.exercise .exercise-title { font-weight: 700; color: var(--caja-exr-texto); }
+/* Quarto 1.10 rotula todos los entornos con .theorem-title: el color propio se fija por tipo. */
+.definition .definition-title, .definition .theorem-title { font-weight: 700; color: var(--caja-def-texto); }
+.example .example-title, .example .theorem-title { font-weight: 700; color: var(--caja-exm-texto); }
+.exercise .exercise-title, .exercise .theorem-title { font-weight: 700; color: var(--caja-exr-texto); }
 .theorem .theorem-title, .theorem .proposition-title { font-family: var(--bs-headings-font-family, sans-serif); }
 
 /* ---------- Demostraciones ---------- */
@@ -70,6 +71,85 @@
 /* ---------- Callouts propios ---------- */
 div.callout.en-preparacion { border-left-color: var(--caja-exr-borde) !important; }
 div.callout.en-preparacion .callout-header { background: var(--caja-exr-fondo) !important; color: var(--caja-exr-texto); }
+
+/* ---------- Cajas temáticas (callouts de Quarto con clase propia) ----------
+   Mismo sistema que en Resonancia. Rótulo escrito y símbolo propio en cada una.
+     ::: {.callout-tip .idea-clave title="Idea clave"}                         ★ violeta
+     ::: {.callout-note .historia icon=false title="Un poco de historia: …"}   ◷ ocre   (con fuente: @clave o enlace)
+     ::: {.callout-note .biografia icon=false title="Quién fue: …"}            ◉ granate (con fuente: @clave o enlace)
+     ::: {.callout-note .caso-real icon=false title="Caso EEG: …"}             ⚙ azul
+     ::: {.callout-note .curiosidad icon=false title="Curiosidad: …"}          ◇ verde azulado
+     ::: {.callout-note .reto icon=false title="Reto: …"}                      ⚑ naranja
+     ::: {.callout-warning title="Errores frecuentes"}                         (estilo de Quarto)
+   Dentro o detrás de un ejercicio:
+     ::: {.callout-tip .pista collapse="true" title="Pista"}                   ocre
+     ::: {.callout-note .solucion collapse="true" title="Solución"}            verde
+   tests/evidencia.mjs exige fuente en .historia y .biografia. */
+div.callout.idea-clave, div.callout.historia, div.callout.biografia, div.callout.caso-real,
+div.callout.curiosidad, div.callout.reto, div.callout.pista, div.callout.solucion {
+  border-left-width: 0.35rem; border-radius: 0 0.4rem 0.4rem 0;
+}
+div.callout.idea-clave { border-left-color: #6f42c1 !important; }
+div.callout.idea-clave .callout-header { background: #f4effb !important; color: #4a2b94; }
+div.callout.idea-clave .callout-title-container::before { content: "★ "; margin-right: 0.35em; }
+div.callout.historia { border-left-color: #8a5a00 !important; }
+div.callout.historia .callout-header { background: #f8efdc !important; color: #5f3d00; }
+div.callout.historia .callout-title-container::before { content: "◷ "; margin-right: 0.35em; }
+div.callout.biografia { border-left-color: #9b2c4a !important; }
+div.callout.biografia .callout-header { background: #fbe9ee !important; color: #6d1a31; }
+div.callout.biografia .callout-title-container::before { content: "◉ "; margin-right: 0.35em; }
+div.callout.caso-real { border-left-color: #1b6ca8 !important; }
+div.callout.caso-real .callout-header { background: #e3eef8 !important; color: #0f3f63; }
+div.callout.caso-real .callout-title-container::before { content: "⚙ "; margin-right: 0.35em; }
+div.callout.curiosidad { border-left-color: #2a9d8f !important; }
+div.callout.curiosidad .callout-header { background: #e2f3f0 !important; color: #10473f; }
+div.callout.curiosidad .callout-title-container::before { content: "◇ "; margin-right: 0.35em; }
+div.callout.reto { border-left-color: #d95f02 !important; }
+div.callout.reto .callout-header { background: #fdebd9 !important; color: #6e2e00; }
+div.callout.reto .callout-title-container::before { content: "⚑ "; margin-right: 0.35em; }
+div.callout.pista { border-left-color: #8a5a00 !important; }
+div.callout.pista .callout-header { background: #fff7e6 !important; color: #6b4400; }
+div.callout.solucion { border-left-color: #1f7a6f !important; }
+div.callout.solucion .callout-header { background: #eaf6f3 !important; color: #14574f; }
+div.callout.idea-clave .callout-icon, div.callout.historia .callout-icon, div.callout.biografia .callout-icon, div.callout.caso-real .callout-icon,
+div.callout.curiosidad .callout-icon, div.callout.reto .callout-icon { display: none; }
+.fuentes-caja { display: block; margin-top: 0.4rem; font-size: 0.88rem; color: var(--texto-suave); }
+.exercise .callout.pista, .exercise .callout.solucion { margin: 0.7rem 0 0.2rem; }
+
+/* ---------- Tipos de ejercicio ----------
+   ::: {#exr-… .rapido}      demostración rápida (unas líneas)
+   ::: {#exr-… .demostracion} demostración más larga
+   ::: {#exr-… .codigo}      caso de código con NeuroRiemann.jl
+   ::: {#exr-… .simulacion}  simulación sencilla con datos sintéticos
+   El tipo aparece escrito tras el título del ejercicio. */
+.exercise.rapido .theorem-title::after, .exercise.demostracion .theorem-title::after,
+.exercise.codigo .theorem-title::after, .exercise.simulacion .theorem-title::after {
+  display: inline-block; margin-left: 0.5rem; padding: 0 0.5rem; border-radius: 1rem;
+  border: 1px solid var(--caja-exr-borde); background: #ffffff; color: var(--caja-exr-texto);
+  font-family: var(--bs-font-sans-serif, sans-serif); font-size: 0.72rem; font-weight: 700; font-style: normal;
+  letter-spacing: 0.03em; vertical-align: 0.1em;
+}
+.exercise.rapido .theorem-title::after { content: "demostración rápida"; }
+.exercise.demostracion .theorem-title::after { content: "demostración"; }
+.exercise.codigo .theorem-title::after { content: "código"; }
+.exercise.simulacion .theorem-title::after { content: "simulación"; }
+
+/* ---------- Niveles de evidencia ----------
+   Etiquetas en línea: [Demostrado]{.ev-demostrado}, [Citado]{.ev-citado},
+   [Verificado numéricamente]{.ev-numerico}, [Hipótesis sintética]{.ev-hipotesis},
+   [Resultado empírico citado]{.ev-empirico}. El rótulo va siempre escrito (el color
+   no es la única señal). tests/evidencia.mjs comprueba su uso. */
+.ev-demostrado, .ev-citado, .ev-numerico, .ev-hipotesis, .ev-empirico {
+  display: inline-block; padding: 0.05rem 0.55rem; border-radius: 1rem;
+  border: 1px solid var(--ev-borde); background: var(--ev-fondo); color: var(--ev-texto);
+  font-family: var(--bs-font-sans-serif, sans-serif); font-size: 0.74rem; font-weight: 700;
+  letter-spacing: 0.03em; line-height: 1.5; vertical-align: 0.1em; white-space: nowrap;
+}
+.ev-demostrado { --ev-borde: var(--caja-thm-borde); --ev-fondo: var(--caja-thm-fondo); --ev-texto: var(--caja-thm-texto); }
+.ev-citado     { --ev-borde: var(--caja-def-borde); --ev-fondo: var(--caja-def-fondo); --ev-texto: var(--caja-def-texto); }
+.ev-numerico   { --ev-borde: var(--caja-dem-borde); --ev-fondo: var(--caja-dem-fondo); --ev-texto: #374151; }
+.ev-hipotesis  { --ev-borde: var(--caja-exm-borde); --ev-fondo: var(--caja-exm-fondo); --ev-texto: var(--caja-exm-texto); border-style: dashed; }
+.ev-empirico   { --ev-borde: var(--caja-exr-borde); --ev-fondo: var(--caja-exr-fondo); --ev-texto: var(--caja-exr-texto); }
 
 /* ---------- Código Julia y resultados (como en JuliaDo) ---------- */
 div.sourceCode {
@@ -138,61 +218,88 @@ div.csl-entry a { word-break: break-word; }
 .tippy-content .csl-entry { margin: 0; padding: 0; text-indent: 0; font-size: 0.9rem; }
 
 /* =============================================================================
-   Portada (index.qmd). Se activa solo si la página contiene .partes.
-   Cabecera azul con franja inferior en los colores de las partes.
+   Portada (index.qmd). Se activa solo si la página contiene .tarjetas.
+   Cabecera azul con franja inferior en los colores de las tarjetas.
    Texto blanco sobre #16426f: 10:1.
    ========================================================================== */
-body:has(.partes) .quarto-title-banner {
+body:has(.tarjetas) .quarto-title-banner {
   background: linear-gradient(135deg, #0f2f50 0%, #16426f 55%, #1d5a94 100%) !important;
   color: #ffffff;
   border-bottom: 6px solid transparent;
   border-image: linear-gradient(90deg, #1b6ca8 0 16.6%, #1f7a6f 16.6% 33.3%, #6f42c1 33.3% 50%,
                 #b45f06 50% 66.6%, #cb3c33 66.6% 83.3%, #6b7280 83.3% 100%) 1;
 }
-body:has(.partes) .quarto-title-banner .title { color: #ffffff; letter-spacing: 0.01em; }
-body:has(.partes) .quarto-title-banner .subtitle { color: #d8e6f5; }
-body:has(.partes) .quarto-title-banner .description,
-body:has(.partes) .quarto-title-banner .description p { color: #ffffff; max-width: 46rem; font-size: 1.05rem; opacity: 1; }
-body:has(.partes) .quarto-title-banner .quarto-category {
+body:has(.tarjetas) .quarto-title-banner .title { color: #ffffff; letter-spacing: 0.01em; }
+body:has(.tarjetas) .quarto-title-banner .subtitle { color: #d8e6f5; }
+body:has(.tarjetas) .quarto-title-banner .description,
+body:has(.tarjetas) .quarto-title-banner .description p { color: #ffffff; max-width: 46rem; font-size: 1.05rem; opacity: 1; }
+body:has(.tarjetas) .quarto-title-banner .quarto-category {
   background: rgba(255, 255, 255, 0.14); color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.55); border-radius: 1rem;
   padding: 0.1rem 0.8rem; font-size: 0.85rem;
 }
-body:has(.partes) main h2 { border-bottom: 3px solid var(--nr-acento); padding-bottom: 0.25rem; margin-top: 2.2rem; }
+body:has(.tarjetas) main h2 { border-bottom: 3px solid var(--nr-acento); padding-bottom: 0.25rem; margin-top: 2.2rem; }
 
 .acciones { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 1.1rem 0 1.6rem; }
 .acciones > p { display: contents; }
 .acciones .btn { font-weight: 600; font-family: var(--bs-font-sans-serif, sans-serif); }
 
-/* Tarjetas de las seis partes; el identificador (I…VI) va escrito */
-.partes {
+/* Tarjetas de la portada (rutas de lectura); el identificador va escrito */
+.tarjetas {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
   gap: 1rem; margin: 1rem 0 2rem;
 }
-.parte {
+.tarjeta {
   display: flex; flex-direction: column;
   padding: 1rem 1.1rem 0.9rem;
-  border: 1px solid var(--parte-borde); border-top: 5px solid var(--parte-color);
-  border-radius: 0.6rem; background: var(--parte-fondo);
+  border: 1px solid var(--tono-borde); border-top: 5px solid var(--tono-color);
+  border-radius: 0.6rem; background: var(--tono-fondo);
 }
-.parte > p { margin: 0 0 0.6rem; font-size: 0.97rem; }
-.parte > p:first-child { display: flex; align-items: center; gap: 0.7rem; }
-.parte > p:last-child { margin: auto 0 0; padding-top: 0.4rem; }
-.parte-id {
+.tarjeta > p { margin: 0 0 0.6rem; font-size: 0.97rem; }
+.tarjeta > p:first-child { display: flex; align-items: center; gap: 0.7rem; }
+.tarjeta > p:last-child { margin: auto 0 0; padding-top: 0.4rem; }
+.tarjeta-id {
   flex: none; display: inline-flex; align-items: center; justify-content: center;
   width: 2.5rem; height: 2.5rem; border-radius: 50%;
-  background: var(--parte-texto); color: #ffffff;
+  background: var(--tono-texto); color: #ffffff;
   font-family: var(--bs-font-sans-serif, sans-serif); font-weight: 700; font-size: 0.95rem;
 }
-.parte-titulo { font-family: var(--bs-font-sans-serif, sans-serif); font-weight: 700; font-size: 1.04rem; line-height: 1.25; color: var(--parte-texto) !important; text-decoration: none; }
-.parte-titulo:hover, .parte-titulo:focus-visible { text-decoration: underline; }
-.parte-meta { font-family: var(--bs-font-sans-serif, sans-serif); font-size: 0.84rem; color: var(--texto-suave); }
-.parte-i   { --parte-color: #1b6ca8; --parte-texto: #134a73; --parte-fondo: #f2f7fc; --parte-borde: #cfe0ef; }
-.parte-ii  { --parte-color: #1f7a6f; --parte-texto: #14574f; --parte-fondo: #f0f8f6; --parte-borde: #c6e5df; }
-.parte-iii { --parte-color: #6f42c1; --parte-texto: #4b2a85; --parte-fondo: #f6f2fc; --parte-borde: #ddd0f2; }
-.parte-iv  { --parte-color: #b45f06; --parte-texto: #7a4204; --parte-fondo: #fff7ec; --parte-borde: #f2d9b8; }
-.parte-v   { --parte-color: #cb3c33; --parte-texto: #a02a22; --parte-fondo: #fcf3f2; --parte-borde: #f0d0cd; }
-.parte-vi  { --parte-color: #6b7280; --parte-texto: #374151; --parte-fondo: #f6f7f9; --parte-borde: #d9dce1; }
+.tarjeta-titulo { font-family: var(--bs-font-sans-serif, sans-serif); font-weight: 700; font-size: 1.04rem; line-height: 1.25; color: var(--tono-texto) !important; text-decoration: none; }
+.tarjeta-titulo:hover, .tarjeta-titulo:focus-visible { text-decoration: underline; }
+.tarjeta-meta { font-family: var(--bs-font-sans-serif, sans-serif); font-size: 0.84rem; color: var(--texto-suave); }
+.tono-azul    { --tono-color: #1b6ca8; --tono-texto: #134a73; --tono-fondo: #f2f7fc; --tono-borde: #cfe0ef; }
+.tono-verde   { --tono-color: #1f7a6f; --tono-texto: #14574f; --tono-fondo: #f0f8f6; --tono-borde: #c6e5df; }
+.tono-morado  { --tono-color: #6f42c1; --tono-texto: #4b2a85; --tono-fondo: #f6f2fc; --tono-borde: #ddd0f2; }
+.tono-naranja { --tono-color: #b45f06; --tono-texto: #7a4204; --tono-fondo: #fff7ec; --tono-borde: #f2d9b8; }
+.tono-rojo    { --tono-color: #cb3c33; --tono-texto: #a02a22; --tono-fondo: #fcf3f2; --tono-borde: #f0d0cd; }
+.tono-gris    { --tono-color: #6b7280; --tono-texto: #374151; --tono-fondo: #f6f7f9; --tono-borde: #d9dce1; }
+
+/* «El recorrido»: los capítulos como pasos numerados sobre una línea vertical */
+.recorrido > ol { list-style: none; counter-reset: paso; margin: 1.1rem 0 1rem 1.25rem; padding: 0; }
+.recorrido > ol > li {
+  counter-increment: paso; position: relative;
+  margin: 0; padding: 0.15rem 0 1.15rem 2rem; border-left: 2px solid var(--borde-suave);
+}
+.recorrido > ol > li:last-child { border-left-color: transparent; padding-bottom: 0.2rem; }
+.recorrido > ol > li::before {
+  content: counter(paso); position: absolute; left: -1.2rem; top: -0.1rem;
+  width: 2.3rem; height: 2.3rem; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--nr-acento); color: #ffffff;
+  font-family: var(--bs-font-sans-serif, sans-serif); font-weight: 700; font-size: 0.95rem;
+}
+.recorrido > ol > li > p { margin: 0; line-height: 1.55; }
+.recorrido > ol > li strong { display: block; font-family: var(--bs-font-sans-serif, sans-serif); color: var(--nr-acento); font-size: 1.02rem; margin-bottom: 0.1rem; }
+.recorrido a.quarto-xref { font-weight: 600; white-space: normal; }
+.ruta {
+  display: inline-block; margin-left: 0.3rem; padding: 0 0.55rem; vertical-align: 0.08em;
+  border: 1px solid #cfe0ef; border-radius: 0.8rem; background: #f2f7fc; color: #134a73;
+  font-family: var(--bs-font-sans-serif, sans-serif); font-size: 0.74rem; font-weight: 700; white-space: nowrap;
+}
+
+/* Leyenda de los niveles de evidencia en la portada */
+.tabla-evidencia table { width: auto; font-size: 0.93rem; }
+.tabla-evidencia td:first-child { white-space: nowrap; }
 
 /* «Cómo es cada capítulo»: rejilla de piezas */
 .piezas {
@@ -218,25 +325,23 @@ body:has(.partes) main h2 { border-bottom: 3px solid var(--nr-acento); padding-b
   border: 1px solid var(--borde-suave); border-radius: 8px; overflow: hidden; font-size: 0.94rem;
 }
 .indice-capitulos thead th {
-  background: var(--parte-fondo, var(--nr-acento-suave)); color: var(--parte-texto, var(--nr-acento));
+  background: var(--nr-acento-suave); color: var(--nr-acento);
   font-family: var(--bs-font-sans-serif, sans-serif); text-align: left;
   font-size: 0.76rem; letter-spacing: 0.05em; text-transform: uppercase;
-  padding: 0.6rem 0.8rem; border-bottom: 2px solid var(--parte-color, var(--nr-acento));
+  padding: 0.6rem 0.8rem; border-bottom: 2px solid var(--nr-acento);
 }
 .indice-capitulos tbody td { padding: 0.6rem 0.8rem; border-bottom: 1px solid var(--borde-suave); vertical-align: top; }
 .indice-capitulos tbody tr:last-child td { border-bottom: 0; }
 .indice-capitulos tbody tr:nth-child(even) { background: var(--fila-par); }
-.indice-capitulos tbody tr:hover { background: var(--parte-fondo, var(--nr-acento-suave)); }
+.indice-capitulos tbody tr:hover { background: var(--nr-acento-suave); }
 .indice-capitulos td:first-child {
   font-family: var(--bs-font-sans-serif, sans-serif); font-weight: 700; white-space: nowrap;
-  color: var(--parte-texto, var(--nr-acento)); font-variant-numeric: tabular-nums;
+  color: var(--nr-acento); font-variant-numeric: tabular-nums;
 }
 .indice-capitulos td:nth-child(2) a { font-weight: 600; text-decoration: none; }
 .indice-capitulos td:nth-child(2) a:hover { text-decoration: underline; }
 .indice-capitulos td:nth-child(3) { color: var(--texto-suave); font-size: 0.9rem; }
 .indice-capitulos td:last-child { white-space: nowrap; }
-.indice-capitulos.parte-i, .indice-capitulos.parte-ii, .indice-capitulos.parte-iii,
-.indice-capitulos.parte-iv, .indice-capitulos.parte-v, .indice-capitulos.parte-vi { background: transparent; }
 
 @media (max-width: 640px) {
   .content .indice-capitulos table { display: block; border: 0; }
@@ -247,7 +352,7 @@ body:has(.partes) main h2 { border-bottom: 3px solid var(--nr-acento); padding-b
 }
 
 /* ---------- Columnas de estado (Realizado · Revisado · GitHub Pages) ---------- */
-.indice-capitulos td:nth-last-child(-n+3) { text-align: center; color: var(--parte-texto, var(--nr-acento)); font-weight: 700; }
+.indice-capitulos td:nth-last-child(-n+3) { text-align: center; color: var(--nr-acento); font-weight: 700; }
 .indice-capitulos thead th:nth-last-child(-n+3) { text-align: center; white-space: nowrap; }
 
 /* Edición web: enlaces a páginas aún no publicadas, convertidos en texto por scripts/edicion_web.mjs */
@@ -256,8 +361,8 @@ body:has(.partes) main h2 { border-bottom: 3px solid var(--nr-acento); padding-b
 
 /* El encabezado «# NeuroRiemann {.unnumbered}» de index.qmd solo sirve para que la
    portada no se numere como capítulo; el título visible es el del banner. */
-body:has(.partes) section#neuroriemann > h1.unnumbered { display: none; }
-body:has(.partes) #title-block-header .quarto-title-meta { display: none !important; }
+body:has(.tarjetas) section#neuroriemann > h1.unnumbered { display: none; }
+body:has(.tarjetas) #title-block-header .quarto-title-meta { display: none !important; }
 
 /* ---------- Navegación ---------- */
 .sidebar-logo { max-width: 72px !important; height: auto; margin: 0.2rem 0 0.4rem; border-radius: 0.9rem; }
