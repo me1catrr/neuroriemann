@@ -1,0 +1,279 @@
+/* =============================================================================
+   NeuroRiemann: estilos del libro
+   Las variables del tema (color principal, tipografía, barra lateral) están en
+   assets/scss/marca.scss; aquí, los tokens CSS y los componentes. Secciones:
+     tokens · entornos matemáticos · demostraciones · callouts · código ·
+     figuras · simuladores · referencias · portada · índices · estados ·
+     navegación · diseño adaptable
+   -----------------------------------------------------------------------------
+   Regla de accesibilidad: cada caja lleva rótulo escrito; el color nunca es la
+   única señal. Contraste de texto sobre fondo ≥ 7:1 en el texto principal y
+   ≥ 4,5:1 en etiquetas.
+   ========================================================================== */
+
+:root {
+  /* Acento del sitio */
+  --nr-acento: #16426f;  --nr-acento-oscuro: #0f2f50;  --nr-acento-suave: #edf3fa;
+  --nr-dorado: #f0b44c;  --nr-turquesa: #8fd3c8;
+
+  /* Entornos matemáticos */
+  --caja-def-borde: #1b6ca8;  --caja-def-fondo: #eef5fb;  --caja-def-texto: #134a73;
+  --caja-thm-borde: #1f7a6f;  --caja-thm-fondo: #e9f6f3;  --caja-thm-texto: #14574f;
+  --caja-exm-borde: #b45f06;  --caja-exm-fondo: #fff5e8;  --caja-exm-texto: #7a4204;
+  --caja-exr-borde: #6f42c1;  --caja-exr-fondo: #f5f1fc;  --caja-exr-texto: #4b2a85;
+  --caja-dem-borde: #6b7280;  --caja-dem-fondo: #f7f8fa;
+
+  /* Colores de Julia (para el código) */
+  --julia-verde: #389826;   --julia-verde-texto: #2a7019;
+  --julia-morado: #9558b2;  --julia-morado-texto: #6e3d8a;
+  --julia-rojo: #cb3c33;
+
+  /* Índices y bordes */
+  --borde-suave: #d5dde6;  --fila-par: #f8fafc;  --texto-suave: #4b5563;
+  --codigo-fondo: #f7f8fa; --codigo-borde: #e3e6eb;
+}
+
+/* ---------- Entornos matemáticos (crossref de Quarto) ----------
+   Quarto añade la clase «theorem» a todos los entornos: se especifica cada tipo. */
+.theorem, .proposition, .lemma, .corollary, .definition, .example, .exercise {
+  margin: 1.3rem 0;
+  padding: 0.75rem 1.05rem 0.65rem;
+  border-left: 0.35rem solid var(--caja-thm-borde);
+  border-radius: 0 0.45rem 0.45rem 0;
+  background: var(--caja-thm-fondo);
+}
+.theorem.definition, .definition { border-left-color: var(--caja-def-borde); background: var(--caja-def-fondo); }
+.theorem.example, .example { border-left-color: var(--caja-exm-borde); background: var(--caja-exm-fondo); }
+.theorem.exercise, .exercise { border-left-color: var(--caja-exr-borde); background: var(--caja-exr-fondo); }
+.theorem > :first-child, .definition > :first-child, .example > :first-child,
+.proposition > :first-child, .exercise > :first-child { margin-top: 0; }
+.theorem > :last-child, .definition > :last-child, .example > :last-child,
+.proposition > :last-child, .exercise > :last-child { margin-bottom: 0; }
+.theorem-title, .proposition-title, .lemma-title, .corollary-title { font-weight: 700; color: var(--caja-thm-texto); }
+.definition .definition-title { font-weight: 700; color: var(--caja-def-texto); }
+.example .example-title { font-weight: 700; color: var(--caja-exm-texto); }
+.exercise .exercise-title { font-weight: 700; color: var(--caja-exr-texto); }
+.theorem .theorem-title, .theorem .proposition-title { font-family: var(--bs-headings-font-family, sans-serif); }
+
+/* ---------- Demostraciones ---------- */
+.proof {
+  margin: -0.4rem 0 1.4rem;
+  padding: 0.6rem 1.05rem 0.6rem;
+  border-left: 0.35rem solid var(--caja-dem-borde);
+  border-radius: 0 0.45rem 0.45rem 0;
+  background: var(--caja-dem-fondo);
+}
+.proof .proof-title { font-style: normal; font-weight: 700; color: #374151; }
+.proof > :last-child { margin-bottom: 0; }
+.proof > :last-child::after { content: " ∎"; float: right; color: var(--caja-dem-borde); }
+
+/* ---------- Callouts propios ---------- */
+div.callout.en-preparacion { border-left-color: var(--caja-exr-borde) !important; }
+div.callout.en-preparacion .callout-header { background: var(--caja-exr-fondo) !important; color: var(--caja-exr-texto); }
+
+/* ---------- Código Julia y resultados (como en JuliaDo) ---------- */
+div.sourceCode {
+  background: var(--codigo-fondo);
+  border: 1px solid var(--codigo-borde);
+  border-left: 3px solid var(--julia-morado);
+  border-radius: 0 0.4rem 0.4rem 0;
+}
+div.sourceCode pre.sourceCode { background: transparent; }
+.cell-output-display > pre, .cell-output-stdout > pre {
+  position: relative;
+  margin: 0.4rem 0 1rem;
+  padding: 1.55rem 0.9rem 0.65rem;
+  background: #ffffff;
+  border: 1px dashed #c9ced6;
+  border-left: 3px solid var(--julia-verde);
+  border-radius: 0 0.4rem 0.4rem 0;
+  font-size: 0.86rem;
+}
+.cell-output-display > pre::before, .cell-output-stdout > pre::before {
+  content: "Resultado";
+  position: absolute; top: 0.35rem; left: 0.9rem;
+  font-family: var(--bs-font-sans-serif, sans-serif);
+  font-size: 0.68rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--julia-verde-texto);
+}
+.cell-output-stderr > pre { border-left: 3px solid var(--julia-rojo); padding-left: 0.9rem; }
+details.code-fold > summary { color: var(--nr-acento); font-size: 0.9rem; }
+/* Pseudocódigo (bloques sin lenguaje) */
+pre:not(.sourceCode) { background: #fbfbfd; border: 1px solid var(--codigo-borde); border-radius: 0.4rem; padding: 0.8rem 1rem; }
+
+/* ---------- Figuras: tarjeta limpia y pie legible ---------- */
+.quarto-figure img.figure-img, figure.quarto-float img.img-fluid {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 0.6rem;
+  box-shadow: 0 1px 4px rgba(31, 41, 55, 0.07);
+}
+figure.quarto-float { margin: 1.5rem auto; }
+figure.quarto-float > figcaption, .quarto-figure figcaption {
+  margin-top: 0.6rem; font-size: 0.9rem; line-height: 1.45; color: var(--texto-suave); text-align: left;
+}
+
+/* ---------- Simuladores OJS ---------- */
+.laboratorio {
+  margin: 1rem 0 1.5rem; padding: 0.9rem 1rem 1rem;
+  border: 1px solid #c7ced8; border-top: 0.3rem solid var(--nr-acento);
+  border-radius: 0.45rem; background: #fbfcfe;
+}
+.laboratorio::before {
+  content: "Simulador interactivo";
+  display: block; margin-bottom: 0.5rem;
+  font-family: var(--bs-font-sans-serif, sans-serif);
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--nr-acento);
+}
+.content input[type="range"], .content input[type="radio"], .content input[type="checkbox"] { accent-color: var(--nr-acento); }
+.solo-impresion { display: none; }
+@media print { .laboratorio { display: none !important; } .solo-impresion { display: block !important; } }
+
+/* ---------- Referencias ---------- */
+#refs, .references { font-size: 0.93rem; }
+div.csl-entry { margin-bottom: 0.55rem; padding-left: 1.6rem; text-indent: -1.6rem; }
+div.csl-entry a { word-break: break-word; }
+.tippy-content .csl-entry { margin: 0; padding: 0; text-indent: 0; font-size: 0.9rem; }
+
+/* =============================================================================
+   Portada (index.qmd). Se activa solo si la página contiene .partes.
+   Cabecera azul con franja inferior en los colores de las partes.
+   Texto blanco sobre #16426f: 10:1.
+   ========================================================================== */
+body:has(.partes) .quarto-title-banner {
+  background: linear-gradient(135deg, #0f2f50 0%, #16426f 55%, #1d5a94 100%) !important;
+  color: #ffffff;
+  border-bottom: 6px solid transparent;
+  border-image: linear-gradient(90deg, #1b6ca8 0 16.6%, #1f7a6f 16.6% 33.3%, #6f42c1 33.3% 50%,
+                #b45f06 50% 66.6%, #cb3c33 66.6% 83.3%, #6b7280 83.3% 100%) 1;
+}
+body:has(.partes) .quarto-title-banner .title { color: #ffffff; letter-spacing: 0.01em; }
+body:has(.partes) .quarto-title-banner .subtitle { color: #d8e6f5; }
+body:has(.partes) .quarto-title-banner .description,
+body:has(.partes) .quarto-title-banner .description p { color: #ffffff; max-width: 46rem; font-size: 1.05rem; opacity: 1; }
+body:has(.partes) .quarto-title-banner .quarto-category {
+  background: rgba(255, 255, 255, 0.14); color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.55); border-radius: 1rem;
+  padding: 0.1rem 0.8rem; font-size: 0.85rem;
+}
+body:has(.partes) main h2 { border-bottom: 3px solid var(--nr-acento); padding-bottom: 0.25rem; margin-top: 2.2rem; }
+
+.acciones { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 1.1rem 0 1.6rem; }
+.acciones > p { display: contents; }
+.acciones .btn { font-weight: 600; font-family: var(--bs-font-sans-serif, sans-serif); }
+
+/* Tarjetas de las seis partes; el identificador (I…VI) va escrito */
+.partes {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 1rem; margin: 1rem 0 2rem;
+}
+.parte {
+  display: flex; flex-direction: column;
+  padding: 1rem 1.1rem 0.9rem;
+  border: 1px solid var(--parte-borde); border-top: 5px solid var(--parte-color);
+  border-radius: 0.6rem; background: var(--parte-fondo);
+}
+.parte > p { margin: 0 0 0.6rem; font-size: 0.97rem; }
+.parte > p:first-child { display: flex; align-items: center; gap: 0.7rem; }
+.parte > p:last-child { margin: auto 0 0; padding-top: 0.4rem; }
+.parte-id {
+  flex: none; display: inline-flex; align-items: center; justify-content: center;
+  width: 2.5rem; height: 2.5rem; border-radius: 50%;
+  background: var(--parte-texto); color: #ffffff;
+  font-family: var(--bs-font-sans-serif, sans-serif); font-weight: 700; font-size: 0.95rem;
+}
+.parte-titulo { font-family: var(--bs-font-sans-serif, sans-serif); font-weight: 700; font-size: 1.04rem; line-height: 1.25; color: var(--parte-texto) !important; text-decoration: none; }
+.parte-titulo:hover, .parte-titulo:focus-visible { text-decoration: underline; }
+.parte-meta { font-family: var(--bs-font-sans-serif, sans-serif); font-size: 0.84rem; color: var(--texto-suave); }
+.parte-i   { --parte-color: #1b6ca8; --parte-texto: #134a73; --parte-fondo: #f2f7fc; --parte-borde: #cfe0ef; }
+.parte-ii  { --parte-color: #1f7a6f; --parte-texto: #14574f; --parte-fondo: #f0f8f6; --parte-borde: #c6e5df; }
+.parte-iii { --parte-color: #6f42c1; --parte-texto: #4b2a85; --parte-fondo: #f6f2fc; --parte-borde: #ddd0f2; }
+.parte-iv  { --parte-color: #b45f06; --parte-texto: #7a4204; --parte-fondo: #fff7ec; --parte-borde: #f2d9b8; }
+.parte-v   { --parte-color: #cb3c33; --parte-texto: #a02a22; --parte-fondo: #fcf3f2; --parte-borde: #f0d0cd; }
+.parte-vi  { --parte-color: #6b7280; --parte-texto: #374151; --parte-fondo: #f6f7f9; --parte-borde: #d9dce1; }
+
+/* «Cómo es cada capítulo»: rejilla de piezas */
+.piezas {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 0.8rem; margin: 1rem 0 1.8rem;
+}
+.pieza { padding: 0.75rem 0.95rem; border: 1px solid var(--codigo-borde); border-radius: 0.5rem; background: #ffffff; }
+.pieza > p { margin: 0; font-size: 0.95rem; }
+.pieza strong { color: var(--nr-acento); font-family: var(--bs-font-sans-serif, sans-serif); }
+
+.creditos {
+  margin: 1.5rem 0 0; padding-top: 0.8rem; border-top: 1px solid var(--borde-suave);
+  font-size: 0.85rem; line-height: 1.5; color: var(--texto-suave);
+}
+
+/* =============================================================================
+   Índices de capítulos (.indice-capitulos), generados desde temario.toml
+   Columnas: Cap. · Capítulo (enlace) · Contenido · Realizado · Revisado · GitHub Pages
+   ========================================================================== */
+.indice-capitulos { margin: 0.8rem 0 1.8rem; }
+.content .indice-capitulos table {
+  display: table; width: 100%; border-collapse: separate; border-spacing: 0;
+  border: 1px solid var(--borde-suave); border-radius: 8px; overflow: hidden; font-size: 0.94rem;
+}
+.indice-capitulos thead th {
+  background: var(--parte-fondo, var(--nr-acento-suave)); color: var(--parte-texto, var(--nr-acento));
+  font-family: var(--bs-font-sans-serif, sans-serif); text-align: left;
+  font-size: 0.76rem; letter-spacing: 0.05em; text-transform: uppercase;
+  padding: 0.6rem 0.8rem; border-bottom: 2px solid var(--parte-color, var(--nr-acento));
+}
+.indice-capitulos tbody td { padding: 0.6rem 0.8rem; border-bottom: 1px solid var(--borde-suave); vertical-align: top; }
+.indice-capitulos tbody tr:last-child td { border-bottom: 0; }
+.indice-capitulos tbody tr:nth-child(even) { background: var(--fila-par); }
+.indice-capitulos tbody tr:hover { background: var(--parte-fondo, var(--nr-acento-suave)); }
+.indice-capitulos td:first-child {
+  font-family: var(--bs-font-sans-serif, sans-serif); font-weight: 700; white-space: nowrap;
+  color: var(--parte-texto, var(--nr-acento)); font-variant-numeric: tabular-nums;
+}
+.indice-capitulos td:nth-child(2) a { font-weight: 600; text-decoration: none; }
+.indice-capitulos td:nth-child(2) a:hover { text-decoration: underline; }
+.indice-capitulos td:nth-child(3) { color: var(--texto-suave); font-size: 0.9rem; }
+.indice-capitulos td:last-child { white-space: nowrap; }
+.indice-capitulos.parte-i, .indice-capitulos.parte-ii, .indice-capitulos.parte-iii,
+.indice-capitulos.parte-iv, .indice-capitulos.parte-v, .indice-capitulos.parte-vi { background: transparent; }
+
+@media (max-width: 640px) {
+  .content .indice-capitulos table { display: block; border: 0; }
+  .indice-capitulos thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .indice-capitulos tbody, .indice-capitulos tbody tr, .indice-capitulos tbody td { display: block; }
+  .indice-capitulos tbody tr { border: 1px solid var(--borde-suave); border-radius: 8px; margin-bottom: 0.7rem; padding: 0.45rem 0.2rem; }
+  .indice-capitulos tbody td { border: 0; padding: 0.15rem 0.8rem; white-space: normal; }
+}
+
+/* ---------- Columnas de estado (Realizado · Revisado · GitHub Pages) ---------- */
+.indice-capitulos td:nth-last-child(-n+3) { text-align: center; color: var(--parte-texto, var(--nr-acento)); font-weight: 700; }
+.indice-capitulos thead th:nth-last-child(-n+3) { text-align: center; white-space: nowrap; }
+
+/* Edición web: enlaces a páginas aún no publicadas, convertidos en texto por scripts/edicion_web.mjs */
+.nr-no-publicado { color: var(--texto-suave); cursor: help; }
+.indice-capitulos td:nth-child(2) .nr-no-publicado { font-weight: 600; }
+
+/* El encabezado «# NeuroRiemann {.unnumbered}» de index.qmd solo sirve para que la
+   portada no se numere como capítulo; el título visible es el del banner. */
+body:has(.partes) section#neuroriemann > h1.unnumbered { display: none; }
+body:has(.partes) #title-block-header .quarto-title-meta { display: none !important; }
+
+/* ---------- Navegación ---------- */
+.sidebar-logo { max-width: 72px !important; height: auto; margin: 0.2rem 0 0.4rem; border-radius: 0.9rem; }
+.sidebar-title, .sidebar .sidebar-title { font-family: var(--bs-font-sans-serif, sans-serif); font-weight: 700; color: var(--nr-acento); }
+.sidebar .sidebar-item-section > .sidebar-item-container .sidebar-item-text { font-weight: 600; }
+.sidebar nav[role="doc-toc"] ul li a.nav-link.active {
+  color: var(--nr-acento-oscuro) !important; font-weight: 600;
+  background: var(--nr-acento-suave);
+  border-left: 3px solid var(--nr-dorado) !important;
+  border-radius: 0 4px 4px 0;
+}
+.nav-footer { border-top: 1px solid var(--borde-suave); font-size: 0.85rem; }
+
+/* ---------- Diseño adaptable ---------- */
+.content p, .content li { max-width: 78ch; }
+.content .cell-output-display, .content div.sourceCode, .content pre { max-width: 100%; overflow-x: auto; }
+.content mjx-container[display="true"] { max-width: 100%; min-width: 0 !important; overflow-x: auto; overflow-y: hidden; }
+.content img, .content svg, .content canvas { max-width: 100%; height: auto; }
+.content :not(pre) > code { white-space: pre-wrap; overflow-wrap: anywhere; }
