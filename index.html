@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Rafael Castro Triguero">
-<meta name="description" content="Teoría rigurosa, algoritmos en Julia y simuladores interactivos para trabajar con matrices de covarianza y conectividad cerebral respetando su geometría, y para saber cuándo esa geometría no ayuda.">
+<meta name="description" content="Geometría riemanniana aplicada al análisis de enfermedades neurodegenerativas, como la esclerosis múltiple, a partir de señales EEG.">
 
 <title>NeuroRiemann</title>
 <style>
@@ -136,7 +136,7 @@ window.Quarto = {
             <p class="subtitle lead">Geometría riemanniana para el análisis de EEG</p>
                   <div>
         <div class="description">
-          Teoría rigurosa, algoritmos en Julia y simuladores interactivos para trabajar con matrices de covarianza y conectividad cerebral respetando su geometría, y para saber cuándo esa geometría no ayuda.
+          Geometría riemanniana aplicada al análisis de enfermedades neurodegenerativas, como la esclerosis múltiple, a partir de señales EEG.
         </div>
       </div>
                           <div class="quarto-categories">
@@ -194,7 +194,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapters/metricas-spd.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Métricas sobre SPD: tres maneras de interpolar</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Métricas sobre SPD: medir y recorrer las diferencias</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -277,152 +277,14 @@ Convenciones: véase appendices/C-notacion.qmd.
 \newcommand{\diag}{\operatorname{diag}}
 \]</span></p>
 </div>
-<p>Las matrices de covarianza de un EEG multicanal no son puntos cualesquiera del espacio <span class="math inline">\(\Sym_n\)</span> de las matrices simétricas: forman el cono <span class="math inline">\(\SPD_n\)</span>, que no se cierra bajo la resta y cuya geometría euclídea ignora invariancias físicas como la ganancia de cada electrodo. Este libro desarrolla, paso a paso y con código verificable, la geometría riemanniana que respeta esa estructura, y muestra también cuándo no ayuda.</p>
+<p>Este libro estudia cómo aplicar la geometría riemanniana al análisis de enfermedades neurodegenerativas, como la esclerosis múltiple, a partir de señales EEG. Un EEG multicanal se resume en matrices (de covarianza, de coherencia, de conectividad), y compararlas entre personas, grupos o visitas exige decidir qué significa que se parezcan. La geometría riemanniana ofrece respuestas con propiedades demostrables, pero el libro no parte de que sean las mejores: investiga, con teoría y código verificable, bajo qué condiciones aportan ventajas y señala con la misma claridad cuándo no compensan.</p>
 <div class="acciones">
-<p><a href="./chapters/metricas-spd.html" class="btn btn-primary">Empezar por el capítulo piloto</a> <a href="#recorrido" class="btn btn-outline-primary">Ver el recorrido</a> <a href="https://github.com/me1catrr/neuroriemann" class="btn btn-outline-secondary">Código en GitHub</a></p>
+<p><span class="nr-no-publicado btn btn-primary" title="Aún no publicado en la edición web">Empezar por la introducción</span> <a href="#indice" class="btn btn-outline-primary">Índice</a> <a href="https://github.com/me1catrr/neuroriemann" class="btn btn-outline-secondary">Código en GitHub</a></p>
 </div>
-<div class="callout callout-style-default callout-note callout-titled" title="Libro en construcción">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Nota</span>Libro en construcción
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>El capítulo de métricas (<a href="chapters/metricas-spd.html" class="quarto-xref"><span>3&nbsp; Métricas sobre SPD: tres maneras de interpolar</span></a>) es el capítulo piloto. <span>Los demás se publicarán aquí a medida que se den por revisados.</span> </p>
-</div>
-</div>
-<section id="antes-de-empezar" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="antes-de-empezar">Antes de empezar</h2>
-<div class="tarjetas">
-<div class="tarjeta tono-gris">
-<p><span class="tarjeta-id">EEG</span> <a href="https://me1catrr.github.io/NeuroMIND/" class="tarjeta-titulo">Lo que se da por sabido</a></p>
-<p>El libro parte de un EEG ya preprocesado: filtrado, con la referencia elegida, los artefactos tratados y segmentado en épocas. El registro, el preprocesado y las medidas clásicas están en el libro de NeuroMIND.</p>
-<p><span class="tarjeta-meta">Enlace a NeuroMIND</span></p>
-</div>
-<div class="tarjeta tono-azul">
-<p><span class="tarjeta-id">∑</span> <a href="./appendices/C-notacion.html" class="tarjeta-titulo">Las matemáticas que necesitas</a></p>
-<p>Álgebra lineal y cálculo. La notación geométrica se introduce cuando hace falta, y el apéndice D reúne la geometría riemanniana general como referencia.</p>
-<p><span class="tarjeta-meta">Apéndices C y D</span></p>
-</div>
-<div class="tarjeta tono-morado">
-<p><span class="tarjeta-id">S</span> <span class="nr-no-publicado tarjeta-titulo" title="Aún no publicado en la edición web">Un experimento que crece</span></p>
-<p>Una cohorte sintética recorre el libro con dos preguntas: EM frente a controles y cambio entre visitas T1–T2. Sus efectos son hipotéticos y declarados, e incluye casos en los que la geometría riemanniana pierde.</p>
-<p><span class="tarjeta-meta">Apéndice E</span></p>
-</div>
-</div>
-</section>
-<section id="recorrido" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="recorrido">El recorrido: siete preguntas</h2>
-<p>Cada capítulo responde a una pregunta que se plantea al analizar matrices de EEG, en el orden en que se necesitan las ideas. <strong>Ruta aplicada:</strong> los pasos marcados <span class="ruta">aplicada</span>, con los resultados demostrados pero sin entrar en cada prueba. <strong>Ruta matemática:</strong> los siete, con todas las demostraciones.</p>
-<div class="recorrido">
-<ol type="1">
-<li><p><strong>¿Qué matriz tengo?</strong> Covarianza, correlación, coherencia y wPLI salen del mismo campo espectral, pero no todas son definidas positivas: antes de elegir una geometría hay que saber qué objeto se tiene. <span class="nr-no-publicado quarto-xref" title="Aún no publicado en la edición web"><span>1&nbsp; Del registro a la matriz: el problema geométrico</span></span> <span class="ruta">aplicada</span></p></li>
-<li><p><strong>¿Cuánto me fío de una covarianza estimada?</strong> Con pocas muestras el espectro se dispersa y las distancias se sesgan; la contracción corrige, pero rompe invariancias. <span class="nr-no-publicado quarto-xref" title="Aún no publicado en la edición web"><span>2&nbsp; Covarianzas con pocos datos: el cono SPD y su estimación</span></span></p></li>
-<li><p><strong>¿Cómo mido la distancia entre dos matrices?</strong> Euclídea, log-euclídea y afín-invariante: qué conserva cada una y qué deforma al interpolar. <a href="chapters/metricas-spd.html" class="quarto-xref"><span>3&nbsp; Métricas sobre SPD: tres maneras de interpolar</span></a> <span class="ruta">aplicada</span></p></li>
-<li><p><strong>¿Cómo vuelvo a un espacio vectorial?</strong> Con la exponencial, el logaritmo y el espacio tangente se linealizan los datos para usar herramientas clásicas, controlando la distorsión. <span class="nr-no-publicado quarto-xref" title="Aún no publicado en la edición web"><span>4&nbsp; Exponencial, logaritmo y espacio tangente</span></span> <span class="ruta">aplicada</span></p></li>
-<li><p><strong>¿Cómo comparo grupos y visitas?</strong> Medias de Fréchet y tests de permutación para EM frente a controles y para el cambio T1–T2, sin borrar el efecto que se busca. <span class="nr-no-publicado quarto-xref" title="Aún no publicado en la edición web"><span>5&nbsp; Estadística riemanniana: grupos y trayectorias</span></span> <span class="ruta">aplicada</span></p></li>
-<li><p><strong>¿Cómo clasifico sin hacer trampas?</strong> Clasificadores riemannianos validados sin fugas de información y comparados siempre con métodos convencionales. <span class="nr-no-publicado quarto-xref" title="Aún no publicado en la edición web"><span>6&nbsp; Clasificación y alineamiento sin fugas</span></span></p></li>
-<li><p><strong>¿Y si la matriz no es definida positiva?</strong> Matrices espectrales complejas, coherencia y wPLI: qué geometría admite cada una y qué cuesta forzarla dentro del cono. <span class="nr-no-publicado quarto-xref" title="Aún no publicado en la edición web"><span>7&nbsp; Conectividad funcional: más allá del cono</span></span> <span class="ruta">aplicada</span></p></li>
-</ol>
-</div>
-<p>Cierra el libro un <span class="nr-no-publicado" title="Aún no publicado en la edición web">epílogo</span> con los límites de estos métodos y preguntas abiertas.</p>
-</section>
-<section id="cómo-se-lee-cada-capítulo" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="cómo-se-lee-cada-capítulo">Cómo se lee cada capítulo</h2>
-<p>Cada afirmación lleva una etiqueta que dice de dónde sale:</p>
-<div class="tabla-evidencia">
-<table class="caption-top table">
-<colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: left;">Etiqueta</th>
-<th style="text-align: left;">Qué significa</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;"><span class="ev-demostrado">Demostrado</span></td>
-<td style="text-align: left;">La demostración está en el libro.</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"><span class="ev-citado">Citado</span></td>
-<td style="text-align: left;">Resultado clásico, enunciado con su fuente y sin demostración.</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"><span class="ev-numerico">Verificado numéricamente</span></td>
-<td style="text-align: left;">Comprobado en ejemplos o simulaciones; no es una prueba.</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"><span class="ev-hipotesis">Hipótesis sintética</span></td>
-<td style="text-align: left;">Vale para el modelo generativo declarado; no dice nada por sí sola sobre pacientes reales.</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"><span class="ev-empirico">Resultado empírico citado</span></td>
-<td style="text-align: left;">Datos reales publicados por otros autores, o resultados agregados cuya publicación está autorizada.</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="callout callout-style-default callout-tip callout-titled" title="Qué trae cada capítulo">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Qué trae cada capítulo
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<div class="piezas">
-<div class="pieza">
-<p><strong>Teoría rigurosa.</strong> Definiciones, teoremas y demostraciones con las hipótesis y convenciones declaradas.</p>
-</div>
-<div class="pieza">
-<p><strong>Algoritmos.</strong> Pseudocódigo con su coste y una implementación de referencia en <code>NeuroRiemann.jl</code>.</p>
-</div>
-<div class="pieza">
-<p><strong>Laboratorio en Julia.</strong> Código que se ejecuta al construir el libro, con figuras y comprobaciones numéricas de los teoremas.</p>
-</div>
-<div class="pieza">
-<p><strong>Simulador interactivo.</strong> Controles en el navegador (OJS) para explorar la geometría en dimensión baja.</p>
-</div>
-<div class="pieza">
-<p><strong>Validación cruzada.</strong> Lo que depende de convenciones delicadas (factores constantes, vectorización, medias iterativas) se recalcula de forma independiente en Python; el resto se comprueba con tests de propiedades.</p>
-</div>
-<div class="pieza">
-<p><strong>Cuándo no usarlo.</strong> Cada comparación incluye métodos convencionales de referencia y señala los casos en que la geometría no aporta.</p>
-</div>
-<div class="pieza">
-<p><strong>Ejercicios.</strong> Problemas de demostración y de laboratorio al final de cada capítulo.</p>
-</div>
-</div>
-</div>
-</div>
-</div>
-</section>
+<p>Se parte de un EEG ya preprocesado, cuyo registro y medidas clásicas están en el libro de <a href="https://me1catrr.github.io/NeuroMIND/">NeuroMIND</a>, y de álgebra lineal y cálculo. La <a href="./appendices/C-notacion.html">notación</a> se fija en un apéndice, y una <span class="nr-no-publicado" title="Aún no publicado en la edición web">cohorte sintética</span> recorre el libro.</p>
 <section id="indice" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="indice">Índice completo</h2>
-<div class="callout callout-style-default callout-note callout-titled" title="Índice detallado y estado de cada capítulo">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Nota</span>Índice detallado y estado de cada capítulo
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>En esta edición web solo se publican los capítulos y apéndices marcados en la columna «GitHub Pages»; los demás están en preparación o en revisión.</p>
+<h2 class="unnumbered anchored" data-anchor-id="indice">Índice</h2>
+<p>En esta edición web solo se publican los capítulos y apéndices marcados en la columna «GitHub Pages»; los demás están en revisión.</p>
 <!-- INDICE:inicio -->
 <section id="capítulos" class="level3">
 <h3 class="anchored" data-anchor-id="capítulos">Capítulos</h3>
@@ -432,7 +294,6 @@ Convenciones: véase appendices/C-notacion.qmd.
 <tr class="header">
 <th style="text-align: right;">Cap.</th>
 <th style="text-align: left;">Capítulo</th>
-<th style="text-align: left;">Contenido</th>
 <th style="text-align: center;">Realizado</th>
 <th style="text-align: center;">Revisado</th>
 <th style="text-align: center;">GitHub Pages</th>
@@ -441,65 +302,50 @@ Convenciones: véase appendices/C-notacion.qmd.
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">1</td>
-<td style="text-align: left;"><span class="nr-no-publicado" title="Aún no publicado en la edición web">Del registro a la matriz: el problema geométrico</span></td>
-<td style="text-align: left;">El campo espectral hermítico y sus proyecciones (covarianza de banda, correlación, coherencia, wPLI); qué objeto se tiene y qué geometría admite; las dos preguntas de la cohorte sintética.</td>
-<td style="text-align: center;"></td>
+<td style="text-align: left;"><span class="nr-no-publicado" title="Aún no publicado en la edición web">¿Por qué geometría riemanniana para estudiar el EEG?</span></td>
+<td style="text-align: center;">✓</td>
 <td style="text-align: center;"></td>
 <td style="text-align: center;"></td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">2</td>
-<td style="text-align: left;"><span class="nr-no-publicado" title="Aún no publicado en la edición web">Covarianzas con pocos datos: el cono SPD y su estimación</span></td>
-<td style="text-align: left;">Álgebra matricial bajo demanda, distribución de Wishart, dispersión del espectro muestral, contracción y deficiencia de rango.</td>
-<td style="text-align: center;"></td>
+<td style="text-align: left;"><span class="nr-no-publicado" title="Aún no publicado en la edición web">Del registro a la matriz: el problema geométrico</span></td>
+<td style="text-align: center;">✓</td>
 <td style="text-align: center;"></td>
 <td style="text-align: center;"></td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">3</td>
-<td style="text-align: left;"><a href="./chapters/metricas-spd.html">Métricas sobre SPD: tres maneras de interpolar</a></td>
-<td style="text-align: left;">Geodésicas y distancias euclídea, log-euclídea y afín-invariante; determinante, hinchamiento, media geométrica e invariancias.</td>
+<td style="text-align: left;"><span class="nr-no-publicado" title="Aún no publicado en la edición web">Covarianzas con pocos datos: el cono SPD y su estimación</span></td>
 <td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
-<td style="text-align: center;">✓</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">4</td>
-<td style="text-align: left;"><span class="nr-no-publicado" title="Aún no publicado en la edición web">Exponencial, logaritmo y espacio tangente</span></td>
-<td style="text-align: left;">Exp y Log riemannianos, transporte paralelo, vectorización isométrica, distorsión de la linealización y re-centrado.</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
+<td style="text-align: left;"><a href="./chapters/metricas-spd.html">Métricas sobre SPD: medir y recorrer las diferencias</a></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">5</td>
-<td style="text-align: left;"><span class="nr-no-publicado" title="Aún no publicado en la edición web">Estadística riemanniana: grupos y trayectorias</span></td>
-<td style="text-align: left;">Media y mediana de Fréchet, dispersión, tests de permutación, comparación EM–control y cambio emparejado T1–T2.</td>
-<td style="text-align: center;"></td>
+<td style="text-align: left;"><span class="nr-no-publicado" title="Aún no publicado en la edición web">Centro y dispersión de un grupo de matrices</span></td>
+<td style="text-align: center;">✓</td>
 <td style="text-align: center;"></td>
 <td style="text-align: center;"></td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">6</td>
-<td style="text-align: left;"><span class="nr-no-publicado" title="Aún no publicado en la edición web">Clasificación y alineamiento sin fugas</span></td>
-<td style="text-align: left;">Distancia mínima a la media, espacio tangente con modelos lineales, CSP, alineamiento entre sesiones y comparación honesta con métodos convencionales.</td>
-<td style="text-align: center;"></td>
+<td style="text-align: left;"><span class="nr-no-publicado" title="Aún no publicado en la edición web">Estadística riemanniana: grupos y trayectorias</span></td>
+<td style="text-align: center;">✓</td>
 <td style="text-align: center;"></td>
 <td style="text-align: center;"></td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">7</td>
 <td style="text-align: left;"><span class="nr-no-publicado" title="Aún no publicado en la edición web">Conectividad funcional: más allá del cono</span></td>
-<td style="text-align: left;">Geometría HPD de las matrices espectrales, coherencia, variedad de correlación y representaciones de medidas no PSD como el wPLI.</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">—</td>
-<td style="text-align: left;"><span class="nr-no-publicado" title="Aún no publicado en la edición web">Epílogo: límites y preguntas abiertas</span></td>
-<td style="text-align: left;">Alta dimensión, no estacionariedad, interpretabilidad y coste computacional de los métodos geométricos.</td>
-<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
 <td style="text-align: center;"></td>
 <td style="text-align: center;"></td>
 </tr>
@@ -544,20 +390,13 @@ Convenciones: véase appendices/C-notacion.qmd.
 </tr>
 <tr class="even">
 <td style="text-align: right;">D</td>
-<td style="text-align: left;"><span class="nr-no-publicado" title="Aún no publicado en la edición web">Geometría riemanniana: resumen de referencia</span></td>
-<td style="text-align: center;"></td>
+<td style="text-align: left;"><span class="nr-no-publicado" title="Aún no publicado en la edición web">La cohorte sintética: especificación</span></td>
+<td style="text-align: center;">✓</td>
 <td style="text-align: center;"></td>
 <td style="text-align: center;"></td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">E</td>
-<td style="text-align: left;"><span class="nr-no-publicado" title="Aún no publicado en la edición web">La cohorte sintética: especificación</span></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">F</td>
 <td style="text-align: left;"><span class="nr-no-publicado" title="Aún no publicado en la edición web">Cajas y ejercicios: guía de estilo</span></td>
 <td style="text-align: center;">✓</td>
 <td style="text-align: center;"></td>
@@ -568,18 +407,50 @@ Convenciones: véase appendices/C-notacion.qmd.
 </div>
 <!-- INDICE:fin -->
 </section>
-</div>
-</div>
+</section>
+<section id="cómo-se-lee" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="cómo-se-lee">Cómo se lee</h2>
+<p>Cada afirmación lleva una etiqueta que dice de dónde sale:</p>
+<div class="tabla-evidencia">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Etiqueta</th>
+<th style="text-align: left;">Qué significa</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><span class="ev-demostrado">Demostrado</span></td>
+<td style="text-align: left;">La demostración está en el libro.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="ev-citado">Citado</span></td>
+<td style="text-align: left;">Resultado clásico, con su fuente y sin demostración.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="ev-numerico">Verificado numéricamente</span></td>
+<td style="text-align: left;">Comprobado en ejemplos o simulaciones; no es una prueba.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="ev-hipotesis">Hipótesis sintética</span></td>
+<td style="text-align: left;">Vale para el modelo generativo declarado; no dice nada por sí sola sobre pacientes reales.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="ev-empirico">Resultado empírico citado</span></td>
+<td style="text-align: left;">Datos reales publicados por otros autores, o agregados cuya publicación está autorizada.</td>
+</tr>
+</tbody>
+</table>
 </div>
 </section>
 <section id="sobre-el-proyecto" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="sobre-el-proyecto">Sobre el proyecto</h2>
-<ul>
-<li><strong>Autoría.</strong> Rafael Castro Triguero, Universidad de Córdoba.</li>
-<li><strong>Código.</strong> El paquete <code>NeuroRiemann.jl</code>, los fixtures y la validación en Python son públicos en <a href="https://github.com/me1catrr/neuroriemann">github.com/me1catrr/neuroriemann</a>; los errores y sugerencias, en sus <a href="https://github.com/me1catrr/neuroriemann/issues">issues</a>.</li>
-<li><strong>Datos.</strong> Solo datos sintéticos, generados con semilla fija y script versionado; ningún dato EEG real ni clínico.</li>
-<li><strong>Licencias.</strong> Texto y figuras originales, <a href="https://github.com/me1catrr/neuroriemann/blob/main/LICENSE-CONTENT.md">CC BY 4.0</a>; código, <a href="https://github.com/me1catrr/neuroriemann/blob/main/LICENSE">MIT</a>. Las obras citadas están en la <a href="./bibliografia.html">bibliografía</a>.</li>
-</ul>
+<p>Rafael Castro Triguero, Universidad de Córdoba. El paquete <code>NeuroRiemann.jl</code>, los fixtures y la validación en Python son públicos en <a href="https://github.com/me1catrr/neuroriemann">github.com/me1catrr/neuroriemann</a>, donde también están las <a href="https://github.com/me1catrr/neuroriemann/issues">incidencias</a>. Solo se usan datos sintéticos, con semilla fija. Texto y figuras originales, <a href="https://github.com/me1catrr/neuroriemann/blob/main/LICENSE-CONTENT.md">CC BY 4.0</a>; código, <a href="https://github.com/me1catrr/neuroriemann/blob/main/LICENSE">MIT</a>; obras citadas en la <a href="./bibliografia.html">bibliografía</a>.</p>
 <div class="creditos">
 <p>Este libro se elabora con apoyo de Claude Code (Anthropic) como herramienta de asistencia para programación, redacción y producción de contenidos interactivos. La selección, revisión y responsabilidad académica de los materiales corresponden al autor.</p>
 </div>
@@ -993,8 +864,8 @@ Convenciones: véase appendices/C-notacion.qmd.
   <div class="nav-page nav-page-previous">
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./chapters/metricas-spd.html" class="pagination-link" aria-label="3 Métricas sobre SPD: tres maneras de interpolar">
-        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Métricas sobre SPD: tres maneras de interpolar</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./chapters/metricas-spd.html" class="pagination-link" aria-label="4 Métricas sobre SPD: medir y recorrer las diferencias">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Métricas sobre SPD: medir y recorrer las diferencias</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
