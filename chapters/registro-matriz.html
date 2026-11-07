@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Libro abierto sobre geometría riemanniana de matrices simétricas definidas positivas y sus aplicaciones al EEG: teoría rigurosa, algoritmos en Julia y simuladores interactivos.">
+
+<title>2&nbsp; Del registro a la matriz: el problema geométrico – NeuroRiemann</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/covarianzas.html" rel="next">
+<link href="../chapters/por-que-geometria.html" rel="prev">
+<link href="../assets/img/marca.svg" rel="icon" type="image/svg+xml">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-be73460e561c16752b9444a2e2312caa.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-ff2d3b005d7a99a3a359846948c6f970.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No se han encontrado resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/registro-matriz.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Del registro a la matriz: el problema geométrico</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Buscar" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="../index.html" class="sidebar-logo-link">
+      <img src="../assets/img/marca.svg" alt="NeuroRiemann" class="sidebar-logo light-content py-0 d-lg-inline d-none">
+      <img src="../assets/img/marca.svg" alt="NeuroRiemann" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">NeuroRiemann</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/me1catrr/neuroriemann" title="Ejecutar el código" class="quarto-navigation-tool px-1" aria-label="Ejecutar el código"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Buscar"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">NeuroRiemann</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/por-que-geometria.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">¿Por qué geometría riemanniana para estudiar el EEG?</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/registro-matriz.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Del registro a la matriz: el problema geométrico</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/covarianzas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Covarianzas con pocos datos: el cono SPD y su estimación</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/metricas-spd.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Métricas sobre SPD: medir y recorrer las diferencias</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/media-frechet.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Centro y dispersión de un grupo de matrices</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/estadistica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Estadística riemanniana: grupos y trayectorias</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/conectividad.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Conectividad funcional: más allá del cono</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../bibliografia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bibliografía</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Apéndices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/A-entorno.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Entorno y reproducibilidad</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/B-validacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Validación cruzada Julia–Python</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/C-notacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Notación y convenciones</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/D-cohorte-sintetica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">La cohorte sintética: especificación</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/E-cajas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Cajas y ejercicios: guía de estilo</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">En esta página</h2>
+   
+  <ul>
+  <li><a href="#la-pregunta" id="toc-la-pregunta" class="nav-link active" data-scroll-target="#la-pregunta"><span class="header-section-number">2.1</span> La pregunta</a></li>
+  <li><a href="#del-registro-al-espectro-cruzado" id="toc-del-registro-al-espectro-cruzado" class="nav-link" data-scroll-target="#del-registro-al-espectro-cruzado"><span class="header-section-number">2.2</span> Del registro al espectro cruzado</a>
+  <ul class="collapse">
+  <li><a href="#las-matrices-que-salen-del-espectro" id="toc-las-matrices-que-salen-del-espectro" class="nav-link" data-scroll-target="#las-matrices-que-salen-del-espectro"><span class="header-section-number">2.2.1</span> Las matrices que salen del espectro</a></li>
+  </ul></li>
+  <li><a href="#experimento-1-de-la-señal-sintética-a-cada-matriz" id="toc-experimento-1-de-la-señal-sintética-a-cada-matriz" class="nav-link" data-scroll-target="#experimento-1-de-la-señal-sintética-a-cada-matriz"><span class="header-section-number">2.3</span> Experimento 1: de la señal sintética a cada matriz</a>
+  <ul class="collapse">
+  <li><a href="#qué-le-ocurre-a-la-matriz-antes-de-verla" id="toc-qué-le-ocurre-a-la-matriz-antes-de-verla" class="nav-link" data-scroll-target="#qué-le-ocurre-a-la-matriz-antes-de-verla"><span class="header-section-number">2.3.1</span> Qué le ocurre a la matriz antes de verla</a></li>
+  <li><a href="#una-invariancia-útil-la-correlación" id="toc-una-invariancia-útil-la-correlación" class="nav-link" data-scroll-target="#una-invariancia-útil-la-correlación"><span class="header-section-number">2.3.2</span> Una invariancia útil: la correlación</a></li>
+  </ul></li>
+  <li><a href="#experimento-2-conducción-de-volumen-frente-a-acoplamiento-con-retardo" id="toc-experimento-2-conducción-de-volumen-frente-a-acoplamiento-con-retardo" class="nav-link" data-scroll-target="#experimento-2-conducción-de-volumen-frente-a-acoplamiento-con-retardo"><span class="header-section-number">2.4</span> Experimento 2: conducción de volumen frente a acoplamiento con retardo</a></li>
+  <li><a href="#lo-que-esto-no-demuestra" id="toc-lo-que-esto-no-demuestra" class="nav-link" data-scroll-target="#lo-que-esto-no-demuestra"><span class="header-section-number">2.5</span> Lo que esto no demuestra</a></li>
+  <li><a href="#autoevaluación" id="toc-autoevaluación" class="nav-link" data-scroll-target="#autoevaluación"><span class="header-section-number">2.6</span> Autoevaluación</a></li>
+  <li><a href="#ejercicios" id="toc-ejercicios" class="nav-link" data-scroll-target="#ejercicios"><span class="header-section-number">2.7</span> Ejercicios</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/me1catrr/neuroriemann/issues/new" class="toc-action"><i class="bi bi-github"></i>Informar sobre problema</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-registro-matriz" class="quarto-section-identifier"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Del registro a la matriz: el problema geométrico</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!--
+Macros LaTeX comunes de NeuroRiemann. Incluir al principio de cada documento con
+el shortcode include de Quarto apuntando a /_macros.qmd (véase index.qmd).
+Pandoc las expande también para formatos no HTML (Typst/LaTeX).
+Convenciones: véase appendices/C-notacion.qmd.
+-->
+<div class="hidden">
+<p><span class="math display">\[
+% Espacios de matrices
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Sym}{\mathrm{Sym}}
+\newcommand{\SPD}{\mathrm{SPD}}
+\newcommand{\Corr}{\mathrm{Corr}}
+\newcommand{\Diag}{\mathrm{Diag}}
+\newcommand{\GL}{\mathrm{GL}}
+\newcommand{\Orth}{\mathrm{O}}
+% Funciones matriciales (espectrales, principales)
+\newcommand{\Expm}{\exp}
+\newcommand{\Logm}{\log}
+% Aplicaciones riemannianas (punto base en subíndice: \Exp_P, \Log_P)
+\newcommand{\Exp}{\operatorname{Exp}}
+\newcommand{\Log}{\operatorname{Log}}
+% Distancias
+\newcommand{\dAI}{d_{\mathrm{AI}}}
+\newcommand{\dLE}{d_{\mathrm{LE}}}
+% Operadores
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\diag}{\operatorname{diag}}
+\]</span></p>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>En este capítulo
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Pregunta.</strong> ¿Qué matriz tengo y qué significa compararla?</p>
+<p><strong>Objetivos.</strong> Clasificar cada matriz que produce un análisis de EEG (hermítica definida positiva, real definida positiva, de correlación, semidefinida o indefinida), demostrar por qué unas viven en el cono <span class="math inline">\(\SPD_n\)</span> y otras no, y distinguir las transformaciones que respetan el cono de las que no. Formular las dos preguntas científicas que recorren el libro.</p>
+<p><strong>Prerrequisitos.</strong> Álgebra lineal y nociones de análisis espectral de señales. El registro y el preprocesado del EEG se dan por conocidos (libro de NeuroMIND).</p>
+<p><strong>Código.</strong> El laboratorio genera datos sintéticos con semilla fija. Las funciones de generación y de medidas de este capítulo son provisionales: cuando el paquete tenga el generador de la cohorte (apéndice <a href="../appendices/D-cohorte-sintetica.html" class="quarto-xref"><span>D</span></a>) pasarán a <code>NeuroRiemann.jl</code>.</p>
+</div>
+</div>
+<section id="la-pregunta" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="la-pregunta"><span class="header-section-number">2.1</span> La pregunta</h2>
+<p>Un EEG de <span class="math inline">\(n\)</span> canales no es una matriz: es una señal. Las matrices aparecen cuando se resume su estructura de segundo orden: cuánta potencia tiene cada canal y cómo se relacionan entre sí. La covarianza, la correlación, la coherencia, la coherencia imaginaria y el wPLI se calculan a partir del mismo objeto, el espectro cruzado, pero <strong>no son el mismo tipo de matriz</strong>. Unas son definidas positivas, otras solo semidefinidas, otras indefinidas por construcción; unas son reales y otras complejas. Antes de elegir una geometría para compararlas hay que saber qué objeto se tiene.</p>
+<p>El libro persigue dos preguntas científicas, formuladas sobre una cohorte sintética (apéndice <a href="../appendices/D-cohorte-sintetica.html" class="quarto-xref"><span>D</span></a>):</p>
+<ol type="1">
+<li><strong>Transversal.</strong> ¿Se diferencian las matrices de los pacientes con esclerosis múltiple (EM) de las de los controles?</li>
+<li><strong>Longitudinal.</strong> ¿Cambian las matrices de una persona entre dos visitas T1 y T2?</li>
+</ol>
+<p>Las dos exigen <strong>comparar matrices</strong> (restarlas, promediarlas, medir su distancia), y para eso hay que saber en qué conjunto viven.</p>
+<div class="idea-clave callout callout-style-default callout-tip callout-titled" title="Reales y complejas">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Reales y complejas
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Las covarianzas temporales son matrices reales simétricas (traspuesta <span class="math inline">\(P^\top\)</span>, congruencia <span class="math inline">\(WPW^\top\)</span>). Las matrices espectrales cruzadas son en general hermíticas (adjunta <span class="math inline">\(P^*=\overline{P}^\top\)</span>, congruencia <span class="math inline">\(WPW^*\)</span>) y conservan la fase. Este capítulo trabaja con las dos y las distingue siempre; el capítulo <a href="metricas-spd.html" class="quarto-xref"><span>4</span></a> se limita a las reales.</p>
+</div>
+</div>
+</section>
+<section id="del-registro-al-espectro-cruzado" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="del-registro-al-espectro-cruzado"><span class="header-section-number">2.2</span> Del registro al espectro cruzado</h2>
+<p>Sea <span class="math inline">\(x(t)\in\R^n\)</span> el registro, ya preprocesado, dividido en <span class="math inline">\(K\)</span> segmentos (épocas). Para cada segmento <span class="math inline">\(k\)</span> y cada frecuencia <span class="math inline">\(f\)</span>, sea <span class="math inline">\(X_k(f)\in\mathbb C^n\)</span> su transformada de Fourier con ventana. El <strong>espectro cruzado estimado</strong> es <span id="eq-espectro-cruzado"><span class="math display">\[
+\hat S(f)=\frac1K\sum_{k=1}^K X_k(f)\,X_k(f)^*\in\mathbb C^{n\times n}.
+\tag{2.1}\]</span></span> La entrada <span class="math inline">\(\hat S_{ij}=\tfrac1K\sum_kX_{k,i}\overline{X_{k,j}}\)</span> mide cuánto se parecen los canales <span class="math inline">\(i\)</span> y <span class="math inline">\(j\)</span> en la frecuencia <span class="math inline">\(f\)</span> y con qué desfase.</p>
+<div id="thm-espectral" class="theorem">
+<p><span class="theorem-title"><strong>Teorema 2.1 (El espectro cruzado es hermítico semidefinido positivo)</strong></span> Para todo <span class="math inline">\(f\)</span>, <span class="math inline">\(\hat S(f)\)</span> es hermítica y semidefinida positiva, y <span class="math inline">\(\operatorname{rango}\hat S\le\min(K,n)\)</span>. Es definida positiva si y solo si <span class="math inline">\(\operatorname{rango}\hat S=n\)</span>, lo que exige <span class="math inline">\(K\ge n\)</span>. <span class="ev-demostrado">Demostrado</span></p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Demostración</em>. </span><span class="math inline">\(\hat S^*=\hat S\)</span> porque cada sumando <span class="math inline">\(XX^*\)</span> es hermítico. Para <span class="math inline">\(v\in\mathbb C^n\)</span>, <span class="math inline">\(v^*\hat Sv=\tfrac1K\sum_k|X_k^*v|^2\ge0\)</span>, con igualdad si y solo si <span class="math inline">\(X_k^*v=0\)</span> para todo <span class="math inline">\(k\)</span>, es decir, si <span class="math inline">\(v\)</span> es ortogonal a los <span class="math inline">\(K\)</span> vectores <span class="math inline">\(X_k\)</span>. Esos vectores generan un subespacio de dimensión a lo sumo <span class="math inline">\(\min(K,n)\)</span>, así que el núcleo de <span class="math inline">\(\hat S\)</span> es trivial exactamente cuando generan <span class="math inline">\(\mathbb C^n\)</span>.</p>
+</div>
+<p>La consecuencia práctica es inmediata: con pocos segmentos o con canales linealmente dependientes, <span class="math inline">\(\hat S\)</span> queda en la frontera del cono y las distancias que se estudian en el capítulo <a href="metricas-spd.html" class="quarto-xref"><span>4</span></a> no están definidas. El capítulo <a href="covarianzas.html" class="quarto-xref"><span>3</span></a> trata ese caso.</p>
+<section id="las-matrices-que-salen-del-espectro" class="level3" data-number="2.2.1">
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="las-matrices-que-salen-del-espectro"><span class="header-section-number">2.2.1</span> Las matrices que salen del espectro</h3>
+<p>Todas las matrices del libro son proyecciones de <span class="math inline">\(\hat S\)</span>. Sea <span class="math inline">\(D=\operatorname{diag}(\hat S_{11},\dots,\hat S_{nn})\)</span> y <span class="math inline">\(\hat C=D^{-1/2}\hat SD^{-1/2}\)</span> la <strong>matriz de coherencia compleja</strong> (de entradas <span class="math inline">\(\hat C_{ij}\)</span>, la «coherency» de la literatura). Las medidas habituales son <span class="citation" data-cites="nolte2004identifying vinck2011improved">(<a href="../bibliografia.html#ref-nolte2004identifying" role="doc-biblioref">Nolte et&nbsp;al. 2004</a>; <a href="../bibliografia.html#ref-vinck2011improved" role="doc-biblioref">Vinck et&nbsp;al. 2011</a>)</span>:</p>
+<ul>
+<li><strong>Coherencia:</strong> <span class="math inline">\(|\hat C_{ij}|\)</span>. <strong>Coherencia imaginaria:</strong> <span class="math inline">\(|\operatorname{Im}\hat C_{ij}|\)</span>.</li>
+<li><strong>PLV:</strong> <span class="math inline">\(\mathrm{PLV}_{ij}=\Big|\tfrac1K\sum_k X^{ij}_k/|X^{ij}_k|\Big|\)</span>, con <span class="math inline">\(X^{ij}_k=X_{k,i}\overline{X_{k,j}}\)</span>.</li>
+<li><strong>wPLI:</strong> <span class="math inline">\(\mathrm{wPLI}_{ij}=\dfrac{\big|\sum_k\operatorname{Im}X^{ij}_k\big|}{\sum_k\big|\operatorname{Im}X^{ij}_k\big|}\)</span>, con diagonal nula por convención.</li>
+</ul>
+<p>La <strong>covarianza de banda</strong> se define como <span class="math inline">\(C_B:=\sum_{f\in B}\operatorname{Re}\hat S(f)\)</span>, con la normalización que se declare en cada uso; coincide, salvo una constante, con la covarianza de la señal filtrada en la banda <span class="math inline">\(B\)</span> (identidad de Parseval) [VERIFICAR fuente].</p>
+<div id="prp-re-im" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposición 2.1 (Parte real y parte imaginaria)</strong></span> Sea <span class="math inline">\(S\in\mathbb C^{n\times n}\)</span> hermítica semidefinida positiva. Entonces <span class="math inline">\(\operatorname{Re}S\)</span> es simétrica semidefinida positiva y <span class="math inline">\(\operatorname{Im}S\)</span> es antisimétrica, con diagonal nula. Si <span class="math inline">\(S\)</span> es definida positiva, <span class="math inline">\(\operatorname{Re}S\)</span> es definida positiva. El recíproco es falso. <span class="ev-demostrado">Demostrado</span></p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Demostración</em>. </span>De <span class="math inline">\(S^*=S\)</span> se sigue <span class="math inline">\((\operatorname{Re}S)^\top-i(\operatorname{Im}S)^\top=\operatorname{Re}S+i\operatorname{Im}S\)</span>, es decir, <span class="math inline">\(\operatorname{Re}S\)</span> simétrica e <span class="math inline">\(\operatorname{Im}S\)</span> antisimétrica. Para <span class="math inline">\(x\in\R^n\)</span>, <span class="math inline">\(x^\top(\operatorname{Re}S)x=\operatorname{Re}(x^\top Sx)=x^*Sx\ge0\)</span> (el último paso, porque <span class="math inline">\(x^*Sx\)</span> es real por ser <span class="math inline">\(S\)</span> hermítica), con desigualdad estricta si <span class="math inline">\(S\succ0\)</span> y <span class="math inline">\(x\neq0\)</span>. Contraejemplo del recíproco: <span class="math inline">\(S=\begin{pmatrix}1&amp;i\\-i&amp;1\end{pmatrix}\)</span> es hermítica con autovalores <span class="math inline">\(0\)</span> y <span class="math inline">\(2\)</span>, singular, mientras que <span class="math inline">\(\operatorname{Re}S=I\)</span>.</p>
+</div>
+<div id="prp-coherencia" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposición 2.2 (La coherencia compleja y la coherencia al cuadrado)</strong></span> Si <span class="math inline">\(\hat S\)</span> es definida positiva, la matriz de coherencia compleja <span class="math inline">\(\hat C\)</span> es hermítica definida positiva con diagonal unitaria, y la matriz <span class="math inline">\(\big(|\hat C_{ij}|^2\big)_{ij}\)</span> es real simétrica definida positiva con diagonal unitaria. <span class="ev-demostrado">Demostrado</span></p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Demostración</em>. </span><span class="math inline">\(\hat C=D^{-1/2}\hat SD^{-1/2}\)</span> es una congruencia de <span class="math inline">\(\hat S\)</span> por una matriz diagonal invertible, así que es hermítica definida positiva, y su diagonal es <span class="math inline">\(1\)</span> por construcción. Para la segunda afirmación, <span class="math inline">\(\big(|\hat C_{ij}|^2\big)=\hat C\circ\overline{\hat C}\)</span> (producto de Hadamard). Escribamos <span class="math inline">\(\overline{\hat C}=\sum_lb_lb_l^*\)</span> con los <span class="math inline">\(b_l\)</span> generando <span class="math inline">\(\mathbb C^n\)</span> (es definida positiva). Entonces <span class="math inline">\(\hat C\circ\overline{\hat C}=\sum_l\operatorname{diag}(b_l)\,\hat C\,\operatorname{diag}(b_l)^*\succeq0\)</span>, y si <span class="math inline">\(v^*(\hat C\circ\overline{\hat C})v=0\)</span> cada <span class="math inline">\(\operatorname{diag}(b_l)^*v=0\)</span>, lo que fuerza <span class="math inline">\(v=0\)</span> porque para cada índice <span class="math inline">\(i\)</span> algún <span class="math inline">\(b_l\)</span> tiene <span class="math inline">\(b_l(i)\neq0\)</span>. Es real y simétrica porque <span class="math inline">\(|\hat C_{ij}|^2=|\hat C_{ji}|^2\)</span> (teorema del producto de Schur; véase también <span class="citation" data-cites="bhatia2007positive">(<a href="../bibliografia.html#ref-bhatia2007positive" role="doc-biblioref">Bhatia 2007, cap. 1</a>)</span>).</p>
+</div>
+<div id="prp-wpli-indefinida" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposición 2.3 (El wPLI no vive en el cono)</strong></span> Sea <span class="math inline">\(W\in\R^{n\times n}\)</span> simétrica con diagonal nula y <span class="math inline">\(W\neq0\)</span> (como el wPLI y la coherencia imaginaria en valor absoluto). Entonces <span class="math inline">\(W\)</span> tiene un autovalor negativo y otro positivo: es <strong>indefinida</strong>. <span class="ev-demostrado">Demostrado</span></p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Demostración</em>. </span><span class="math inline">\(\operatorname{tr}W=\sum_i\lambda_i=0\)</span> por tener diagonal nula. Como <span class="math inline">\(W\)</span> es simétrica y no nula, algún autovalor es distinto de cero; como suman cero, hay uno positivo y otro negativo.</p>
+</div>
+<p>La <a href="#tbl-taxonomia" class="quarto-xref">Tabla&nbsp;<span>2.1</span></a> resume el panorama. Que una matriz sea semidefinida o indefinida <strong>no es un defecto del análisis</strong>: es lo que ocurre con esas medidas. Lo que cambia es qué geometría admite cada una, y esa es la pregunta que organiza el libro.</p>
+<div id="tbl-taxonomia" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-taxonomia-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;2.1: Clasificación de las matrices que produce un análisis de EEG. «SPD» y «HPD» suponen rango completo.
+</figcaption>
+<div aria-describedby="tbl-taxonomia-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Matriz</th>
+<th>Entradas</th>
+<th>Tipo</th>
+<th>Diagonal</th>
+<th>Geometría candidata</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Covarianza de banda <span class="math inline">\(C_B\)</span></td>
+<td>reales</td>
+<td>SPD (semidefinida si rango <span class="math inline">\(&lt;n\)</span>)</td>
+<td>potencias</td>
+<td>cono <span class="math inline">\(\SPD_n\)</span> (cap. <a href="metricas-spd.html" class="quarto-xref"><span>4</span></a>)</td>
+</tr>
+<tr class="even">
+<td>Espectro cruzado <span class="math inline">\(\hat S(f)\)</span></td>
+<td>complejas</td>
+<td>HPD (semidefinida si <span class="math inline">\(K&lt;n\)</span>)</td>
+<td>potencias</td>
+<td>cono HPD (cap. <a href="conectividad.html" class="quarto-xref"><span>7</span></a>)</td>
+</tr>
+<tr class="odd">
+<td>Coherencia compleja <span class="math inline">\(\hat C\)</span></td>
+<td>complejas</td>
+<td>HPD</td>
+<td><span class="math inline">\(1\)</span></td>
+<td>cono HPD con diagonal fija</td>
+</tr>
+<tr class="even">
+<td>Coherencia al cuadrado <span class="math inline">\(\big(\lvert\hat C_{ij}\rvert^2\big)\)</span></td>
+<td>reales</td>
+<td>SPD</td>
+<td><span class="math inline">\(1\)</span></td>
+<td>matrices de correlación <span class="math inline">\(\Corr_n\)</span></td>
+</tr>
+<tr class="odd">
+<td>Coherencia imaginaria <span class="math inline">\(\lvert\operatorname{Im}\hat C_{ij}\rvert\)</span></td>
+<td>reales</td>
+<td>indefinida</td>
+<td><span class="math inline">\(0\)</span></td>
+<td>fuera del cono</td>
+</tr>
+<tr class="even">
+<td>wPLI</td>
+<td>reales</td>
+<td>indefinida</td>
+<td><span class="math inline">\(0\)</span></td>
+<td>fuera del cono</td>
+</tr>
+<tr class="odd">
+<td>PLV</td>
+<td>reales</td>
+<td>sin garantía de ser semidefinida</td>
+<td><span class="math inline">\(1\)</span></td>
+<td>capítulo <a href="conectividad.html" class="quarto-xref"><span>7</span></a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</section>
+</section>
+<section id="experimento-1-de-la-señal-sintética-a-cada-matriz" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="experimento-1-de-la-señal-sintética-a-cada-matriz"><span class="header-section-number">2.3</span> Experimento 1: de la señal sintética a cada matriz</h2>
+<p>Construimos un modelo mínimo en el dominio de la frecuencia: en una frecuencia fija, tres fuentes con coeficientes de Fourier gaussianos complejos circulares; las fuentes 1 y 2 están <strong>acopladas con un retardo</strong> (el acoplamiento <span class="math inline">\(\kappa\)</span> y el desfase <span class="math inline">\(\varphi\)</span> son los dos parámetros que modulan la fase) y la fuente 3 es común a todos los sensores. Seis sensores mezclan las tres fuentes con pesos reales (mezcla instantánea) más ruido de sensor. Es el primer factor de la cohorte sintética: mezcla y retardo. <span class="ev-hipotesis">Hipótesis sintética</span></p>
+<div id="lab1-modelo" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">NeuroRiemann</span>, <span class="bu">LinearAlgebra</span>, <span class="bu">StableRNGs</span>, <span class="bu">CairoMakie</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cn</span>(rng, dims<span class="op">...</span>) <span class="op">=</span> (<span class="fu">randn</span>(rng, dims<span class="op">...</span>) <span class="op">.+</span> <span class="cn">im</span> <span class="op">.*</span> <span class="fu">randn</span>(rng, dims<span class="op">...</span>)) <span class="op">./</span> <span class="fu">sqrt</span>(<span class="fl">2</span>)   <span class="co"># gaussiana compleja circular</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> MEZCLA <span class="op">=</span> [<span class="fl">1.0</span> <span class="fl">0.3</span> <span class="fl">0.6</span>; <span class="fl">0.8</span> <span class="fl">0.5</span> <span class="fl">0.6</span>; <span class="fl">0.4</span> <span class="fl">0.9</span> <span class="fl">0.6</span>; <span class="fl">0.2</span> <span class="fl">1.0</span> <span class="fl">0.6</span>; <span class="fl">0.6</span> <span class="fl">0.2</span> <span class="fl">1.0</span>; <span class="fl">0.3</span> <span class="fl">0.7</span> <span class="fl">0.9</span>]   <span class="co"># 6 sensores × 3 fuentes</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="st">"Coeficientes de Fourier de K segmentos de tres fuentes; la 2 sigue a la 1 con acoplamiento κ y desfase φ."</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">fuentes</span>(rng, K; κ <span class="op">=</span> <span class="fl">0.6</span>, <span class="cn">φ</span> <span class="op">=</span> <span class="cn">π</span> <span class="op">/</span> <span class="fl">3</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    Y1 <span class="op">=</span> <span class="fu">cn</span>(rng, K)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    Y2 <span class="op">=</span> κ <span class="op">.*</span> <span class="fu">cis</span>(<span class="op">-</span><span class="cn">φ</span>) <span class="op">.*</span> Y1 <span class="op">.+</span> <span class="fu">sqrt</span>(<span class="fl">1</span> <span class="op">-</span> κ<span class="op">^</span><span class="fl">2</span>) <span class="op">.*</span> <span class="fu">cn</span>(rng, K)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    Y3 <span class="op">=</span> <span class="fu">cn</span>(rng, K)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fu">permutedims</span>(<span class="fu">hcat</span>(Y1, Y2, Y3))                 <span class="co"># 3 × K</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="st">"Sensores: mezcla real de las fuentes más ruido de sensor de desviación σ."</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">sensores</span>(rng, Y; A <span class="op">=</span> MEZCLA, σ <span class="op">=</span> <span class="fl">0.3</span>) <span class="op">=</span> A <span class="op">*</span> Y <span class="op">.+</span> σ <span class="op">.*</span> <span class="fu">cn</span>(rng, <span class="fu">size</span>(A, <span class="fl">1</span>), <span class="fu">size</span>(Y, <span class="fl">2</span>))</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="fu">espectral</span>(Z) <span class="op">=</span> <span class="fu">Hermitian</span>(Z <span class="op">*</span> Z<span class="op">'</span> <span class="op">/</span> <span class="fu">size</span>(Z, <span class="fl">2</span>))                                  <span class="co"># @eq-espectro-cruzado</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="fu">coherencia</span>(S) <span class="op">=</span> (d <span class="op">=</span> <span class="fl">1</span> <span class="op">./</span> <span class="fu">sqrt</span>.(<span class="fu">real</span>.(<span class="fu">diag</span>(S))); <span class="fu">Hermitian</span>(<span class="fu">Diagonal</span>(d) <span class="op">*</span> S <span class="op">*</span> <span class="fu">Diagonal</span>(d)))</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">wpli</span>(Z)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> <span class="fu">size</span>(Z, <span class="fl">1</span>); W <span class="op">=</span> <span class="fu">zeros</span>(n, n)</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>n, j <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>n</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>        i <span class="op">==</span> j <span class="op">&amp;&amp;</span> <span class="cf">continue</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> <span class="fu">imag</span>.(Z[i, <span class="op">:</span>] <span class="op">.*</span> <span class="fu">conj</span>.(Z[j, <span class="op">:</span>]))</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>        W[i, j] <span class="op">=</span> <span class="fu">abs</span>(<span class="fu">sum</span>(x)) <span class="op">/</span> <span class="fu">sum</span>(abs, x)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fu">Symmetric</span>(W)</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">medidas</span>(z1, z2)</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> z1 <span class="op">.*</span> <span class="fu">conj</span>.(z2)</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    nrm <span class="op">=</span> <span class="fu">sqrt</span>(<span class="fu">sum</span>(abs2, z1) <span class="op">*</span> <span class="fu">sum</span>(abs2, z2))</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (coherencia <span class="op">=</span> <span class="fu">abs</span>(<span class="fu">sum</span>(x)) <span class="op">/</span> nrm, imaginaria <span class="op">=</span> <span class="fu">abs</span>(<span class="fu">imag</span>(<span class="fu">sum</span>(x))) <span class="op">/</span> nrm,</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>            PLV <span class="op">=</span> <span class="fu">abs</span>(<span class="fu">sum</span>(x <span class="op">./</span> <span class="fu">abs</span>.(x))) <span class="op">/</span> <span class="fu">length</span>(x), wPLI <span class="op">=</span> <span class="fu">abs</span>(<span class="fu">sum</span>(<span class="fu">imag</span>.(x))) <span class="op">/</span> <span class="fu">sum</span>(abs, <span class="fu">imag</span>.(x)))</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="cn">nothing</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<p>Con <span class="math inline">\(K=400\)</span> segmentos, se calculan las matrices de la <a href="#tbl-taxonomia" class="quarto-xref">Tabla&nbsp;<span>2.1</span></a> y sus autovalores. La prueba numérica falla el render si alguna matriz no es del tipo que predicen los resultados anteriores.</p>
+<div id="lab1-matrices" class="cell" data-execution_count="1">
+<details open="" class="code-fold">
+<summary>Código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> <span class="fu">StableRNG</span>(<span class="fl">20261107</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>Z <span class="op">=</span> <span class="fu">sensores</span>(rng, <span class="fu">fuentes</span>(rng, <span class="fl">400</span>))</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>S <span class="op">=</span> <span class="fu">espectral</span>(Z)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>C <span class="op">=</span> <span class="fu">coherencia</span>(S)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>matrices <span class="op">=</span> [(<span class="st">"Covarianza de banda (parte real de S)"</span>, <span class="fu">Symmetric</span>(<span class="fu">real</span>.(S)), <span class="cn">true</span>),</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>            (<span class="st">"Espectro cruzado S"</span>, S, <span class="cn">true</span>),</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>            (<span class="st">"Coherencia compleja"</span>, C, <span class="cn">true</span>),</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>            (<span class="st">"Coherencia al cuadrado"</span>, <span class="fu">Symmetric</span>(<span class="fu">abs2</span>.(C)), <span class="cn">true</span>),</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>            (<span class="st">"Coherencia imaginaria (valor absoluto)"</span>, <span class="fu">Symmetric</span>(<span class="fu">abs</span>.(<span class="fu">imag</span>.(C))), <span class="cn">false</span>),</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>            (<span class="st">"wPLI"</span>, <span class="fu">wpli</span>(Z), <span class="cn">false</span>)]</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>autovalores <span class="op">=</span> [<span class="fu">eigvals</span>(M) for (_, M, _) <span class="kw">in</span> matrices]</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">tipo</span>(λ) <span class="op">=</span> λ[<span class="fl">1</span>] <span class="op">&gt;</span> <span class="fl">1e-12</span> <span class="op">*</span> λ[<span class="kw">end</span>] ? <span class="st">"definida positiva"</span> <span class="op">:</span> (λ[<span class="fl">1</span>] <span class="op">&lt;</span> <span class="op">-</span><span class="fl">1e-12</span> <span class="op">*</span> λ[<span class="kw">end</span>] ? <span class="st">"indefinida"</span> <span class="op">:</span> <span class="st">"semidefinida"</span>)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"| Matriz | λ mínimo | λ máximo | Tipo observado |</span><span class="sc">\n</span><span class="st">|---|---|---|---|"</span>)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ((nombre, _, _), λ) <span class="kw">in</span> <span class="fu">zip</span>(matrices, autovalores)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(<span class="st">"| "</span>, nombre, <span class="st">" | "</span>, <span class="fu">round</span>(λ[<span class="fl">1</span>]; sigdigits <span class="op">=</span> <span class="fl">3</span>), <span class="st">" | "</span>, <span class="fu">round</span>(λ[<span class="kw">end</span>]; sigdigits <span class="op">=</span> <span class="fl">3</span>), <span class="st">" | "</span>, <span class="fu">tipo</span>(λ), <span class="st">" |"</span>)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>esperado <span class="op">=</span> [m[<span class="fl">3</span>] for m <span class="kw">in</span> matrices]</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="fu">all</span>((<span class="fu">tipo</span>(λ) <span class="op">==</span> <span class="st">"definida positiva"</span>) <span class="op">==</span> <span class="cn">e</span> <span class="cf">for</span> (λ, <span class="cn">e</span>) <span class="kw">in</span> <span class="fu">zip</span>(autovalores, esperado)) <span class="op">||</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">error</span>(<span class="st">"alguna matriz no es del tipo que predice la teoría"</span>)</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="cn">nothing</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Matriz</th>
+<th>λ mínimo</th>
+<th>λ máximo</th>
+<th>Tipo observado</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Covarianza de banda (parte real de S)</td>
+<td>0.0852</td>
+<td>8.93</td>
+<td>definida positiva</td>
+</tr>
+<tr class="even">
+<td>Espectro cruzado S</td>
+<td>0.0807</td>
+<td>9.09</td>
+<td>definida positiva</td>
+</tr>
+<tr class="odd">
+<td>Coherencia compleja</td>
+<td>0.0471</td>
+<td>5.32</td>
+<td>definida positiva</td>
+</tr>
+<tr class="even">
+<td>Coherencia al cuadrado</td>
+<td>0.0988</td>
+<td>4.76</td>
+<td>definida positiva</td>
+</tr>
+<tr class="odd">
+<td>Coherencia imaginaria (valor absoluto)</td>
+<td>-0.557</td>
+<td>0.775</td>
+<td>indefinida</td>
+</tr>
+<tr class="even">
+<td>wPLI</td>
+<td>-1.44</td>
+<td>2.53</td>
+<td>indefinida</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="cell-fig-autovalores" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>colores <span class="op">=</span> Makie.<span class="fu">wong_colors</span>()</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> <span class="fu">Figure</span>(size <span class="op">=</span> (<span class="fl">820</span>, <span class="fl">360</span>))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> <span class="fu">Axis</span>(fig[<span class="fl">1</span>, <span class="fl">1</span>]; xticks <span class="op">=</span> (<span class="fl">1</span><span class="op">:</span><span class="fl">6</span>, [<span class="st">"Re S"</span>, <span class="st">"S"</span>, <span class="st">"Coher.</span><span class="sc">\n</span><span class="st">compleja"</span>, <span class="st">"Coher.²"</span>, <span class="st">"|ImCoh|"</span>, <span class="st">"wPLI"</span>]),</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>          ylabel <span class="op">=</span> <span class="st">"autovalor / máx |autovalor|"</span>, xticklabelsize <span class="op">=</span> <span class="fl">11</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">hlines!</span>(ax, [<span class="fl">0.0</span>]; color <span class="op">=</span> <span class="op">:</span>black, linestyle <span class="op">=</span> <span class="op">:</span>dash)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (k, λ) <span class="kw">in</span> <span class="fu">enumerate</span>(autovalores)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scatter!</span>(ax, <span class="fu">fill</span>(k, <span class="fu">length</span>(λ)), λ <span class="op">./</span> <span class="fu">maximum</span>(abs, λ); color <span class="op">=</span> [x <span class="op">&lt;</span> <span class="fl">0</span> ? colores[<span class="fl">6</span>] <span class="op">:</span> colores[<span class="fl">3</span>] for x <span class="kw">in</span> λ], markersize <span class="op">=</span> <span class="fl">12</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>fig</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="fig-autovalores" class="cell-output cell-output-display quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="1">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-autovalores-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img width="820" height="360" style="object-fit: contain; height: auto;" src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAzQAAAFoCAYAAACBob7SAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAOxAAADsQBlSsOGwAAIABJREFUeAHswQl4FfWh///3ORkCCSELgcAMQZiRTcoijguKbGoHRWstVr3uSgu12v7qzG2lt3qVWmuxt5tavW29WLtYS62VFtfiWLzigh0rKlZkkUUIq6whCVlO/v/c58n/+f55gPxuObEezuf1slr/X4iIiIiIiOQgCxERERERkRxlISIiIiIikqMsREREREREcpSFiIiIiIhIjrIQERERERHJURYiIiIiIiI5ykJERERERCRHWYiIiIiIiOQoCxERERERkRxlISIiIiIikqMsREREREREcpSFiIiIiIhIjrIQERERERHJURYiIiIiIiI5ykI6dP/99/P2228zcOBAREREREQkO9auXcvIkSO5/vrr+UdZSIdeffVV3n//fcrKyvhnaWpqorm5maKiIkTaNDQ0kE6nKSwsRKRNbW0txcXFpNNpRDKZDHV1dZSUlCDSprGxkUwmQ7du3RBpU19fj2VZdOnShX+Wt99+m3379nH99dfzj7KQDnmeh+d5zJ49m3+Wuro66urq6NWrFyJtduzYQWFhISUlJYi0qampoaqqCsuyEGlubmbr1q04joNIm9raWhobG+nZsycibbZv305xcTHFxcX8s8yePZsjZSEiIiIiIpKjLERERERERHKUhYiIiIiISI6yEBERERERyVEWIiIiIiIiOcpCREREREQkR1nkuFdeeYXKykqGDBnC4dTW1rJ48WL27dvHhAkT6N27NyIiIiIiktssclhzczNf/OIX+epXv8qQIUM4lJqaGs4880xaW1spKytj5syZPPvss5x44ol83O1ubODH7y5m8eb32dVQx5iqY7hu6KmM6mkj+em93du4f/lLvL5lPUVdCjmtr8uXjhtH724lSH56duN7/Ob9N3hn+0YGlPXik84QPj/kFKx0Gsk/TZkWHlixhLhmJet2b2dEr35cfuwJfNIZguSnrQ213Pv3xbyyZQ37m5vxq47hhuPGMbi0F5Kflu6o4afvvcLSrR9Q3q2YCfYgbjjuNEq7dCMXWeSg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ykJERERERCRHWYiIiIiIiOQoCxERERERkRxlISIiIiIikqMsREREREREcpSFiIiIiIhIjrIQERERERHJURYiIiIiIiI5ykJERERERCRHWYiIiIiIiOQoCxERERERkRxlISIiIiIikqMsREREREREcpSFiIiIiIhIjrIQERERERHJURYiIiIiIiI5ykJERERERCRHWYiIiIiIiOQoCxERERERkRxlISIiIiIikqMsREREREREcpSFiIiIiIhIjrIQERERERHJURYiIiIiIiI5ykJERERERCRHWWTJM888Q3NzM/8b48aNo6KiAhERERERkX+ERZb89re/paGhgf+NwYMHU1FRgYiIiIiIyD/CIkseeughREREREREPkoWWfbSSy9x5plnsmfPHgoLCxEREREREeksFll2yimnMHz4cObNm8eVV16JiIiIiIhIZ7HIssbGRsaNG8eMGTP42c9+Rv/+/Umn07S7+eabOe644xARERERETlSFp2ge/fu3HjjjRxM165dERERERERyQaLLCsuLmbOnDmIiIiIiIh0NotO0NjYyM9+9jPmz5/P+vXrqaqq4owzzuCrX/0qpaWliIiIiIiIZINFJ7jmmmt48cUXmTFjBp7nsWXLFh566CGeeeYZXnrpJbp06YKIiIiIiMiRssiydevWMX/+fFasWEF1dTXtvvjFLzJixAgWLlzI1KlTEREREREROVIWWbZmzRpc16W6uhpTcXExJ554ImvWrEFERERERCQbLLJs6NChrFq1irfffpuRI0fSbtu2bbz44otcd911iIiIiIiIZINFltm2zVe+8hXGjh3LZz/7WTzPY8uWLfz+97/npJNOYvLkyYiIiIiIiGSDRSf47ne/y+TJk3n88cd59dVXqaqq4j/+4z+44oorSKVSiIiIiIiIZINFJznnnHM455xzEBERERER6SwWWfKlL32JhoYGOvK1r32NoUOHIiIiIiIicqQssqR79+5YlkVHCgoKEBERERERyQaLLLnrrrvoyIoVK+jduzciIiIiIiLZYNEJamtref7559mzZw/tWltb+fa3v833vvc9zjvvPERERERERI6URZa1trYyceJEVq1ahWVZZDIZ+vfvz3vvvccpp5zCxIkTyYaWlhaWLFnCmjVrOPnkkxk8eDCHsnfvXt555x1MhYWFnHDCCYiIiIiISO6yyLKlS5fyzjvvsHHjRrZv3860adN46623WLlyJdOmTSOdTnOkmpubueSSS1i8eDHDhw9nxowZ3H333cyYMYODWbhwIRdeeCGmPn36sHnzZkREREREJHdZZNn27dtxXZfKykoqKyvZvHkzjY2NDB48mP79+xPHMeeffz5H4g9/+AMvvvgib731Fn379uWxxx7jyiuv5JJLLqG0tJQDrVy5kvPOO48FCxYgIiIiIiJHD4ssGzBgACtXrmTFihUMGTKEQYMG8dprr3H66afTvXt3PvjgA47UvHnzmDZtGn379qXNtGnTuOGGG1iwYAGXX345B1q9ejVDhw6lTWtrK6lUChERERERyX0WWTZkyBAuvPBCPvGJT7Bp0yauuuoqPvvZzzJ+/HgWLFjAzTffzJFau3Yt48ePp10qlWLo0KGsW7eOg1m5ciUNDQ306dOHPXv2MHbsWO655x5GjhzJgerr62loaMDU3NxMQUEBmUyGf5ZMJkMmkyGTySDSJpPJkMlkyGQyiLTJZDJkMhkymQwimUyGTCZDJpNBpE0mkyGTyZDJZBBpk8lkyGQyZDIZ/llaW1tJpVIcCYtO8Mgjj/DXv/6VkpISbrjhBtLpNEmS8Lvf/Y7jjz+eI7V9+3bKy8sxlZeXs3XrVg5m7dq1jB49mrlz52JZFrfccgtTp07l3XffpaSkBNM999zDXXfdhcn3fUaOHElNTQ3/LPX19dTX19PY2IhIm127dtGlSxe6d++OSJstW7bQ3NyMZVmINDc38+GHHyLSbt++fTQ1NdHQ0IBImx07dlBUVERRURH/LHv37qW0tJQjYZFldXV1PPPMM3zqU5+iS5cutPniF79INvXo0YO6ujpM+/bto6SkhINZs2YNpoceeohevXrxwgsvcO6552KaNWsWs2bNwjR79mzaVFdX889SV1dHXV0dvXr1QqRNcXExhYWFlJSUINImnU5TVVWFZVmINDc3U1hYiOM4iLSpra2lsbGRnj17ItKmW7duFBcXU1xczD9LaWkpR8oiy5qamrj22mvp2rUrV1xxBdOnT2fEiBFkk+M41NTUYNq0aROO43CglpYWGhoa6N69O+2Ki4vp06cPO3bsQEREREREcpdFlpWVlbF161aefPJJHnnkEU4++WRGjhzJ9OnTufTSSyktLeVITZkyhYcffphvfetbpFIp1q5dy/LlywmCgANt376dfv368eSTTzJlyhTarF+/ng0bNjBmzBhERERERCR3WXSCrl27Mm3aNKZNm8bevXuZP38+P/nJT4iiiMWLFzNmzBiOxDXXXMO9997Ltddey+TJk7n77ru57LLLGDRoEG1uvvlmHn74YdauXUufPn2YMWMGV199Nddccw2VlZX85Cc/4ZprrmHEiBGIiIiIiEjusuhEO3fu5I9//COPPfYYr7/+OsOGDaOkpIQjVVlZyeLFi7nvvvt4+umnueaaa7jhhhtoN3HiRMrKymh37733csIJJ/D8889TU1PD7NmzueKKKxARERERkdxmkWXNzc089NBD/P73v+f555+nf//+XHrppXz3u9/luOOOI1uqq6v5zne+w8EEQUAQBLSzLIsZM2YwY8YMRERERETk6GGRZbt27eKWW27hkksuYfbs2YwdOxYREREREZHOYJFlPXv2ZOPGjRQUFJDJZKipqaFXr14UFhYiIiIiIiKSTRZZlk6nWb9+PVEUsWDBAhobG0mn04wbN467776bMWPGICIiIiIikg0WWdbS0sIFF1xAVVUVCxcuxPM8tmzZwv3338/UqVNZtmwZlZWViIiIiIiIHCmLLHv33XdZv349r7zyCl27dqVNdXU1c+fO5ZRTTiGOYy6++GJERERERESOlEWW7d69m549e9K1a1cO5DgOu3btQkREREREJBsssmzkyJFs3ryZBx98kOnTp9Nu0aJFLFy4kG9+85uIiIiIiIhkg0WWlZaWMnfuXKZPn87tt9+O67ps2bKFlStX8s1vfpNRo0YhIiIiIiKSDRad4KKLLmLixIk899xzfPDBB1RVVTFhwgSOPfZYREREREREssUiy+rq6vjRj37EN77xDS677DJMP//5zznttNMYOnQoIiIiIiIiR8oiSxoaGpg/fz579+7lhz/8IZ7nYWppaeHOO+/khz/8IUOHDkVERERERORIWWTJvn37mDNnDi0tLezevZs5c+ZwoNGjRzNx4kRERERERESywSJLKisrWbp0Kbt27eKyyy7jqaeeQkREREREpDNZZFl5eTlPPfUUIiIiIiIinc0iy7Zv307v3r05lL/85S9MmjQJERERERGRI2WRZRUVFbz99tuYPvzwQx555BEymQynn346IiIiIiIi2WCRZQUFBYwYMYIDTZw4kSAIWLJkCePGjUNERERERORIWXyESktLWbp0KePGjUNERERERORIWWRZY2MjTz31FAd64403eOKJJ7juuusQERERERHJBossq6ur4+tf/zoH6tq1K7NmzeKss85CREREREQkGyyyrLy8nOXLlyMiIiIiItLZLDrJ7t272bt3L+1aW1u5+uqriaKI8847DxERERERkSNl0QlmzpzJAw88wIEcx2H06NGIiIiIiIhkg0WWrV69mrlz57Jw4UL27NnDnDlzeOaZZ1iwYAGPPPII1dXViIiIiIiIZINFlq1Zs4ZBgwZx1llnkclk+PznP09FRQVXX3019913Hy+88AKTJk1CRERERETkSFlkWUVFBRs2bGD//v107doV27Z57733GDZsGMOHD2fZsmVMmjQJERERERGRI2WRZWPGjGHgwIGMHDmSJEk4++yzue6667jooot48sknufTSSxEREREREckGiyxLp9MsWrSIBx98kDa3334706dP5wc/+AFXXXUVU6ZMQUREREREJBssOkHv3r2ZNWsW7ebNm4eIiIiIiEi2WWTJvn37aG1t5X+juLiYdDqNiIiIiIjIP8IiS0aNGsW+ffv43/jTn/7EySefjIiIiIiIyD/CIktWr16NiIiIiIjIR8lCREREREQkR1mIiIiIiIjkKAsREREREZEcZSEiIiIiIpKjLLKsrq6ONWvW8IlPfIIDvffee3Tp0gXP8xARERERETlSFlnW1NTEaaedxm233UYYhqRSKTKZDHfffTe33HILL7zwAp7nISIiIiIicqQssqysrIzFixdz7bXX8sQTTzB79mxuvvlmtm7dyp///GdOPPFEREREREREssGiE4wcOZJXXnmFCRMmMHHiRE466SSWLl1KUVERIiIiIiIi2WLRCdasWcP06dPZs2cPjzzyCN/+9reZNm0aDzzwANXV1YiIiIiIiGSDRZbt2bOH448/nhkzZnDHHXfQrVs3PvOZz/CNb3yDkSNH8vLLL3PcccchIiIiIiJypCyyrKCggCeeeILx48fTrmvXrnz/+9/nvPPOI5PJICIiIiIikg0WWda9e3fGjx/PwbzwwgtMnToVERERERGRbLDIkrfeeotRo0bR5qGHHuKee+5hz549tGttbWXdunWcf/75iIiIiIiIZINFlkydOpX58+czYMAAvvCFL/C1r32N/fv38+yzzzJ79myeeOIJmpubOeGEExAREREREckGiyyZO3cuM2bM4JZbbqFPnz7ccccd1NXV8Ytf/IJp06Yxbdo0Bg8ezLJlyxgxYgQiIiIiIiJHyiJLpkyZwrhx43jllVdoaGigtbWV4uJiunfvzqZNm7Btm/Hjx/PSSy8xYsQIREREREREjpRFFpWUlHDqqafS1NTEtddey09+8hNOOeUU5syZw8yZM3n55Zf55Cc/iYiIiIiISDZYZFlJSQkLFizg29/+NrW1tdx5552MGzeOe+65hxNPPJELLrgAERERERGRbLDoBKeffjpPP/00bXr16sXGjRvZuHEj1dXVpFIpREREpHPUNTfx/WWLiGtWsqF2J8f1tLn82BP4F/d4RESORhadZPPmzdTW1mJavXo1/fr1o6ioCBEREcmu2qb9THr6P3n9ww20W71vJ0988HeWbFvHD0/+NCIiRxuLLGtpaeHss8/mueee42D+8pe/MGnSJERERCS7fvT3F3n9ww0czN3vLOZy7wRO7NUfEZGjiUWWLVmyhEWLFvHss88yfvx4UqkUpsLCQkRERCT7nvzgXQ6llVae3PAuJ/bqj4jI0cQiy4qKihg1ahRBECAiIiIfnV2N9RzOzv31iIgcbSyybNSoUZSWlrJgwQI+9alPIUdu1Z7tvLhxFdv27eHUlsGMqxpIOpVCRETEdExJBct3b+VQvB6ViIgcbSyyrKCggNNOO43zzz+fnj17UlRUhOnRRx/l1FNPRTqWaW3lxiV/5L7lL5FpbeV/vP1nTqjsx+NnXssx3csRERFpV15YxOEMKq1ERORoY5Flq1ev5s477+SWW25hwoQJpFIpTMOGDUP+7/zgnRe4993FHOhvH27kwud/wZLz/g/pVArJP69/uIHF61dQUtiN8f0HM6S0N5K/apv2s7BmJX/b8D6DavtyRr8h9O9ejuSfdbU7OJwl29Yztfo4RESOJhZZtn37dkaMGMG3vvUt5Mjcv/xlDiXZ/gFLtq3n1KoBSP74cH8dn33+FyzavJp2qddSXDP4RH562mfpki5A8ssLm1dz0V9+xbaGWv7HCuiSLuCuE88l/MQEJL/sadrP4exubEBE5GhjkWVjxoyhsLCQ999/H8/zkH9MU6aFtXt3cjjLd2/l1KoBSP644oXfsGjzakyttPLzlX+lb1EP7vSnIvljW0MtF8QPsauxHlNTpoXotT9xXHkVZ/cbhuSPY3tU8u6uLRzK4NJeiIgcbSyyrLm5mWOPPZYhQ4YwadIkevXqhenWW29l+PDhyOFZ6TRdCwpoaGnmUHp06Yrkj9V7P+SZjcs5lP9c/gq3jzkbK51G8sO8NW+yq7GeQ/nJ8lc4u98wJH/MHDqWJz74OwdTUVjExe5oRESONhadYMiQIXz961/nYIqKipCOpUhxljOEJz74OwfTrcBiQl8PyR/v7d7K4exqrGdz/V6qu5ch+WHVnu0czoo925H88qn+w5lz4rnc8renac5kaNe7Wwm/m3wlvbuVICJytLHIsuLiYu644w7kyI3vM5AnPvg7B+P26ElVtxIkf3S3CulISZdCJH/06NKVwynr0g3JP7NGTuYSdzTPbVzBym2bOKn6WKb0G0qPLl0RETkaWcjH1q9W/41DeXfXVt7cUcPong6SH07qdQyFBQU0trRwMANLKigvLELyx2RnEHe8+RyHMqayH5Kf6pqb2Fi3m3V1uxjYUEtTpgURkaOVhXwsNWcy/H3XFg7nzR01jO7pIPlhT1MDTS0ZDqWuuYlWWkmRQvLDhtpdHM7O/fVI/rlk0a/43Zo3aTdv4zt86dX5PHT6JVw5yEdE5GhjIR9L6VSKdCpFprWVQ+mSLkDyx5s7amillUPZ2lDLlvpa+hb1QPLD0h01HM6yXZuQ/HLH0uf43Zo3OVCmNcPVLz7CJPtY+ncvR0TkaGKRJTfddBPnnHMOEyZMoKCggM7W0tLCkiVLWLNmDSeffDKDBw/mcGpra1m8eDH79u1jwoQJ9O7dm4+zdCrFaVUD+e/N73Mw6VSK06oGIvkjnUrRkXQqheQPK53mcLqkC5D88t1lf+FQWoEZLz3KM8EMRCS//X3XFv5rxRL+tnU9Pbt153Tb4wtDT6W7VUgussiSyy67jMcee4zZs2fjeR4XXHABQRBQVFREtjU3N3PJJZewePFihg8fzowZM7j77ruZMWMGB1NTU8OZZ55Ja2srZWVlzJw5k2effZYTTzyRj7N9zY0cSioFA0oqkPxxQmU1h9M1XUBVtxIkfwwv78PhlFiFSH6pbWrkcN7csQkRyW+Pr1vGpS/8mv0tzbR7/IN3mLviNV4453p6detOrrHIkuOPP57jjz+eNitXruTxxx/n3nvvpby8nAsuuIDzzjuP8vJysuEPf/gDL774Im+99RZ9+/blscce48orr+SSSy6htLSUA91xxx307duX5557joKCAr785S9z4403snjxYj7O/rZ9I4fSkmnle8sW8dURk5D8sHRHDYezP9NCU6aFLukCJD/8avXrHM4bH9Yg+SWVgtZWDimdQkTy2N6m/Xz+pd+xv6WZA/191xb+7fWneGDcReQai04wePBgbrrpJm666SZqamqYP38+l112GalUin/913/ljDPO4EjMmzePadOm0bdvX9pMmzaNG264gQULFnD55ZdzoHnz5nHfffdRUFBAm+uvv57hw4ezceNG+vXrx8fR3sb9tNLK4Ty54V2+OmJYdvRtAAAgAElEQVQSkh9+vSqhIy9ueZ8z7MFIfnhn52YOp665EckvZYXd2Lm/nkM5tWogkp8y+/exf93rNNXvo6XrqRR0r0Dyz6LNq9mxv45DeWztWzww7iJyjUUncxyH66+/nuuvv56dO3eydetWjtTatWsZP3487VKpFEOHDmXdunUcaO/evezYsYNhw4bRbujQoaRSKdatW0e/fv0w1dfX09DQgKm5uZn169ezcOFC2rmui+d5mOI4xuS6Lp7nYYrjGJPruniehymOY5pppSN7d+5m4cKFtHFdF8/zMMVxjMl1XTzPwxTHMSbXdfE8D1Mcx5hc18XzPExxHGNyXRfP8zDFcYzJdV08z8MUxzEm13XxPA9THMeYXNfF8zxMcRxjcl0Xz/MwxXGMyXVdPM/DFMcxJtd18TwPUxzHmFzXxfM8THEcY3JdF8/zMMVxjMl1XTzPo11BKk1HupBm4cKFmFzXxfM8THEcY3JdF8/zMMVxjMl1XTzPwxTHMSbXdfE8D1Mcx5hc18XzPExxHGNyXRfP8zDFcYzJdV08z8MUxzEm13XxPA9THMeYXNfF8zxMcRxjcl0Xz/MwxXGMyXVdPM/DFMcxJtd18TwPUxzHmFzXxfM8THEcY3JdF8/zSKVSdCSTydAujmNMruvieR6mOI4xua6L53mY4jjG5LounudhiuMYk+u6eJ6HKY5jTK7r4nkepjiOMbmui+d5mOI4xuS6Lp7nYYrjGJPruniehymOY0yu6+J5HqY4jjG5rovneZjiOMbkui6e52GK4xiT67p4nocpjmNMruvieR6mOI4x3XTMKfzbykUcTJoUlzX2YtWqVXiehymOY0yu6+J5HqY4jjG5rovneZjiOMbkui6e52GK4xiT67p4nocp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yCLLBg0axKuvvsprr73GKaecQme45ppruPfee7n22muZPHkyd999N5dddhmDBg2izc0338zDDz/M2rVraTNr1izOOeccevfuTXl5Obfeeitz5swhnU6TK5ziUsqxSKdSiJQVdiPoeyyFhYUUFXRB5JjuFVzgDKWqvIqCVBoREatHb1IFFq0tzRxKl14DkPzTu1sJN1QPZeueDykur6LMGUwqlSJXWWRZt27duO2227j44ou56qqr6N+/P+l0mnbnnnsutm1zJCorK1m8eDH33XcfTz/9NNdccw033HAD7SZOnEhZWRntTj/9dBYuXMgvf/lLVqxYwdy5c/n0pz+NiIiIyNGqefdmWluaOZzGre9TWDUIyR+Z+t3UPDiTPX99FFpb2QVsKS6n6uI5VEz+ArnIIsvq6uqYN28etm2zcOFCDnTCCSdg2zZHqrq6mu985zscTBAEBEGAaezYsYwdOxYRERGRvJBK05FUKo3klw33X0rtW09jaqnbxaaHrqOgewWlJ19MrrHIsrKyMl599VVERERE5J/HKq2iS6+BNG1fy8GkrEK6DTwByR8N65dS+9bTHMr2BXdSevLF5BqLTvLWW2/xpz/9ifXr11NVVcUZZ5zBGWecgYiIiIh8BFIpqj77bTb+5HIOpnLq1yjo3hPJHw3r3+RwGj54m9aWZlIFFrnEohP84Ac/4KabbmLChAl4nsebb77J9773Pa6++mp++tOfIiIiIiKdr+zUy2ht3s+W336VltodtEl37U7PsyOqPjMbyS+pAovDSaULSKXT5BqLLPvwww/5xje+wcKFC5k8eTLtVq5cycknn8y1117L2LFjEREREZHO1bx7Mx8+/X1aanfQLrN/H7sW/YzSEy+k2zGjkfxRNOhUSKWhNcPBFA06FVJpco1Flr3zzju4rsvkyZMxDR48mDPPPJM33niDsWPHIiIiIiKda/Ov/w/7N77DgZp3b2HjTy7n2G+/DakUkh8Ke3tUnHEdO+P7OVDKKqTqojvJRRZZ1rdvXzZu3MjOnTupqKigXXNzM8uXL+eKK65ARERERDpXa2M9e//2Rw5l/8Z3aPjgTbodczySP/pefjdWWV92PvdjmvdshVSaooEnUPUv/0Hx4HHkIossGzx4MGPHjmXSpEnceOONeJ7Hli1beOCBB2hsbOSss85CRERERDpX895ttDY3cjjNOzfCMccj+SNVYNH70/9O70//O1vXLqe4vBcl5b3IZRZZlkqlePTRR7nzzjv5zne+wwcffEBVVRVnnHEGDz74ICUlJYiIiIhI5yooqSRVYNHa0syhWGV9kfyVLulFurCYXGfRCcrKyrjrrru46667EBEREZGPXrprd0pGTWXvG3/iYAr7DKLbgDGI5DqLLJk3bx5NTU105JOf/CR9+vRBRERERDpX3yvvpWHD2zRtW4OpoLicfl/4NaTSiOQ6iyy5++67qauroyPDhg2jT58+iIiIiEjn6lJ5DMd+6w12Lvov9q54iZam/ZQeexIVk2ZgVfRD5GhgkSUvv/wyIiIiIvLxki4qo/Kcf6Xr+C/Q2NhIz549ETmaWHSS3bt3s3fvXtq1trZy9dVXE0UR5513HiIiIiLS+Rq3rubDJ7/LvtVLyDQ1UO/69JxyI0XuSYgcDSw6wcyZM3nggQc4kOM4jB49GhERERHpfA3rl7L2zklk6nfTbvfm99jz2u+ovuFRevgXIPmnadsadi1+iL3v/426kp6UDhtP2bgrSVldyUUWWbZ69Wrmzp3LwoUL2bNnD3PmzOGZZ55hwYIFPPLII1RXVyMiIiIinW/zr75Mpn43B2ptaWbTL66jZPRUUlYhkj9q336WDfdeSGb/PtrVvvxLdv7lpxxz00IKisvJNRZZtmbNGgYNGsRZZ51FJpPh85//PBUVFVx99dXcd999vPDCC0yaNAkRERER6TyZ+t3UrXyJQ2nevYX6NQnFg09D8kOmsY6an11FZv8+DlS/JmHbY7fQ98ofk2sssqyiooINGzawf/9+unbtim3bvPfeewwbNozhw4ezbNkyJk2ahIiIiIh0npb6PdDayuFk6nYi+aPu3b/QvGcrh7J7yTz6Xvljco1Flo0ZM4aBAwcycuRIkiTh7LPP5rrrruOiiy7iySef5NJLL0VEREREOpdV2od01+5k9u/jUAqrBiH5o3nXZg6nZe92WpsbSVmF5BKLLEun0yxatIgHH3yQNrfffjvTp0/nBz/4AVdddRVTpkxBRERERDpXyiqkbNxV7Hz+PzmY4qETKLSHIvnDKrc5nIIevUlZheQaiyxramoik8kwa9Ys2s2bNw8RERER+Wj1ufR7NG1bQ+3bz2Dqdsxoqr/4GyS/FB83CausD827t3AwZWP/hVxkkWW7d++murqac889l+nTpzN16lQsy0JEREREPlrpwmKO+erT1L33Irve/W9aGhuoGHoq3UcEpAosJL+kC4vp94Vf88E908g07MVUdOwpVF14B7nIIst6/T/twX14z4Xi//HnZ3tv5rMbs1tjTbKxzbCZ+7sNGa06Ro5ESTQlSpiz3LZDHPStlSg/uT11DjkcN8uJdMjNlONmwnETfTGEmZVhZrff6/3H57p27afOOVeLvXdej4efH7t27eLPf/4zI0aMwGazMWTIEIYNG0bTpk0RERERkXvL3rQLZQ1iKCoqwsPHB/nv5d7sYRrPOsqPu1eQ/91+XD198YyIo06HQdicXbAig19B+/btad++Penp6Wzfvp2VK1fSvn17mjVrxkcffUSjRo0QEREREZF7z8U3BP8+U7Hl5mK327Hb7ViZwa/I2dmZ0NBQIiMjOXToEHv37iU3N5dGjRohIiIiIiLySxn8Ck6fPs2aNWtYs2YNBw8epGPHjgwfPpwBAwbg5+eHiIiIiIjcP+UlRZRcPklJXX+wN8HKDKrYtWvXCAsLo0WLFjz11FOsXbuWhg0bIiIiIiIi91d5cSFXVk3ghy8/pLzkDnmAi28IgYPexqv1E1iRQRXz9fWlvLwcERERERGpXr5fPIzrX6+kouJr2VyYP4CQcZ/i0eIRrMbgV1BUVMSiRYtYv3492dnZBAQE0L17d1JSUvDy8kJERERERO6tO98f5/rXK7mr8jKurkvDo8UjWI3Br2Do0KHs2rWL5ORkHnroIa5cucLy5cvZvHkzmZmZuLi4ICIiIiIi907hmX38nNtnD0BZKTg5YyUGVezcuXOsX7+eb7/9luDgYBxGjhxJVFQUW7duJTExERERERERuZds/BybzYYVGVSxM2fO0KhRI4KDg6nIbrfTunVrzpw5g4iIiIiI3FtujVrzc9watgInZ6zGoIo1bdqU06dPc+TIEZo3b47D1atX2bVrFy+++CIiIiIiInJv1aofQZ0Og7j+1Z/5/9ic8O/3e6zIoIoFBQUxZswY2rdvT//+/XnooYe4cuUKa9asoU2bNnTr1g0REREREbn36g9fgrO7Dz98+SHlJXcwufiGEDgoHY/mvbEig1/B3Llz6datG+vWrePrr78mICCAN998k6effhqbzYaIiIiIiNx7Nhc36j3zHoFPvcWVE//A7u2PV3BTrMygihUXF7Nr1y4eeeQRHnnkESrat28fjRo1ws/PDxERERERuT9shitGvXAMux2rM6giZWVl5OTkkJeXx7PPPsu+ffuoqLS0lFdeeYXU1FSSkpIQERERERH5pQyqSE5ODkFBQTgEBQVRWWBgIK1bt0ZERERERKQqGFSRwMBAfvjhB/Ly8oiPj+fw4cNU5uHhgWEYiIiIiIiIVAWDKmKz2fD29qZOnTocPXoULy8vREREREREfk0GVSw/P58+ffrwU9555x2io6MRERERERH5pQyqWK1atejfvz8VXbt2jbVr19KqVSuCg4MRERERERGpCgZVzM3NjdGjR1PZxIkT6dChA9euXcPPzw8REREREZFfyuAecXV1pXnz5uzYsYOmTZsiIiIiIiLySxlUsfLycq5fv05lWVlZbNq0id69eyMiIiIiIlIVDKrYtWvX8Pf35266du1K3759ERERERERqQoGVczX15dLly5RWa1atahbty4iIiIiIiJVxaCK2Ww26tWrx92kpaWRmJhI27ZtERERERER+aUMfgXLly9n3rx55Ofn41BeXs65c+f4zW9+g4iIiIiISFUwqGJXr17lhRdeYMKECdy5c4ctW7aQlpbGp59+SklJCa1atUJERERERKQqGFSxf/7znwQGBvLGG29QUFDAihUr6NevH/369SMsLIyjR48SFRWFiIiIiIjIL2VQxQzDoLCwkPLycux2O+7u7ly6dImgoCC6dOlCZmYmUVFRiIiIiIiI/FIGVSw6Opri4mKee+45Fi5cSLt27Zg9ezYjRoxgz5499OzZExERERERkapgUMU8PDzIyMhg5syZ3Lx5k1mzZtGpUyfmzZtH69atSUpKQkREREREpCoY/Ao6d+7MZ599hsnPz4+LFy9y8eJFgoODsdlsiIiIiIiIVAWDe8DJyYkHHngAERERERGRqmQgIiIiIiJiUQYiIiIiIiIWZSAiIiIiImJRBiIiIiIiIhZlICIiIiIiYlEGIiIiIiIiFmUgIiIiIiJiUQYiIiIiIiIWZSAiIiIiImJRBiIiIiIiIhZlICIiIiIiYlEGFlVaWsrevXs5c+YMbdu2JSwsjJ9y48YN/vnPf1KRq6srrVq1QkRERERErMvAgkpKSnjyySfZvXs3kZGRJCcn8+6775KcnMzdbN26lSeeeIKKAgMDuXz5MiIiIiIiYl0GFvTXv/6VXbt2cfjwYerVq8fatWt55plnePLJJ/Hy8qKyU6dO8dhjj5GRkYGIiIiIiNQcBhb0ySef0K9fP+rVq4epX79+jBo1ioyMDAYPHkxl3333HU2bNsVUXl6OzWZDRERERESsz8CCzp49S5cuXXCw2Ww0bdqUc+fOcTenTp2isLCQwMBA8vPzad++PfPmzaN58+aIiIiIiIh1GVhQbm4u3t7eVOTt7U1OTg53c/bsWVq2bMmSJUswDIMpU6aQmJjI8ePH8fDwoKK0tDR+//vfU1FcXBwxMTFkZ2dzv9y+fZvbt29TUFCAiOnHH3/ExcUFd3d3RExXrlyhsLAQwzAQKSkp4dq1a5SUlCBiunXrFsXFxdy8eRMRU15eHrVr16Z27drcL9evX6dOnTr8EgbV0LJly7hy5QqVxcfH0759ezw9PSkoKKCiW7du4eHhwd2cOXOGipYvX46fnx87duzg0UcfpaK0tDTS0tKoKC0tDVNISAj3S0FBAQUFBfj5+SFi8vDwwNXVFQ8PD0RMhmEQEBCAYRiIlJSU4ObmRv369REx3bx5k6KiInx8fBAx2e127HY7drud+6VOnTr8UgbVUGlpKSUlJVRWVlaGqX79+nz//fdUdOnSJerXr09lpaWlFBYW4u7ujoPdbicwMJC8vDxERERERMS6DKqh559/np/Tq1cv/vSnPzFjxgxsNhtnz57lxIkTJCQkUFlubi4NGjRg06ZN9OrVC1N2djYXLlwgJiYGERERERGxLgMLGjp0KO+99x7PPfcc3bp1491332XQoEGEhoZimjx5Mn/60584e/YsgYGBJCcn8+yzzzJ06FB8fX1ZuHAhQ4cOJSoqChERERERsS4DC/L19WX37t0sWLCAzz77jKFDhzJq1Cgc4uLiqFOnDg7vvfcerVq1Ytu2bXz//fekpaXx9NNPIyIiIiIi1mZgUcHBwfzhD3/gbhISEkhISMDBMAySk5NJTk5GRERERERqDgMREREREfmvUZTzHT/uXMqNM1nccvfGKyIO787PYnNxw4oMRERERETkv8LNb/7Ghfm/payoANMd4Nbelfyw/f/RMPXvOLvXxWoMRERERESkxiu7c4uLHw6lrKiAygrPZZGzZjJBz76P1RiIiIiIiEiNV3DiS0pvXOWn5P9jNUHPvo/VGIiIiIiISI1X8uNlfk7pzWuUlxRhM1yxEgMREREREanxjLr1+TmGVwA2wxWrMRARERERkRrPPTwewzuIkh8vcTde7Z/CigxERERERKTGs7nWpsGLf+L8u0mU3c6nIntYRwKemIEVGYiIiIiIyH8F94huhP7hGD9mfkT+6X24ePrgFRmPV9sB2JxdsCIDERERERH5r2HUbYDfY69Bbi52ux273Y6VGYiIiIiIiFiUgYiIiIiIiEUZiIiIiIiIWJSBiIiIiIiIRRmIiIiIiIhYlIGIiIiIiIhFGYiIiIiIiFiUgYiIiIiIiEUZiIiIiIiIWJSBiIiIiIiIRRmIiIiIiIhYlIGIiIiIiIhFGYiIiIiIiFiUgYiIiIjUWOWlxdw4sJ7rJzMpvXMbpybt8Go7ACc3D0RqAgMRERERqZFKb+WR/WZvbp/Zh0PBrkVc3TCdhilbcA1qiojVGYiIiIhIjXT54zHcPrOPyopzz1Bb3WQAABW4SURBVHHhg6d46PcHwGZDxMoMRERERKTGKS8uJP8ff+GnFJ7L4s7Fo9QKbo6IlRmIiIiISI1Tkp9Deckdfk7xtWxqBTdHxMoMRERERKTGcXb3ASdnKCvlpzh7+iNidQYiIiIiUuM4uXng0exhbh7Zwt24+DWk9oOxiFidgYiIiIjUSPWemc/ZWV0p+fESFTnVcqd+8nJwckbE6gxEREREpEZyDQyl8RvfkPfFAm5+m0lpUSGejdtQ9+FRuAY0RqQmMBARERGRGsvZ0x//vmnUvnmToqIifHx8EKlJDERERERERCzKQERERERExKIMRERERERELMpARERERETEogxEREREREQsykBERERERMSiDERERERERCzKQP6l7Oxszp8/z5w5c7hfiouLKSoqwt3dHRFTQUEBhmHg6uqKiCk/Px8PDw+cnJwQKSsr4+bNm3h5eSFiKioqoqSkBLvdjojp1q1buLq64uLiwv2SmZnJAw88wC9hIP9SeHg4BQUF/PDDD9wveXl55Obm0qRJE0RMZ86cwW63ExgYiIjp0KFDREREUKtWLUTu3LnD8ePHiY6ORsR05coVCgoKaNSoESKmb7/9Fj8/P3x8fLhffH19CQ8P55cwkH/pd7/7HffbunXr+Oijj5g9ezYippdeeonmzZszcuRIREyhoaEsWLCAxo0bI/Ldd9/Rq1cvNm/ejIjpgw8+4MiRI8yePRsRU79+/XjkkUfo27cvVmYgIiIiIiJiUQYiIiIiIiIWZSAiIiIiImJRBmIJTZo0oW/fvog4JCQkUK9ePUQcXnjhBby9vRExeXt788ILLyDiEBMTQ1BQECIOffv2pUmTJlidgVhCs2bNaNasGSIOSUlJiFQ0YcIERBx8fX2ZMGECIg7t27dHpKJnnnmGmsBARERERETEogxEREREREQsykBERERERMSiDOS+ev311yktLcXk5ORESEgITz75JJ6envy7rl69yvz58zl+/DiBgYEMGzaMmJgYpGYqKipi8eLFZGZm4ubmxmOPPUbfvn2RmuP06dN8/PHHnDhxgrCwMF555RX8/f35OXPmzCE1NRWpWXbs2MHGjRu5dOkSHTt2ZMSIEbi6uvJTsrOz2bNnDwMHDqQqHDt2DF9fXwIDA5H7a8mSJQwfPhzTnDlzGDlyJF5eXvy7duzYwcaNG7l06RIdO3ZkxIgRuLq68nPmzJlDamoqlX388ccMGDAAV1dXxHq2bdvGtm3bMNlsNho0aMDAgQPx9vYmKyuL7777jv79+1PZnDlzGDlyJF5eXlQ3BnJfzZw5k/nz52MYBoWFhaxevZr58+eTlZWFzWbjXykuLiYuLo7HHnuMcePGkZWVRVJSEp9++inNmzdHap5Ro0Zx5coVxo0bR05ODrNnzyYnJ4cXXngBsb6vvvqKwYMH89prr9GpUyc2bNhAp06dOHjwIB4eHvyU9PR0UlNTkZpjwYIFLF68mGnTpmFauHAhmZmZrFy5kp+SnZ3NmjVrGDhwIL/Un//8Z3Jzc8nKyuKNN96gQYMGyP3z0UcfMXz4cEzp6ekMHjwYLy8v/h0LFixg8eLFTJs2DdPChQvJzMxk5cqV/Jz09HRSU1OpbNWqVSQlJeHq6opYz86dOzl06BBJSUmUlJTwt7/9jbfffpvDhw/zzTff8MUXX9C/f38qS09PZ/DgwXh5eVHdGMh9N3ToUNzc3DANHToUX19fLl26RP369SksLGTr1q3YbDa6deuGu7s7FZ08eZL8/Hzmzp2LqX379ri6upKVlUXz5s2RmmfdunV89dVXhIWFYQoLC2PFihVIzTB27Fjmz59PYmIipp49e9KtWzfWr1/P008/TX5+Plu3bsWUkJCAp6cnDlevXuWLL74gIiKC6OhoHHbt2sXFixfp1q0bgYGBmL755hseeughPvvsM5544gmcnZ2R6iM3N5fp06dz9OhR/P39McXFxREeHk52djYhISHk5+ezdetWTAkJCXh6euJw8uRJ9u/fT1xcHMHBwTjs2rWLixcv0q1bNwIDAzHt27ePhg0bsn//fhITE3GIi4vD09OTY8eOYRgGUv1cv36dy5cvU1RUxDfffMPDDz+M6e9//ztt2rShSZMm5ObmMn36dI4ePYq/vz+muLg4wsPDyc7OJiQkhPz8fLZu3YopISEBT09PHK5evcoXX3xBREQE0dHRSPV26dIlbty4QZMmTbh58yYHDhwgLi4O08GDB2ncuDGm6Ohonn/+eUzJyckEBwdz6NAhrMpAqpWjR4/i6+tLUFAQRUVFdO3alUaNGuHp6cnEiRPZtWsX3t7eOISFhXHz5k0mTZrEsGHDCA0NZfjw4UjNFRsby+9+9ztSU1Np27YtMTExxMTEINZ39epVvv32WxITE6lo+/btmK5fv07btm1JTEzENGnSJPbt24eXlxcFBQWMHj2adu3akZaWxty5c+nTpw+jR48mKyuLjh07kpqaytq1a2ndujXjx4/Hzc0NX19f+vXrh1Qv27dvp2PHjvj7++Pg4+NDTk4OpuvXr9O2bVsSExMxTZo0iX379mE6cOAAb775Jo0aNWLMmDEcO3aMgIAARo8eTVZWFh07diQ1NZW1a9fSunVrfvvb3xIaGkqPHj1ITEzE4YcffuDtt99m6tSpBAYGItXPkSNHGDZsGF26dMHNzY0pU6YQERFBp06dePXVVzlw4AB79+6lY8eO+Pv74+Dj40NOTg6m69ev07ZtWxITEzFNmjSJffv24eXlRUFBAaNHj6Zdu3akpaUxd+5c+vTpg1RfZ8+eZcKECezevZtNmzYxcOBATpw4QVhYGL169eLkyZNUdv78efLy8vD19cWqDOS+a9myJTabjcLCQs6fP89XX32FzWZj1apVNGzYkE8++QTTK6+8wrvvvsvrr7+OQ61atTh48CCzZs2iW7duuLi4kJyczLhx46hVqxZS8/zlL3/hf/7nf0hOTubSpUv069ePGTNmEBgYiFjb+fPnqV+/Pj9l+fLlxMbGkp6ejqmoqIgVK1bw8ssvU1BQwNSpU4mKiqJu3bps2bKF6Oho1q1bx9mzZ3FxcaFDhw5MmDCB7du3Y+revTvjxo1Dqp/z58/ToEEDfsry5cuJjY0lPT0dU1FREStWrCAmJoaCggIWLVqEk5MT3377LV9++SXt2rVj3bp1nD17FhcXFzp06MCECRPYvn07Fy5c4K9//SutWrWioo0bN3L79m3efPNNRo8eTWhoKFL9uLi4sGTJEsrLy1m5ciVvvfUWkZGRnDt3jt27d3P58mUaNGjAT1m+fDmxsbGkp6djKioqYsWKFbz88ssUFBQwdepUoqKiqFu3Llu2bKFPnz5I9dWuXTv+93//lxs3brBz5066d+/Otm3buHXrFuHh4fj4+GBaunQpmzdvpqSkhOPHjzN+/HjCwsLIzMzEigzkvtuzZw+1atWipKSEDz/8kJdeeon9+/dz4sQJvvnmG+Lj4zHdvHmT+Ph4Krp16xaBgYEsXrwY04EDBxg7diw//vgjc+bMQWqW4uJiSktLmT59OtOnT+fChQvMmDGD3/zmN+zduxextsDAQK5cuUJlR44c4cqVK5w+fZrOnTvj0KJFC44dO4bJ29ubqKgoTJ6enpSVlXHy5EmKi4vp2bMnptLSUsrKynDo0qULUj0FBgayZ88eKtu8eTMNGzbk9OnTdO7cGYcWLVpw7NgxYmJi6NChA05OTpg8PT0pKyvj5MmTFBcX07NnT0ylpaWUlZVh8vT0JCYmhsomTZqEVH9hYWGYbDYbdrudJk2aYHJ3d6esrIzAwED27NlDZZs3b6Zhw4acPn2azp0749CiRQuOHTuGydvbm6ioKEyenp6UlZUh1ZuTkxM9evRg586d7N27l9mzZ7No0SIKCgp49NFHcfjtb3/LhAkTMPn6+lK7dm2szEDuO3d3d9zc3DCNHj2aqVOnYvL392fw4MG8/vrrmM6fP4+zszMV/eUvf2Hnzp0sXboUU2xsLJMnT2bmzJlIzXPx4kUefvhhTp06hc1mIzg4mHfeeYc6depQXFyMi4sLYl3169fHz8+PLVu20KtXLxzmzJlDy5YtCQgI4NixYzhkZWURHByMyTAMKvP396dZs2Zs374dU35+PhcvXsShdu3aSPXUpUsXxowZQ25uLn5+fphKSkoYOXIkq1evJiAggGPHjuGQlZVFcHAwJsMwqMzf359mzZqxfft2TPn5+Vy8eBFTrVq1sNlsSM3UpUsXxowZQ25uLn5+fphKSkoYOXIkq1evJiAggGPHjuGQlZVFcHAwJsMwEOtJTEzkk08+wcPDg7i4OEaMGMGtW7eYPXs2Dp6engQHB1NTGEi1Urt2bQzDIDc3lwEDBtC5c2eCgoIICQkhJSWFv/3tb1T06KOPMnXqVN544w26du1Kfn4+s2bN4qmnnkJqngcffJAHH3yQIUOG8Oyzz+Ls7Mwf//hHHn/8cVxcXBBrs9lszJs3j+eee45JkyYRFRXFjh07+PLLL5k3bx55eXnEx8eTkJBAeXk5GRkZ7Ny5k5/SsmVLbty4wdSpU+nRowdz5sxh+PDhREREUNGdO3cYPnw4CxYsoE6dOsj9FxISwquvvkr37t2ZMmUKfn5+LFq0iPDwcNq0aUPdunWJj48nISGB8vJyMjIy2LlzJ5cuXeJuWrZsyY0bN5g6dSo9evRgzpw5DB8+nIiICCq6c+cOw4cPZ8GCBdSpUwexvpCQEF599VW6d+/OlClT8PPzY9GiRYSHh9OmTRvq1q1LfHw8CQkJlJeXk5GRwc6dOxHr6tWrF0OHDiU1NRUXFxfCw8M5fvw4zZs359/x3XffsXjxYhzCw8Pp3Lkz1ZmB3FfTpk3DMAwqmjt3LmfOnKFNmzZkZGSwaNEi9u/fzwcffEBISAgV+fv78/XXX/P+++8zf/58vL29mThxIo8//jhSM23cuJEPP/yQZcuW4ezsTIcOHRg2bBhSM/Ts2ZMtW7bw8ccfs2PHDkJDQzlw4AA+Pj74+PiwYcMGli5diikjI4PGjRtjSklJwSEyMhI3NzecnJz4/PPPSU9PZ/ny5QwcOJD+/ftjGjJkCAEBAZhsNhuhoaE4Ozsj1ceUKVNo3bo1mzZtIi8vjw4dOvDiiy9iCg0NZcOGDSxduhRTRkYGjRs3xsXFhQEDBuCQmJhISEgITk5OfP7556Snp7N8+XIGDhxI//79MaWkpOBgs9kIDQ3F2dkZqb5SUlLw8vIiJCSEgQMH4jBu3DicnJww9e7dm/r162OaMmUKrVu3ZtOmTeTl5dGhQwdefPFFTKGhoWzYsIGlS5diysjIoHHjxphSUlJwiIyMxM3NDan+fHx8ePvtt+nevTumlJQUrl27hkN8fDxlZWXcTXR0NL169eLChQs4BAQEYEpJScHLy4vqyEDuq2nTplHZSy+9hENUVBTz5s3j5zRo0ICZM2ci/x3sdjtjxoxBaq5mzZrxhz/8gbuJjY0lNjaWylJSUnCIjIwkMjISk4+PDzNmzKCyIUOG4ODq6kpaWhpS/fTu3ZvevXtzN7GxscTGxlJRSEgIISEhOCQmJuLg4+PDjBkzqCwlJQUHV1dX0tLSkOotJSUFk5eXFyEhITiMGzcOh969e1NR79696d27N3cTGxtLbGwslaWkpOAQGRlJZGQkYg2jRo3CoXv37lQUHx/PT4mOjiY6Opq7SUlJoboyEBEREZFqLSQkhOrigQcewMnJCZHqwkBEREREqrU//vGPVBcffPABItWJgYiIiIiIiEUZiIhIjfbSSy/x2muvERISwt0cOXKE3bt3M3LkSERERKzGQEREarTDhw9TUFDATykoKCAnJwcRERErMhARkfti9erVbN68mYYNGzJ27Fi8vLzIycnhnXfeIScnh8TERPr164dp/vz5NGnShNWrV9O+fXu6detGeno6QUFBjBo1Cm9vb+bPn0+7du1YunQpAQEBjB8/Hi8vLyo6deoUCxcuxGazMWjQIFq1akVQUBARERGYrl+/zqpVq/j6668JDg5m3Lhx1K1bFxERkerKQERE7rnFixezatUqpk2bxscff8yoUaNYtmwZcXFxjBw5kt69ezNhwgRu377N4MGDmThxIs8//zxDhgxh4MCBNGnShOnTp/POO++wZMkSxo8fz9y5c2nRogUpKSls3LiRpKQktm3bhkNOTg4PP/wwr732Gp6engwcOJD169eTl5fH6tWrGTBgACkpKZiGDx/OkiVLmDx5Mu+//z4iIiLVlYGIiNxzH374IYsWLaJly5a0bt2atWvX8tVXX+Hs7Mwrr7yCafbs2cyaNYvBgwdTXl7OzJkzsdvtxMXFkZSURNeuXbl69SqfffYZpqKiIsaOHUt8fDwdO3bE19eX7OxsHFatWkVcXByPP/44pkOHDrFs2TL69OmDw/jx42nYsCElJSVERkaSmZmJiIhIdWYgIiL33Pfff09AQAAmu93OM888w9q1a4mMjMQhICCAK1euYHJzc8Nut2NydnbG19cXk7OzMxW1aNECk6urK+Hh4Vy+fBmHy5cvc+LECV577TUc4uLiqOjAgQP079+fhg0b4uPjg4iISHVnICIi91zjxo3JzMykf//+5ObmMnbsWFJSUsjMzMRhx44dhIaG8p/IzMwkKSmJ/Px8jhw5QqNGjXBo3Lgx+fn5zJ8/H9OWLVsICgoiPz8fU1lZGS+//DKnTp3C19eX9evXs3z5ckRERKozAxERuecmT57Myy+/zMmTJ9myZQvx8fG0bNmSdu3a0b9/f1q2bMmyZctYuXIl/4m33nqLw4cP8/nnn5OcnIy/vz8OTz31FPPmzWPQoEGEhISwceNG9u3bR1ZWFiYnJyfq16/PrFmzsNvt7Nu3j4MHD3L48GFatGiBiIhIdWQgIiL3XM+ePfn000/JzMzkjTfeoGvXrpjWrFnD1q1bycnJ4csvvyQkJATThg0bcJg8eTL16tXD1LlzZyIiInBYs2YNf//73+nUqRM9evTA9N577xESEoLdbmfPnj1s2bKFwsJCUlNTcXd3p6J//OMfbN26lVq1apGWlsb+/fvx9/dHRESkujIQEZH7IjQ0lNDQUCpycnKiV69eVNapUyccIiIicPDz88PPzw8HX19fBg0aREUxMTE4uLu7069fPxzu3LlDZmYmdevWxWS32+nTpw8O7dq1Q0REpDozEBGRGiEpKQknJyf+E99//z05OTlMnDgRERERKzIQEZEaYeHChfynGjVqxFtvvYWIiIhVGYiIiIiIiFiUgYiIiIiIiEUZiIiIiIiIWJSBiIiIiIiIRRmIiIiIiIhYlIGIiIiIiIhFGYiIiIiIiFiUgYiIiIiIiEUZiIiIiIiIWJSBiIiIiIiIRRmIiIiIiIhYlIGIiIiIiIhFGYiIiIiIiFiUgYiIiIiIiEX9H11Z5HYUVmPrAAAAAElFTkSuQmCC" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-autovalores-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;2.1: Autovalores (normalizados por el mayor en valor absoluto) de las seis matrices del experimento. Las cuatro primeras están en el semieje positivo; la coherencia imaginaria y el wPLI tienen autovalores negativos (<a href="#prp-wpli-indefinida" class="quarto-xref">Proposición&nbsp;<span>2.3</span></a>).
+</figcaption>
+</figure>
+</div>
+</div>
+<p>La <a href="#fig-autovalores" class="quarto-xref">Figura&nbsp;<span>2.1</span></a> es el resultado central del capítulo: las cuatro primeras matrices viven en el cono (HPD o SPD) y las dos últimas, no, y no por un fallo de estimación sino porque tienen <strong>diagonal nula</strong> (<a href="#prp-wpli-indefinida" class="quarto-xref">Proposición&nbsp;<span>2.3</span></a>). <span class="ev-numerico">Verificado numéricamente</span></p>
+<section id="qué-le-ocurre-a-la-matriz-antes-de-verla" class="level3" data-number="2.3.1">
+<h3 data-number="2.3.1" class="anchored" data-anchor-id="qué-le-ocurre-a-la-matriz-antes-de-verla"><span class="header-section-number">2.3.1</span> Qué le ocurre a la matriz antes de verla</h3>
+<p>Antes del análisis, la señal sufre tres transformaciones lineales: la <strong>ganancia</strong> de cada electrodo (una matriz diagonal invertible <span class="math inline">\(D\)</span>), la <strong>mezcla</strong> por conducción de volumen (una matriz invertible <span class="math inline">\(M\)</span>) y la <strong>referencia</strong> (con <span class="math inline">\(n\)</span> canales, la referencia promedio es la proyección singular <span class="math inline">\(H=I-\tfrac1n\mathbf 1\mathbf 1^\top\)</span>). Actúan sobre la covarianza como <span class="math inline">\(P\mapsto DPD\)</span>, <span class="math inline">\(P\mapsto MPM^\top\)</span> y <span class="math inline">\(P\mapsto HPH\)</span>.</p>
+<div id="prp-referencia" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposición 2.4 (La referencia promedio saca la matriz del cono)</strong></span> Si <span class="math inline">\(P\in\R^{n\times n}\)</span> y <span class="math inline">\(H=I-\tfrac1n\mathbf 1\mathbf 1^\top\)</span>, entonces <span class="math inline">\(HPH\)</span> tiene <span class="math inline">\(\mathbf 1\)</span> en su núcleo y, por tanto, rango a lo sumo <span class="math inline">\(n-1\)</span>: no es definida positiva. <span class="ev-demostrado">Demostrado</span></p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Demostración</em>. </span><span class="math inline">\(H\mathbf 1=\mathbf 1-\tfrac1n\mathbf 1(\mathbf 1^\top\mathbf 1)=0\)</span>, así que <span class="math inline">\((HPH)\mathbf 1=HPH\mathbf 1=0\)</span>.</p>
+</div>
+<p>En cambio, <span class="math inline">\(D\)</span> y <span class="math inline">\(M\)</span> son invertibles y <span class="math inline">\(DPD\)</span>, <span class="math inline">\(MPM^\top\)</span> siguen en el cono. La celda siguiente lo comprueba con la covarianza de banda del experimento:</p>
+<div id="lab1-transformaciones" class="cell" data-execution_count="1">
+<details open="" class="code-fold">
+<summary>Código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>P <span class="op">=</span> <span class="fu">Symmetric</span>(<span class="fu">real</span>.(S))</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="fu">size</span>(P, <span class="fl">1</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>D <span class="op">=</span> <span class="fu">Diagonal</span>(<span class="fu">exp</span>.(<span class="fl">0.5</span> <span class="op">.*</span> <span class="fu">randn</span>(rng, n)))            <span class="co"># ganancias de electrodo</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>M <span class="op">=</span> <span class="fu">randn</span>(rng, n, n) <span class="op">+</span> <span class="fl">3</span>I                           <span class="co"># mezcla invertible</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>H <span class="op">=</span> I <span class="op">-</span> <span class="fu">ones</span>(n, n) <span class="op">/</span> n                              <span class="co"># referencia promedio</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"| Transformación | Rango | ¿Definida positiva? |</span><span class="sc">\n</span><span class="st">|---|---|---|"</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (nombre, X) <span class="kw">in</span> ((<span class="st">"Ninguna"</span>, P), (<span class="st">"Ganancias D P D"</span>, D <span class="op">*</span> P <span class="op">*</span> D), (<span class="st">"Mezcla M P Mᵀ"</span>, M <span class="op">*</span> P <span class="op">*</span> M<span class="op">'</span>),</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>                    (<span class="st">"Referencia promedio H P H"</span>, H <span class="op">*</span> P <span class="op">*</span> H))</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(<span class="st">"| "</span>, nombre, <span class="st">" | "</span>, <span class="fu">rank</span>(<span class="fu">Symmetric</span>(X); rtol <span class="op">=</span> <span class="fl">1e-10</span>), <span class="st">" | "</span>, <span class="fu">isspd</span>(<span class="fu">Symmetric</span>(X)) ? <span class="st">"sí"</span> <span class="op">:</span> <span class="st">"no"</span>, <span class="st">" |"</span>)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th>Transformación</th>
+<th>Rango</th>
+<th>¿Definida positiva?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Ninguna</td>
+<td>6</td>
+<td>sí</td>
+</tr>
+<tr class="even">
+<td>Ganancias D P D</td>
+<td>6</td>
+<td>sí</td>
+</tr>
+<tr class="odd">
+<td>Mezcla M P Mᵀ</td>
+<td>6</td>
+<td>sí</td>
+</tr>
+<tr class="even">
+<td>Referencia promedio H P H</td>
+<td>5</td>
+<td>no</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Las ganancias y la mezcla conservan el cono; la referencia promedio lo abandona. Cómo tratar ese caso (reducir a <span class="math inline">\(n-1\)</span> canales o regularizar) es el tema del capítulo <a href="covarianzas.html" class="quarto-xref"><span>3</span></a>.</p>
+</section>
+<section id="una-invariancia-útil-la-correlación" class="level3" data-number="2.3.2">
+<h3 data-number="2.3.2" class="anchored" data-anchor-id="una-invariancia-útil-la-correlación"><span class="header-section-number">2.3.2</span> Una invariancia útil: la correlación</h3>
+<div id="prp-correlacion" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposición 2.5 (La correlación elimina las ganancias diagonales)</strong></span> Sea <span class="math inline">\(P\in\SPD_n\)</span>, <span class="math inline">\(D\)</span> diagonal con entradas positivas y <span class="math inline">\(\operatorname{Corr}(P)_{ij}=P_{ij}/\sqrt{P_{ii}P_{jj}}\)</span>. Entonces <span class="math inline">\(\operatorname{Corr}(DPD)=\operatorname{Corr}(P)\)</span>. <span class="ev-demostrado">Demostrado</span></p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Demostración</em>. </span><span class="math inline">\((DPD)_{ij}=d_iP_{ij}d_j\)</span> y <span class="math inline">\((DPD)_{ii}=d_i^2P_{ii}\)</span>, de modo que <span class="math inline">\(\operatorname{Corr}(DPD)_{ij}=\dfrac{d_id_jP_{ij}}{\sqrt{d_i^2P_{ii}\,d_j^2P_{jj}}}=\operatorname{Corr}(P)_{ij}\)</span>, porque <span class="math inline">\(d_i,d_j&gt;0\)</span> se cancelan.</p>
+</div>
+<p>Esa invariancia tiene un coste: la correlación descarta la <strong>potencia</strong> de cada canal, que es información fisiológica. Cuándo conviene pagarlo es una pregunta de la introducción y de los capítulos <a href="metricas-spd.html" class="quarto-xref"><span>4</span></a> y <a href="estadistica.html" class="quarto-xref"><span>6</span></a>.</p>
+</section>
+</section>
+<section id="experimento-2-conducción-de-volumen-frente-a-acoplamiento-con-retardo" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="experimento-2-conducción-de-volumen-frente-a-acoplamiento-con-retardo"><span class="header-section-number">2.4</span> Experimento 2: conducción de volumen frente a acoplamiento con retardo</h2>
+<p>Dos sensores reciben la actividad de tres fuentes; las medidas de fase deben distinguir un acoplamiento real de una simple mezcla. El resultado teórico es sencillo.</p>
+<div id="prp-mezcla-real" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposición 2.6 (La parte imaginaria ignora una mezcla instantánea real)</strong></span> Sea <span class="math inline">\(Z=MY\)</span> con <span class="math inline">\(M\in\R^{n\times m}\)</span> real y <span class="math inline">\(Y\in\mathbb C^{m\times K}\)</span>. Entonces <span class="math inline">\(\hat S_Z=M\hat S_YM^\top\)</span> y <span class="math inline">\(\operatorname{Im}\hat S_Z=M\,(\operatorname{Im}\hat S_Y)\,M^\top\)</span>. En particular, si <span class="math inline">\(\operatorname{Im}\hat S_Y=0\)</span> (fuentes sin relación de fase), <span class="math inline">\(\operatorname{Im}\hat S_Z=0\)</span>. <span class="ev-demostrado">Demostrado</span></p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Demostración</em>. </span><span class="math inline">\(\hat S_Z=\tfrac1K MYY^*M^\top=M\hat S_YM^\top\)</span> porque <span class="math inline">\(M\)</span> es real, y tomar la parte imaginaria conmuta con la multiplicación por matrices reales.</p>
+</div>
+<p>Es la razón de ser de la coherencia imaginaria <span class="citation" data-cites="nolte2004identifying">(<a href="../bibliografia.html#ref-nolte2004identifying" role="doc-biblioref">Nolte et&nbsp;al. 2004</a>)</span> y del wPLI <span class="citation" data-cites="vinck2011improved">(<a href="../bibliografia.html#ref-vinck2011improved" role="doc-biblioref">Vinck et&nbsp;al. 2011</a>)</span>: la conducción de volumen, que es una mezcla instantánea real, no genera parte imaginaria; un <strong>retardo</strong> sí. Lo comprobamos sobre dos escenarios: solo conducción de volumen (sin acoplamiento entre las fuentes) y acoplamiento con retardo <span class="math inline">\(\varphi=\pi/3\)</span>.</p>
+<div id="lab1-nube" class="cell" data-execution_count="1">
+<details open="" class="code-fold">
+<summary>Código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>rng2 <span class="op">=</span> <span class="fu">StableRNG</span>(<span class="fl">20261108</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>A2 <span class="op">=</span> MEZCLA[<span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="op">:</span>]</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>escenarios <span class="op">=</span> [(<span class="st">"Solo volumen (κ = 0)"</span>, <span class="fl">0.0</span>, <span class="fl">0.0</span>), (<span class="st">"Retardo (κ = 0,6, φ = π/3)"</span>, <span class="fl">0.6</span>, <span class="cn">π</span> <span class="op">/</span> <span class="fl">3</span>)]</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>nubes <span class="op">=</span> <span class="fu">Dict</span><span class="dt">{String, Vector{ComplexF64}}</span>()</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"| Escenario | Coherencia | Coherencia imaginaria | PLV | wPLI |</span><span class="sc">\n</span><span class="st">|---|---|---|---|---|"</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (nombre, κ, <span class="cn">φ</span>) <span class="kw">in</span> escenarios</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    Y <span class="op">=</span> <span class="fu">fuentes</span>(rng2, <span class="fl">300</span>; κ <span class="op">=</span> κ, <span class="cn">φ</span> <span class="op">=</span> <span class="cn">φ</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    Z2 <span class="op">=</span> <span class="fu">sensores</span>(rng2, Y; A <span class="op">=</span> A2)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    nubes[nombre] <span class="op">=</span> Z2[<span class="fl">1</span>, <span class="op">:</span>] <span class="op">.*</span> <span class="fu">conj</span>.(Z2[<span class="fl">2</span>, <span class="op">:</span>])</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    m <span class="op">=</span> <span class="fu">medidas</span>(Z2[<span class="fl">1</span>, <span class="op">:</span>], Z2[<span class="fl">2</span>, <span class="op">:</span>])</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(<span class="st">"| "</span>, nombre, <span class="st">" | "</span>, <span class="fu">join</span>((<span class="fu">round</span>(v; digits <span class="op">=</span> <span class="fl">3</span>) <span class="cf">for</span> v <span class="kw">in</span> m), <span class="st">" | "</span>), <span class="st">" |"</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co"># comprobación numérica de la proposición con 6 sensores y sin ruido</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>Y <span class="op">=</span> <span class="fu">fuentes</span>(rng2, <span class="fl">500</span>)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">Identidad Im(M S_Y Mᵀ) = M Im(S_Y) Mᵀ: error relativo "</span>,</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>        <span class="fu">round</span>(<span class="fu">norm</span>(<span class="fu">imag</span>(<span class="fu">espectral</span>(MEZCLA <span class="op">*</span> Y)) <span class="op">-</span> MEZCLA <span class="op">*</span> <span class="fu">imag</span>(<span class="fu">espectral</span>(Y)) <span class="op">*</span> MEZCLA<span class="op">'</span>) <span class="op">/</span> <span class="fu">norm</span>(<span class="fu">imag</span>(<span class="fu">espectral</span>(MEZCLA <span class="op">*</span> Y))); sigdigits <span class="op">=</span> <span class="fl">2</span>), <span class="st">"."</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th>Escenario</th>
+<th>Coherencia</th>
+<th>Coherencia imaginaria</th>
+<th>PLV</th>
+<th>wPLI</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Solo volumen (κ = 0)</td>
+<td>0.903</td>
+<td>0.001</td>
+<td>0.854</td>
+<td>0.004</td>
+</tr>
+<tr class="even">
+<td>Retardo (κ = 0,6, φ = π/3)</td>
+<td>0.936</td>
+<td>0.072</td>
+<td>0.881</td>
+<td>0.371</td>
+</tr>
+</tbody>
+</table>
+<p>Identidad Im(M S_Y Mᵀ) = M Im(S_Y) Mᵀ: error relativo 2.2e-16.</p>
+</div>
+<div id="cell-fig-nube" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> <span class="fu">Figure</span>(size <span class="op">=</span> (<span class="fl">820</span>, <span class="fl">380</span>))</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (j, (nombre, _, _)) <span class="kw">in</span> <span class="fu">enumerate</span>(escenarios)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> nubes[nombre]; s <span class="op">=</span> <span class="fu">sort</span>(<span class="fu">abs</span>.(x))[<span class="fu">length</span>(x) <span class="op">÷</span> <span class="fl">2</span>]</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    ax <span class="op">=</span> <span class="fu">Axis</span>(fig[<span class="fl">1</span>, j]; title <span class="op">=</span> nombre, aspect <span class="op">=</span> <span class="fu">DataAspect</span>(), xlabel <span class="op">=</span> <span class="st">"parte real"</span>, ylabel <span class="op">=</span> j <span class="op">==</span> <span class="fl">1</span> ? <span class="st">"parte imaginaria"</span> <span class="op">:</span> <span class="st">""</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">hlines!</span>(ax, [<span class="fl">0.0</span>]; color <span class="op">=</span> <span class="op">:</span>gray, linewidth <span class="op">=</span> <span class="fl">0.8</span>); <span class="fu">vlines!</span>(ax, [<span class="fl">0.0</span>]; color <span class="op">=</span> <span class="op">:</span>gray, linewidth <span class="op">=</span> <span class="fl">0.8</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scatter!</span>(ax, <span class="fu">real</span>.(x) <span class="op">./</span> s, <span class="fu">imag</span>.(x) <span class="op">./</span> s; color <span class="op">=</span> (colores[j <span class="op">==</span> <span class="fl">1</span> ? <span class="fl">3</span> <span class="op">:</span> <span class="fl">6</span>], <span class="fl">0.4</span>), markersize <span class="op">=</span> <span class="fl">5</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlims!</span>(ax, <span class="op">-</span><span class="fl">4</span>, <span class="fl">4</span>); <span class="fu">ylims!</span>(ax, <span class="op">-</span><span class="fl">4</span>, <span class="fl">4</span>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>fig</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="fig-nube" class="cell-output cell-output-display quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="1">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-nube-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img width="820" height="380" style="object-fit: contain; height: auto;" src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAzQAAAF8CAYAAAAZ5v5fAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAOxAAADsQBlSsOGwAAIABJREFUeAHswQmAzwXi///n+/N5f665x1yM2xj3taSUDldF2sK2JUkRoyhs20WSbbu28ot206qV1HTsVisRUrvIkShKitzkmo8xxpyfz2c+x+///v7+8/tN06Qo5TO9Hg8z8v9BREREREQkCpmIiIiIiIhEKRMREREREZEoZSIiIiIiIhKlTERERERERKKUiYiIiIiISJQyERERERERiVImIiIiIiIiUcpEREREREQkSpmIiIiIiIhEKRMREREREZEoZSIiIiIiIhKlTERERERERKKUiYiIiIiISJQyERERERERiVImIiIiIiIiUcpEREREREQkSpmIiIiIiIhEKRORKBAKhdiwYQN79uwhISGBdu3aUb9+fX6oUCjExo0bcTqddOjQgV9CYWEhO3bsICUlhaZNmxJNSkpK2Lp1K23btsXj8fBz8Pl8BINB4uLiqLRr1y4qKipo2bIlIlJ7fPzxx1QXExNDdnY2DoeDX9oXX3xBeXk5HTp0wOl0cqq2bduG3W4nKyuLn0t+fj6pqan8UF6vl6SkJJxOJ7VZXl4eiYmJuN1uKn322WekpaWRmZmJRBcTkTPcpk2buPrqq/nqq6+oZJomo0aN4umnn8YwDL5PcXExXbt2pX79+uzfv59fwvLlyxk4cCDXXXcdubm5RJM77riDJUuWsGPHDk63goICBg8ezIoVKwiFQnTp0oXXXnuNpk2bsmrVKkaNGsXmzZvJzs5GRGqHrl27UpPU1FT++c9/0qtXL77Ptm3bWLRoEe3ataNPnz78lK655hq++OILdu/eTZMmTTgVe/bsoVOnTjz11FNkZWVxuj3//PNMmTKFAwcOkJaWxm233cZ9993Hd3n99deZMGECBw8exOl0cvvtt/PII49QG0yfPp1HHnmEw4cP8+qrr/KHP/wBr9eLzWajf//+zJkzh5SUFGbMmMGaNWvYtGkTTqcTiR4mIme46667jq+++oorr7ySK664gq1bt/LSSy/xzDPP0KFDB26++Wbk9Nm0aRPPPfccf/3rXzFNk9Ptuuuu47333uPaa68lOTmZmTNnctlll7FlyxaGDBnC/fffzx//+EfefvttRKT2sNvtTJgwAUsoFOKDDz5gw4YN5OTksGPHDr7Phg0b+MMf/sBNN91Enz59ONPccccd1KlTh2HDhnG6ffjhh4waNYrMzEzuu+8+3nzzTaZMmUKLFi245pprqO7DDz9k8ODBNG/enHvvvZc33niDRx99lG7dunHllVcS7ZYsWcIll1zCzp07GT58OHFxcYwbN441a9awYMEC7rjjDubMmcM999xDq1at+Nvf/sbtt9+ORA8TkTNYYWEhmzdvxuVy8dprr+F2u7FccMEFjBo1io0bN1IpPz+fZ599li1btpCWlka/fv24+OKLOZF33nmHpUuXUlhYSNu2bcnJySEpKYnq9u7dy5NPPklGRgYTJ07E4vV6efjhh0lISOCBBx7AsmnTJl577TX27dtH06ZNue6662jVqhU1WbZsGfPnz+eSSy7hsssuw5Kbm8vHH3/MTTfdRPv27Zk8eTIlJSXcdtttzJw5k7KyMq6//nrat2/P9OnT2bZtG+eccw4333wzpmliycvLY9asWWzfvp2srCyGDx9O48aNsbzyyiusW7eOG2+8kXXr1rF69WoaNmzI7bffTp06dajJE088gcvl4vrrr8cye/ZsPv/8c26++WZatWrFf/7zHxYsWEDLli255ZZb+DHy8/N57733yMrK4pVXXsHy5Zdfsnz5cj799FM6derEiBEjuP/++9myZQutW7dGRGoH0zR54oknqLRr1y6ysrLYuXMnfr8fl8tFXl4es2bNYvv27WRlZTF8+HAaN27Mnj17eP/997Fs3bqVxYsX069fP3w+H3PmzGHdunWEQiHat2/PqFGjSEpKoqCggAceeIB69eoxZMgQnn76acaOHUvDhg3ZvHkzc+bMoby8nBtuuIGavPPOOyxdupTCwkLatm1LTk4OSUlJ1GTHjh3MmzePSZMm4XQ6OXDgAI8//jhNmjRhwoQJBAIB/vSnP1FWVsa4ceNo2rQpP8arr75KOBzmkUceYejQofTu3ZsePXrw6quvcs0111DdX//6V8LhMK+++iqdO3dm9OjRfPTRRzRr1oyTsX79erp27UqlNWvWsH79ejp06EDPnj35Ka1evZqVK1dy5MgRQqEQ1Q0ePJhu3bpRXl7OihUr+Mc/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Mh577DHuuece2rdvTzSZPXs2Ep1M5JSNHz+ejIwMtm7dioiISFXjx48nIyODrVu3IvJr0qZNG0R+TiZySv7973+zevVq5s6dy9lnn42IiEilf//736xevZq5c+dy9tlnIyIip4+JnLSvv/6asWPHsnjxYkzT5ERWrVrF6tWrqcrr9VJYWEjjxo0RETnd9u3bR+fOnRkzZgxy+n399deMHTuWxYsXY5omJ7Jq1SpWr15NVV6vl8LCQho3boyIyOm2b98+OnfuzJgxY4hWJnJSwuEw119/PXfddRedOnVi8+bNnIjP5+PYsWNUtXHjRoqLi0lISEC+KRgMEggEiImJQb5t8+bNtGvXDvm2srIynE4npmki3/TZZ59RWlrKmDFjkNMrHA5z/fXXc9ddd9GpUyc2b97Mifh8Po4dO0ZVGzdupLi4mISEBOSbgsEggUCAmJgY5Ns2b95Mu3btkG8rKyvD6XRimibyTZ999hmlpaWMGTOGaGUiJ+Wtt95i48aN9O7dmwcffBCv14vliSeeoHfv3vTs2ZOq+vTpQ58+fahq4sSJWB555BHkm3w+H0VFRaSnpyPf9vTTTzN27Fjk27xeLwkJCbjdbuSbJk6ciPw83nrrLTZu3Ejv3r158MEH8Xq9WJ544gl69+5Nz549qapPnz706dOHqiZOnIjlkUceQb7J5/NRVFREeno68m1PP/00Y8eORb7N6/WSkJCA2+1GvmnixIlEOxM5KfXq1WPgwIHs3LkTS2FhIZZdu3bRsWNHRETk16tevXoMHDiQnTt3YiksLMSya9cuOnbsiIiI/PRM5KSce+65nHvuuVTavHkz8+fPZ+bMmSQlJSEiIr9e5557Lueeey6VNm/ezPz585k5cyZJSUmIiMhPz0RERERERCRKmciP0q5dOyKRCCIiItW1a9eOSCSCiIicPiYiIiIiIiJRykRERERERCRKmYiIiIiIiEQpExERERERkShlIiIiIiIiEqVMREREREREopSJiIiIiIhIlDIRERERERGJUiYiIiIiIiJRykRERERERCRKmYiIiIiIiEQpExERERERkShlIiIiIiIiEqVMREREREREopSJiIiIiIhIlDIRERERERGJUiYiIiIiIiJRykRERERERCRKmYiIiIiIiEQpExERERERkShlIiIiIiIiEqVMREREREREopSJiIiIiIhIlDIRERERERGJUiYiIiIiIiJRykRERERERCRKmYiIiIiIiEQpExERERERkShlIiIiIiIiEqVMREREREREopSJiIiIiIhIlDIRERERERGJUiYiIiIiIiJRykRERERERCRKmYiIiIiIiEQpExERERERkShlIiIiIiIiEqVMREREREREopSJiIiIiIhIlDIRERERERGJUiYiIiIiIiJRykRERERERCRKmYiIiIiIiEQpExERERERkShlIiIiIiIiEqVMREREREREopSJiIiIiIhIlDIRERERERGJUiYiIiIiIiJRykQIlGkfAAAgAElEQVRERERERCRKmYiIiIiIiEQpExERERERkShlIiIiIiIiEqVMREREREREopSJiIiIiIhIlDIRERERERGJUiYiIiIiIiJRykRERERERCRKmYiIiIiIiEQpExERERERkShlIqdk+fLlvPXWWxQXF9OtWzeGDx+OaZqISO0TDIc5WHacJKeHBKcbke+zfPly3nrrLYqLi+nWrRvDhw/HNE1EROSnZyInLTc3l1GjRjFmzBiaN2/OX/7yF1577TXee+89bDYbIlK7LNq/hcPlxdgMg4GN25HiikXku+Tm5jJq1CjGjBlD8+bN+ctf/sJrr73Ge++9h81mQ0REflomctIeeughpkyZwsSJE7HccMMNNG7cmBUrVtCzZ09EpPYIRyLk+UqwhCMR8spLSHHFIvJdHnroIaZMmcLEiROx3HDDDTRu3JgVK1bQs2dPRETkp2UiJyUUCpGRkUH//v2plJGRQWxsLIcOHUJEahebYZAVn8KOonw8poOGsUmIfJdQKERGRgb9+/enUkZGBrGxsRw6dAgREfnpmchJsdvtLF++nKqeeeYZfD4fF110EdXt2rWLXbt2UVVhYSFxcXH4fD7km3w+H36/H5/Ph3xbOBzG5/Mh3+b3+/H5fJwO5yU3oF1cKjF2J2Yogi/kI5oEg0FM00ROP7vdzvLly6nqmWeewefzcdFFF1Hdrl272LVrF1UVFhYSFxeHz+dDvsnn8+H3+/H5fMi3hcNhfD4f8m1+vx+fz4d8WzAYxDRNopmJnLK8vDwmT57MK6+8Qm5uLvXr16e6VatW8dJLL1GV2+2madOmFBUVId/k9/spLi7G5XIh3xYOhykqKkK+rbi4GEsgEOB0KSNANPL7/Zimify88vLymDx5Mq+88gq5ubnUr1+f6latWsVLL71EVW63m6ZNm1JUVIR8k9/vp7i4GJfLhXxbOBymqKgI+bbi4mIsgUAA+Sa/349pmkQzEzklL774IuPHj6dPnz58/vnnNGvWjJoMGzaMYcOGUdXEiROxpKenI9/k8/lwuVykp6cj32aaJunp6UjNEhIScLvdyDfFxsYiP68XX3yR8ePH06dPHz7//HOaNWtGTYYNG8awYcOoauLEiVjS09ORb/L5fLhcLtLT05FvM02T9PR0pGYJCQm43W7km2JjY4l2JnLSnnvuOe69917efPNNevXqhYiISKXnnnuOe++9lzfffJNevXohIiKnl4mcFL/fz6RJk5g+fTq9evVCRESkkt/vZ9KkSUyfPp1evXohIiKnn4mclK1bt5Kfn09OTg6jR4+mqtzcXAYMGICIiPw6bd26lfz8fHJychg9ejRV5ebmMmDAAERE5KdlIielUaNGLFu2jJq0bdsWERH59WrUqBHLli2jJm3btkVERH56JnJSkpOT6dGjByIiItUlJyfTo0cPRETk52MiIiIiIiISpUxERERERESilImIiPxgq7172F18lMZxdbggoykiIiLyyzIREZEfpMBfxhfHDmPZUphHq8R00tyxiIiIyC/HREREfhC33YHdsBGKhLEZBh7TgYiIiPyyTERE5AeJMR1c1qAVe0uO0SgumTjTiYiIiPyyTERE5AerF5NAvZgERERE5MxgIiIiIiIiEqVMREREREREopSJiIiIiIhIlDIRERERERGJUiYiIiIiIiJRykRERERERCRKmYiIiIiIiEQpk1+RGTNmcNttt2Gz2RARERERkehnUgstWLCAxYsXEwgEqFReXs6bb77JyJEjiY2NRUREREREop9JLbNu3ToGDhzIoEGD2LhxI/Xq1aN169a89957PPbYY8TGxiIiIiIiIrWDSS3z/vvv079/f/71r3/x+uuv8/bbbzNr1ixGjBjB2LFjGTduHCIiIiIiUjuY1DJ+v5/U1FQs7du35y9/+QuWc845h8OHD7N//34aNGiAiIiIiIhEP5NapkOHDjz77LOsXLmSbt26sXPnTnbt2kVaWhrHjh2jvLwcERERERGpHUxqmQEDBjBv3jzGjBnD559/zm233UabNm1wu920b9+e5s2bIyIiIiIitYNJLWO328nNzaWiogLL1KlT6dmzJ3l5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pyxERERERETylIWIiIiIiEieshAREREREclTFvK59ff3E41Gqa2tRUREZKz+/n6i0Si1tbWIiMjJYyHHrb29na9//eu88soruFwuioqKeOSRR7jssssQEZHJrb29na9//eu88soruFwuioqKeOSRR7jssssQEZETz0KO2+23304qlaKnp4dQKMT999/Ptddey3vvvUdNTQ0iIjJ53X777aRSKXp6egiFQtx///1ce+21vPfee9TU1CAiIieWhRy3X/3qV2zZsoVwOEzOHXfcwaZNm2hqauJrX/saIiIyef3qV79iy5YthMNhcu644w42bdpEU1MTX/va1xARkRPLQo5LNpvlF7/4Beeccw6j2traiEQilJaWIiIik1c2m+UXv/gF55xzDqPa2tqIRCKUlpYiIiInnoUcF9M0WbVqFaNaWlq4/PLLOe+887jwwgs51M9+9jMee+wxxvJ4PEydOpWuri7kYMlkkmg0iowvnU7T1dWFHK6np4dkMonb7UYOFovF8Pv9yMlnmiarVq1iVEtLC5dffjnnnXceF154IYf62c9+xmOPPcZYHo+HqVOn0tXVhRwsmUwSjUaR8aXTabq6upDD9fT0kEwmcbvdyMFisRh+v598ZiEHyWQybN++nfE0NjYSCATISSQSbNy4kR/+8IfccMMN3H///RiGwaGWL19OVVUVYz3xxBO43W5CoRBysEQiQU4oFEIOZ5omoVAIOVwymSQYDOLxeJCDud1u5MTIZDJs376d8TQ2NhIIBMhJJBJs3LiRH/7wh9xwww3cf//9GIbBoZYvX05VVRVjPfHEE7jdbkKhEHKwRCJBTigUQg5nmiahUAg5XDKZJBgM4vF4kIO53W7ynYUcJJFIcNdddzGehx56iDlz5tDZ2cmFF15IWVkZr7/+OvPnz+dIGhoaaGhoYKwXXniBHI/HgxxuZGQEj8eDHM40TTweD3I4t9uNx+PB4/EgB7MsCzkxEokEd911F+N56KGHmDNnDp2dnVx44YWUlZXx+uuvM3/+fI6koaGBhoYGxnrhhRfI8Xg8yOFGRkbweDzI4UzTxOPxIIdzu914PB48Hg9yMMuyyHcWchC/38/zzz/P0dxwww0sXLiQf/qnf8IwDEREZHLw+/08//zzHM0NN9zAwoUL+ad/+icMw0BERE4uCzku7e3t/PrXv2bDhg088MADjLV69WpmzpyJiIhMTu3t7fz6179mw4YNPPDAA4y1evVqZs6ciYiInFgWclz6+vo4//zzaW5uprm5mbGWLFnCzJkzERGRyamvr4/zzz+f5uZmmpubGWvJkiXMnDkTERE5sSzkuDQ2NvLyyy8jIiJyqMbGRl5++WVEROSLYyEiIiIiIpKnLERERERERPKUhYiIiIiISJ6yEBERERERyVMWIiIiIiIiecpCREREREQkT1mIiIiIiIjkKQsREREREZE8ZSEiIiIiIpKnLERERERERPKUhYiIiIiISJ6yEBERERERyVMWIiIiIiIiecpCREREREQkT1mIiIiIiIjkKQsREREREZE8ZSEiIiIiIpKnLERERERERPKUhYiIiIiISJ6yEBERERERyVMWIiIiIiIiecpCREREREQkT1mIiIiIiIjkKQsREREREZE8ZSEiIiIiIpKnLERERERERPKUhYiIiIiISJ6yEBERERERyVMWIiIiIiIiecpCREREREQkT1mIiIiIiIjkKQsREREREZE8ZSEiIiIiIpKnLERERERERPKUhYiIiIiISJ6yEBERERERyVMWIiIiIiIiecpCREREREQkT1mIiIiIiIjkKQsREREREZE8ZSEiIiIiIpKnLERERERERPKUhYiIiIiISJ6yEBERERERyVMWIiIiIiIiecpCREREREQkT1mIiIiIiIjkKQsREREREZE8ZSEiIiIiIpKnLERERERERPKUhYiIiIiISJ6yEBERERERyVMWIiIiIiIiecpCREREREQkT1mIiIiIiIjkKQsREREREZE8ZSEiIiIiIpKnLERERERERPKUhYiIiIiISJ6yEBERERERyVMW8kfZuXMnl1xyCXv27CEUCiEiIjJq586dXHLJJezZs4dQKISIiJx4FvK5DQ8Ps3btWjo7O8lms4iIiIwaHh5m7dq1dHZ2ks1mERGRk8NCPrdbb72V8vJydu/ejYiIyFi33nor5eXl7N69GxEROXks5HN58sknefXVV9myZQtnn302IiIio5588kleffVVtmzZwtlnn42IiJw8FnLcWltb2bBhA9u2bcOyLI6mqamJV199lbHeeusthoeHueeee5CDpVIpkskkgUAAOdybb75Jb28vcrihoSHcbjdOpxM5WFNTE1OmTEG+GK2trWzYsIFt27ZhWRZH09TUxKuvvspYb731FsPDw9xzzz3IwVKpFMlkkkAggBzuzTffpLe3Fznc0NAQbrcbp9OJHKypqYkpU6aQzyzkuGSzWdatW8cdd9zBokWLaG5u5mgSiQSRSISx3G43iUSCSCSCHGxwcJCOjg5mzZqFHK6vr49IJIIc7r333qOyspJQKIQczDRNgsEgcvJls1nWrVvHHXfcwaJFi2hubuZoEokEkUiEsdxuN4lEgkgkghxscHCQjo4OZs2ahRyur6+PSCSCHO69996jsrKSUCiEHMw0TYLBIPnMQg4yMDBAdXU143nppZdobW1lx44drFy5ku9+97t0dXWRc//997Ny5UouuOACxlq1ahWrVq1irI0bN5KzceNG5GAvv/wyd999Nw8++CByOMMwaGpqQg53wQUXsG7dOlasWIEcbOPGjciJMTAwQHV1NeN56aWXaG1tZceOHaxcuZLvfve7dHV1kXP//fezcuVKLrjgAsZatWoVq1atYqyNGzeSs3HjRuRgL7/8MnfffTcPPvggcjjDMGhqakIOd8EFF7Bu3TpWrFiBHGzjxo3kOws5SEFBAUNDQxxJOp1mzZo17Nu3j5z+/n5yWlpaWLhwISIiMnEVFBQwNDTEkaTTadasWcO+ffvI6e/vJ6elpYWFCxciIiInnoUcl2XLlrFs2TJGNTc389RTT/Hwww8TDocREZHJa9myZSxbtoxRzc3NPPXUUzz88MOEw2FEROTEsxAREREREclTFvJHaWxsxLZtjsfy5cuR8dXV1bF27VpkfHfeeScyvrVr11JXV4ccbvny5cip0djYiG3bHI/ly5cj46urq2Pt2rXI+O68805kfGvXrqWurg453PLly8l3FvKFW7VqFTK+hoYGbrrpJmR89913HzK+m266CRnfqlWrkPyxatUqZHwNDQ3cdNNNyPjuu+8+ZHw33XQTMr5Vq1aR7yxERERERETylIWIiIiIiEieshAREREREclTFiIiIiIiInnKQk4L3d3dfOtb3+InP/kJPp8PgZaWFjZv3kxbWxuzZs3i5ptvpri4mMmoq6uLzZs3s3//fpYuXcr69esxDAOBaDTKP/7jP/Luu+9SXl7ODTfcwLx585CDNTU18dRTT/H3f//3SP7p7u7mW9/6Fj/5yU/w+XwItLS0sHnzZtra2pg1axY333wzxcXFTEZdXV1s3ryZ/fv3s3TpUtavX49hGAhEo1H+8R//kXfffZfy8nJuuOEG5s2bhxysqamJp556ir//+78nH1nIaWH9+vU888wzPPLII/h8Pia7PXv2sGjRIlavXs1ZZ53Fc889x0MPPcTOnTspLy9nMunv7+fcc8+ltraWc889l7/927/ltdde40c/+hGT3cjICEuXLiUYDHL11VfT3NzMGWecwXPPPcfKlSuRT0QiEa677jqKioqQ/LR+/XqeeeYZHnnkEXw+H5Pdnj17WLRoEatXr+ass87iueee46GHHmLnzp2Ul5czmfT393PuuedSW1vLueeey9/+7d/y2muv8aMf/YjJbmRkhKVLlxIMBrn66qtpbm7mjDPO4LnnnmPlypXIJyKRCNdddx1FRUXkKws55R566CF27dqFfOrBBx/k3HPP5Z//+Z/J+au/+isWLVrEww8/zN13381ksmXLFkzTZNu2bTidTtasWcPixYv5m7/5G+rq6pjMtm7dyoEDB3j99dcJBALk+Hw+7rnnHlauXIl84pvf/CamaSL56aGHHmLXrl3Ipx588EHOPfdc/vmf/5mcv/qrv2LRokU8/PDD3H333UwmW7ZswTRNtm3bhtPpZM2aNSxevJi/+Zu/oa6ujsls69atHDhwgNdff51AIECOz+fjnnvuYeXKlcgnvvnNb2KaJvnMQk6pXbt2ce+99/LjH/+YSy+9FPmEZVlcd911jHI4HNTX19PR0cFk8+yzz7J69WqcTic5CxYsYNq0aWzbto2bb76ZySwWi7Fu3ToCgQCjGhoaeP7555FPbN68mdbWVm677TYeffRRJL/s2rWLe++9lx//+MdceumlyCcsy+K6665jlMPhoL6+no6ODiabZ599ltWrV+N0OslZsGAB06ZNY9u2bdx8881MZrFYjHXr1hEIBBjV0NDA888/j3xi8+bNtLa2ctttt/Hoo4+SryzklEkkEqxdu5bvf//71NXVIZ966KGHGGv79u28+OKLPPbYY0w2HR0dXH755YxVV1dHR0cHk9369esZq7u7m5/85CdcfPHFCOzevZu77rqLV199lW3btiH5JZFIsHbtWr7//e9TV1eHfOqhhx5irO3bt/Piiy/y2GOPMdl0dHRw+eWXM1ZdXR0dHR1MduvXr2es7u5ufvKTn3DxxRcjsHv3bu666y5effVVtm3bRj6zkFPmr//6r1myZAnXXnstzc3NyOGSySQ/+MEPuOeee9iwYQNXXXUVk83g4CB+v5+xAoEAkUgE+dSTTz7J7bffTkNDA9/73veY7EZGRrjuuuvYtGkT06ZNQ/LPX//1X7NkyRKuvfZampubkcMlk0l+8IMfcM8997BhwwauuuoqJpvBwUH8fj9jBQIBIpEI8qknn3yS22+/nYaGBr73ve8x2Y2MjHDdddexadMmpk2bRr6zkJMiFotx1VVXMZ7vf//7dHd38/jjj/Mv//IvNDU1sX//fnJee+015syZQ319PRPZhg0b2LdvH4dav349X/3qV8nZvn0769atIxAI8Mwzz7BixQomo+LiYgYHBxmrv7+fM888E4EDBw5w4403smPHDu655x5uvPFGDMNgstu0aROGYTBt2jSamppoaWkhFovR1NREY2Mj4XAYOXVisRhXXXUV4/n+979Pd3c3jz/+OP/yL/9CU1MT+/fvJ+e1115jzpw51NfXM5Ft2LCBffv2caj169fz1a9+lZzt27ezbt06AoEAzzzzDCtWrGAyKi4uZnBwkLH6+/s588wzEThw4AA33ngjO3bs4J577uHGG2/EMAwmu02bNmEYBtOmTaOpqYmWlhZisRhNTU00NjYSDofJJxZyUng8Hu666y7GU11dze7duyksLOSWW24hJ5VKkXPTTTexYcMG7rzzTiayb37zmwwNDXGoKVOmkLNjxw4uuugi7r77br797W9jGAaTVX19Pe+//z5j7du3jz//8z9nshscHOTCCy/k7LPPZs+ePQQCAeQTsViM3t5err/+enKi0SjRaJTrr7+eLVu2cP755yOnjsfj4a677mI81dXV7N69m8LCQm655RZyUqkUOTfddBMbNmzgzjvvZCL75je/ydDQEIeaMmUKOTt27OCiiy7i7rvv5tvf/jaGYTBZ1dfX8/777zPWvn37+PM//3Mmu8HBQS688ELOPvts9uzZQyAQQD4Ri8Xo7e3l+uuvJycajRKNRrn++uvZsmUL559/PvnEQk4Kh8PB8uXLOZIrrriCK664glHNzc3Mnz+ft99+m3A4zES3aNEijuY73/kO11xzDbfeeiuT3TXXXMOdd97JvffeSzAY5OWXX6anp4fVq1cz2f3oRz8ik8nw05/+FMMwkE/dd9993HfffYz6h3/4BzZv3szOnTuRU8/hcLB8+XKO5IorruCKK65gVHNzM/Pnz+ftt98m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" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-nube-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;2.2: Espectro cruzado por segmento <span class="math inline">\(X^{12}_k=Z_{k,1}\overline{Z_{k,2}}\)</span> de los dos sensores en el plano complejo, normalizado por su mediana. Con solo conducción de volumen la nube queda simétrica respecto del eje real (la parte imaginaria promedia cero); con retardo la parte imaginaria deja de promediar cero (véanse las medidas de la tabla anterior).
+</figcaption>
+</figure>
+</div>
+</div>
+<p>En el primer escenario la coherencia y el PLV son altos, porque los sensores comparten una fuente, pero la coherencia imaginaria es casi nula y el wPLI es pequeño: la medida «ve» que no hay retardo. En el segundo, la parte imaginaria aparece y el wPLI sube <span class="ev-numerico">Verificado numéricamente</span>. Con pocos segmentos el wPLI de dos señales sin relación de fase no es exactamente cero sino algo positivo (es un valor absoluto de una media ruidosa); de ahí el interés por estimadores corregidos del sesgo <span class="citation" data-cites="vinck2011improved">(<a href="../bibliografia.html#ref-vinck2011improved" role="doc-biblioref">Vinck et&nbsp;al. 2011</a>)</span>.</p>
+</section>
+<section id="lo-que-esto-no-demuestra" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="lo-que-esto-no-demuestra"><span class="header-section-number">2.5</span> Lo que esto no demuestra</h2>
+<ul>
+<li><strong>No demuestra que una geometría sea mejor que otra.</strong> Clasifica las matrices por su tipo; qué geometría compara mejor cada una es la pregunta de los capítulos siguientes.</li>
+<li><strong>El modelo sintético es mínimo.</strong> Una frecuencia, tres fuentes, mezcla instantánea real y ruido de sensor: sirve para ilustrar proposiciones, no para reproducir un EEG. Lo que se observa en las figuras vale para ese generador <span class="ev-hipotesis">Hipótesis sintética</span>.</li>
+<li><strong>La conducción de volumen real no es siempre instantánea ni estacionaria.</strong> La <a href="#prp-mezcla-real" class="quarto-xref">Proposición&nbsp;<span>2.6</span></a> es exacta para una mezcla real instantánea; con retardos de propagación o mezclas que varían, aparece parte imaginaria espuria.</li>
+<li><strong>La covarianza de banda definida aquí</strong> depende de la normalización de la ventana, y su identificación con la covarianza de la señal filtrada queda por verificar con su fuente.</li>
+<li><strong>Las medidas de conectividad se han definido por pares.</strong> Cómo se construyen matrices completas a partir de ellas, y si son semidefinidas (PLV), se discute en el capítulo <a href="conectividad.html" class="quarto-xref"><span>7</span></a>.</li>
+</ul>
+</section>
+<section id="autoevaluación" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="autoevaluación"><span class="header-section-number">2.6</span> Autoevaluación</h2>
+<div class="autoeval callout callout-style-default callout-tip callout-titled" title="1. ¿Puede ser definida positiva una matriz de wPLI?">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>¿Puede ser definida positiva una matriz de wPLI?
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Una matriz de wPLI tiene diagonal nula por convención y entradas en <span class="math inline">\([0,1]\)</span>. ¿Puede ser definida positiva?</p>
+<p><strong>Respuesta.</strong> No: tiene traza cero y no es la matriz nula, así que tiene autovalores de los dos signos (<a href="#prp-wpli-indefinida" class="quarto-xref">Proposición&nbsp;<span>2.3</span></a>). Sumarle un múltiplo de la identidad la haría definida positiva, pero eso cambia la matriz y sus distancias (capítulo <a href="conectividad.html" class="quarto-xref"><span>7</span></a>).</p>
+</div>
+</div>
+</div>
+<div class="autoeval callout callout-style-default callout-tip callout-titled" title="2. Parte real definida positiva, matriz singular">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Parte real definida positiva, matriz singular
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Si <span class="math inline">\(\operatorname{Re}S\)</span> es definida positiva, ¿lo es <span class="math inline">\(S\)</span>?</p>
+<p><strong>Respuesta.</strong> No necesariamente: <span class="math inline">\(S=\begin{pmatrix}1&amp;i\\-i&amp;1\end{pmatrix}\)</span> es singular y su parte real es la identidad (<a href="#prp-re-im" class="quarto-xref">Proposición&nbsp;<span>2.1</span></a>). El recíproco sí es cierto.</p>
+</div>
+</div>
+</div>
+<div class="autoeval callout callout-style-default callout-tip callout-titled" title="3. Dos sensores, una fuente común">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Dos sensores, una fuente común
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Dos sensores registran la misma fuente mezclada con pesos distintos y reales, y no hay más actividad. ¿Qué vale la coherencia imaginaria esperada?</p>
+<p><strong>Respuesta.</strong> Cero: con una sola fuente real mezclada, <span class="math inline">\(\operatorname{Im}S_Y=0\)</span> y <span class="math inline">\(\operatorname{Im}S_Z=M\,\operatorname{Im}S_Y\,M^\top=0\)</span> (<a href="#prp-mezcla-real" class="quarto-xref">Proposición&nbsp;<span>2.6</span></a>). La coherencia no será cero, y por eso la coherencia sola no basta para detectar acoplamiento.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="ejercicios" class="level2" data-number="2.7">
+<h2 data-number="2.7" class="anchored" data-anchor-id="ejercicios"><span class="header-section-number">2.7</span> Ejercicios</h2>
+<div id="exr-espectral-rango" class="demostracion theorem exercise">
+<p><span class="theorem-title"><strong>Ejercicio 2.1</strong></span> Demuestra que si <span class="math inline">\(K&lt;n\)</span> la matriz <span class="math inline">\(\hat S(f)\)</span> de la <a href="#eq-espectro-cruzado" class="quarto-xref">ecuación&nbsp;<span>2.1</span></a> es singular y que, con <span class="math inline">\(K\ge n\)</span>, es definida positiva con probabilidad uno cuando los <span class="math inline">\(X_k\)</span> son gaussianos complejos circulares independientes con covarianza definida positiva.</p>
+<div class="pista callout callout-style-default callout-tip callout-titled" title="Pista">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Pista
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>El rango de <span class="math inline">\(\hat S\)</span> es el de la matriz <span class="math inline">\(n\times K\)</span> de columnas <span class="math inline">\(X_k\)</span>.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="exr-schur-coherencia" class="demostracion theorem exercise">
+<p><span class="theorem-title"><strong>Ejercicio 2.2</strong></span> Calcula, para <span class="math inline">\(\hat C=\begin{pmatrix}1&amp;0{,}5i\\-0{,}5i&amp;1\end{pmatrix}\)</span>, la matriz <span class="math inline">\(\big(|\hat C_{ij}|^2\big)\)</span> y sus autovalores, y comprueba la <a href="#prp-coherencia" class="quarto-xref">Proposición&nbsp;<span>2.2</span></a>.</p>
+</div>
+<div id="exr-wpli-3x3" class="rapido theorem exercise">
+<p><span class="theorem-title"><strong>Ejercicio 2.3</strong></span> Sea <span class="math inline">\(W=\begin{pmatrix}0&amp;a&amp;b\\a&amp;0&amp;c\\b&amp;c&amp;0\end{pmatrix}\)</span> con <span class="math inline">\(a,b,c&gt;0\)</span>. Calcula <span class="math inline">\(\operatorname{tr}W\)</span> y <span class="math inline">\(\det W\)</span> y deduce cuántos autovalores positivos y cuántos negativos tiene.</p>
+<div class="solucion callout callout-style-default callout-note callout-titled" title="Solución">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>Solución
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><span class="math inline">\(\operatorname{tr}W=0\)</span> y <span class="math inline">\(\det W=2abc&gt;0\)</span>. El producto de los tres autovalores es positivo y su suma es cero, así que no pueden ser los tres positivos ni los tres negativos: hay uno positivo y dos negativos (un producto positivo exige un número par de negativos, y al menos uno es negativo porque la suma es cero).</p>
+</div>
+</div>
+</div>
+</div>
+<div id="exr-agregada" class="demostracion theorem exercise">
+<p><span class="theorem-title"><strong>Ejercicio 2.4</strong></span> Sean <span class="math inline">\(X_1,\dots,X_K\in\R^{n\times T}\)</span> segmentos con media nula por canal y <span class="math inline">\(P_k=\tfrac1TX_kX_k^\top\)</span>. Demuestra que la covarianza, con normalización <span class="math inline">\(1/(KT)\)</span>, del registro concatenado <span class="math inline">\([X_1\ \cdots\ X_K]\)</span> es la media aritmética <span class="math inline">\(\tfrac1K\sum_kP_k\)</span>. ¿Qué pregunta responde entonces la media euclídea de covarianzas, y cuál la media geométrica de la <a href="metricas-spd.html#prp-riccati" class="quarto-xref">Proposición&nbsp;<span>4.5</span></a>?</p>
+<div class="solucion callout callout-style-default callout-note callout-titled" title="Solución">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>Solución
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>El registro concatenado <span class="math inline">\(X=[X_1\ \cdots\ X_K]\)</span> tiene media nula por canal, porque la tiene cada segmento, y <span class="math inline">\(XX^\top=\sum_kX_kX_k^\top\)</span>. Por tanto <span class="math inline">\(\tfrac1{KT}XX^\top=\tfrac1K\sum_k\tfrac1TX_kX_k^\top=\tfrac1K\sum_kP_k\)</span>. La media aritmética es la covarianza de todos los datos juntos: la respuesta correcta si los segmentos son muestras de un mismo proceso. La media geométrica no es la covarianza de ningún registro agregado; es el centro de los segmentos para la geometría afín-invariante, insensible a una mezcla lineal común.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="exr-referencia" class="codigo theorem exercise">
+<p><span class="theorem-title"><strong>Ejercicio 2.5</strong></span> (Laboratorio) Con <code>NeuroRiemann.jl</code>, comprueba que <code>isspd</code> rechaza la covarianza con referencia promedio <span class="math inline">\(HPH^\top\)</span> y acepta la de <span class="math inline">\(n-1\)</span> canales obtenida eliminando uno de los canales. ¿Qué rango tiene cada una?</p>
+</div>
+<div id="exr-sesgo-wpli" class="simulacion theorem exercise">
+<p><span class="theorem-title"><strong>Ejercicio 2.6</strong></span> Con las funciones <code>fuentes</code>, <code>sensores</code> y <code>medidas</code> del laboratorio, estima con 500 repeticiones el wPLI medio de dos sensores sin acoplamiento (<span class="math inline">\(\kappa=0\)</span>) para <span class="math inline">\(K\in\{5,20,80,320\}\)</span>. ¿Cómo depende del número de segmentos y por qué no es cero?</p>
+</div>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-bhatia2007positive" class="csl-entry" role="listitem">
+Bhatia, Rajendra. 2007. <em>Positive Definite Matrices</em>. Princeton Series en Applied Mathematics. Princeton University Press.
+</div>
+<div id="ref-nolte2004identifying" class="csl-entry" role="listitem">
+Nolte, Guido, Ou Bai, Lewis Wheaton, Zoltan Mari, Sherry Vorbach, y Mark Hallett. 2004. <span>«Identifying true brain interaction from <span>EEG</span> data using the imaginary part of coherency»</span>. <em>Clinical Neurophysiology</em> 115 (10): 2292-307. <a href="https://doi.org/10.1016/j.clinph.2004.04.029">https://doi.org/10.1016/j.clinph.2004.04.029</a>.
+</div>
+<div id="ref-vinck2011improved" class="csl-entry" role="listitem">
+Vinck, Martin, Robert Oostenveld, Marijn van Wingerden, Francesco Battaglia, y Cyriel M. A. Pennartz. 2011. <span>«An improved index of phase-synchronization for electrophysiological data in the presence of volume-conduction, noise and sample-size bias»</span>. <em>NeuroImage</em> 55 (4): 1548-65. <a href="https://doi.org/10.1016/j.neuroimage.2011.01.055">https://doi.org/10.1016/j.neuroimage.2011.01.055</a>.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiado");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiado");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/me1catrr\.github\.io\/neuroriemann\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./por-que-geometria.html" class="pagination-link" aria-label="1 ¿Por qué geometría riemanniana para estudiar el EEG?">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">¿Por qué geometría riemanniana para estudiar el EEG?</span></span>
+      </a>
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./covarianzas.html" class="pagination-link" aria-label="3 Covarianzas con pocos datos: el cono SPD y su estimación">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Covarianzas con pocos datos: el cono SPD y su estimación</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© 2026 Rafael Castro Triguero · Universidad de Córdoba</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/me1catrr/neuroriemann/issues/new" class="toc-action"><i class="bi bi-github"></i>Informar sobre problema</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Texto y figuras <a href="https://creativecommons.org/licenses/by/4.0/deed.es">CC BY 4.0</a> · Código MIT</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

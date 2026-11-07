@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Libro abierto sobre geometría riemanniana de matrices simétricas definidas positivas y sus aplicaciones al EEG: teoría rigurosa, algoritmos en Julia y simuladores interactivos.">
+
+<title>Apéndice E — Cajas y ejercicios: guía de estilo – NeuroRiemann</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../appendices/D-cohorte-sintetica.html" rel="prev">
+<link href="../assets/img/marca.svg" rel="icon" type="image/svg+xml">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-be73460e561c16752b9444a2e2312caa.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-ff2d3b005d7a99a3a359846948c6f970.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No se han encontrado resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../appendices/A-entorno.html">Apéndices</a></li><li class="breadcrumb-item"><a href="../appendices/E-cajas.html"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Cajas y ejercicios: guía de estilo</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Buscar" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="../index.html" class="sidebar-logo-link">
+      <img src="../assets/img/marca.svg" alt="NeuroRiemann" class="sidebar-logo light-content py-0 d-lg-inline d-none">
+      <img src="../assets/img/marca.svg" alt="NeuroRiemann" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">NeuroRiemann</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/me1catrr/neuroriemann" title="Ejecutar el código" class="quarto-navigation-tool px-1" aria-label="Ejecutar el código"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Buscar"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">NeuroRiemann</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/por-que-geometria.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">¿Por qué geometría riemanniana para estudiar el EEG?</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/registro-matriz.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Del registro a la matriz: el problema geométrico</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/covarianzas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Covarianzas con pocos datos: el cono SPD y su estimación</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/metricas-spd.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Métricas sobre SPD: medir y recorrer las diferencias</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/media-frechet.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Centro y dispersión de un grupo de matrices</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/estadistica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Estadística riemanniana: grupos y trayectorias</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/conectividad.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Conectividad funcional: más allá del cono</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../bibliografia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bibliografía</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Apéndices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/A-entorno.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Entorno y reproducibilidad</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/B-validacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Validación cruzada Julia–Python</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/C-notacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Notación y convenciones</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/D-cohorte-sintetica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">La cohorte sintética: especificación</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/E-cajas.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Cajas y ejercicios: guía de estilo</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">En esta página</h2>
+   
+  <ul>
+  <li><a href="#entornos-matemáticos" id="toc-entornos-matemáticos" class="nav-link active" data-scroll-target="#entornos-matemáticos"><span class="header-section-number">E.1</span> Entornos matemáticos</a></li>
+  <li><a href="#niveles-de-evidencia" id="toc-niveles-de-evidencia" class="nav-link" data-scroll-target="#niveles-de-evidencia"><span class="header-section-number">E.2</span> Niveles de evidencia</a></li>
+  <li><a href="#cajas-temáticas" id="toc-cajas-temáticas" class="nav-link" data-scroll-target="#cajas-temáticas"><span class="header-section-number">E.3</span> Cajas temáticas</a></li>
+  <li><a href="#ejercicios" id="toc-ejercicios" class="nav-link" data-scroll-target="#ejercicios"><span class="header-section-number">E.4</span> Ejercicios</a></li>
+  <li><a href="#simuladores" id="toc-simuladores" class="nav-link" data-scroll-target="#simuladores"><span class="header-section-number">E.5</span> Simuladores</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/me1catrr/neuroriemann/issues/new" class="toc-action"><i class="bi bi-github"></i>Informar sobre problema</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../appendices/A-entorno.html">Apéndices</a></li><li class="breadcrumb-item"><a href="../appendices/E-cajas.html"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Cajas y ejercicios: guía de estilo</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-cajas" class="quarto-section-identifier">Apéndice E — Cajas y ejercicios: guía de estilo</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!--
+Macros LaTeX comunes de NeuroRiemann. Incluir al principio de cada documento con
+el shortcode include de Quarto apuntando a /_macros.qmd (véase index.qmd).
+Pandoc las expande también para formatos no HTML (Typst/LaTeX).
+Convenciones: véase appendices/C-notacion.qmd.
+-->
+<div class="hidden">
+<p><span class="math display">\[
+% Espacios de matrices
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Sym}{\mathrm{Sym}}
+\newcommand{\SPD}{\mathrm{SPD}}
+\newcommand{\Corr}{\mathrm{Corr}}
+\newcommand{\Diag}{\mathrm{Diag}}
+\newcommand{\GL}{\mathrm{GL}}
+\newcommand{\Orth}{\mathrm{O}}
+% Funciones matriciales (espectrales, principales)
+\newcommand{\Expm}{\exp}
+\newcommand{\Logm}{\log}
+% Aplicaciones riemannianas (punto base en subíndice: \Exp_P, \Log_P)
+\newcommand{\Exp}{\operatorname{Exp}}
+\newcommand{\Log}{\operatorname{Log}}
+% Distancias
+\newcommand{\dAI}{d_{\mathrm{AI}}}
+\newcommand{\dLE}{d_{\mathrm{LE}}}
+% Operadores
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\diag}{\operatorname{diag}}
+\]</span></p>
+</div>
+<p>Este apéndice muestra, con un ejemplo real de cada una, las cajas que usa el libro. Sirve al lector para reconocerlas y al autor como plantilla: el Markdown de cada caja figura junto a ella. El sistema es el mismo que el de Resonancia; los estilos están en <code>assets/css/styles.css</code> y <code>tests/evidencia.mjs</code> comprueba las reglas que se indican.</p>
+<section id="entornos-matemáticos" class="level2" data-number="E.1">
+<h2 data-number="E.1" class="anchored" data-anchor-id="entornos-matemáticos"><span class="header-section-number">E.1</span> Entornos matemáticos</h2>
+<p>Las definiciones, los teoremas y los ejemplos usan los entornos numerados de Quarto, que se citan con <code>@</code>.</p>
+<div id="def-congruencia-guia" class="theorem definition">
+<p><span class="theorem-title"><strong>Definición E.1 (Congruencia)</strong></span> Dos matrices <span class="math inline">\(A,B\in\SPD_n\)</span> son <strong>congruentes</strong> si existe <span class="math inline">\(W\in\GL(n)\)</span> tal que <span class="math inline">\(B=WAW^\top\)</span>.</p>
+</div>
+<div id="prp-congruencia-spd-guia" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposición E.1 (La congruencia conserva el cono)</strong></span> Si <span class="math inline">\(P\in\SPD_n\)</span> y <span class="math inline">\(W\in\GL(n)\)</span>, entonces <span class="math inline">\(WPW^\top\in\SPD_n\)</span>. <span class="ev-demostrado">Demostrado</span></p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Demostración</em>. </span><span class="math inline">\(WPW^\top\)</span> es simétrica. Para <span class="math inline">\(x\neq0\)</span>, el vector <span class="math inline">\(y=W^\top x\)</span> no es nulo, porque <span class="math inline">\(W^\top\)</span> es invertible, y <span class="math inline">\(x^\top WPW^\top x=y^\top Py&gt;0\)</span>.</p>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>::: {#prp-nombre}</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">## Título</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>Enunciado. <span class="co">[</span><span class="ot">Demostrado</span><span class="co">]</span>{.ev-demostrado}</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>::: {.proof}</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>Demostración.</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Regla.</strong> Todo <code>#thm-</code>, <code>#prp-</code>, <code>#lem-</code> o <code>#cor-</code> va seguido de su demostración o cita su fuente en el enunciado (<code>[@clave]</code>). Las definiciones, los ejemplos y los ejercicios no la necesitan.</p>
+<div id="exm-cono-lorentz" class="theorem example">
+<p><span class="theorem-title"><strong>Ejemplo E.1 (<span class="math inline">\(\SPD_2\)</span> es un cono circular)</strong></span> Una matriz simétrica <span class="math inline">\(\begin{psmallmatrix}a&amp;b\\b&amp;c\end{psmallmatrix}\)</span> es definida positiva si y solo si <span class="math inline">\(a&gt;0\)</span> y <span class="math inline">\(ac-b^2&gt;0\)</span>. Con <span class="math inline">\(u=\tfrac{a+c}{2}\)</span> y <span class="math inline">\(v=\tfrac{a-c}{2}\)</span> se tiene <span class="math inline">\(ac-b^2=u^2-v^2-b^2\)</span>, y las dos condiciones equivalen a <span class="math inline">\(u&gt;\sqrt{v^2+b^2}\)</span>: en las coordenadas <span class="math inline">\((u,v,b)\)</span>, <span class="math inline">\(\SPD_2\)</span> es el interior de un cono circular de eje <span class="math inline">\(u\)</span>.</p>
+</div>
+</section>
+<section id="niveles-de-evidencia" class="level2" data-number="E.2">
+<h2 data-number="E.2" class="anchored" data-anchor-id="niveles-de-evidencia"><span class="header-section-number">E.2</span> Niveles de evidencia</h2>
+<p>Cada afirmación lleva, cuando no es evidente, una etiqueta que dice de dónde sale:</p>
+<div id="tbl-evidencia-guia" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-evidencia-guia-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;E.1: Niveles de evidencia.
+</figcaption>
+<div aria-describedby="tbl-evidencia-guia-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Etiqueta</th>
+<th>Markdown</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="ev-demostrado">Demostrado</span></td>
+<td><code>[Demostrado]{.ev-demostrado}</code></td>
+<td>La demostración está en el libro.</td>
+</tr>
+<tr class="even">
+<td><span class="ev-citado">Citado</span></td>
+<td><code>[Citado]{.ev-citado}</code></td>
+<td>Resultado clásico, con su fuente y sin demostración. Exige una cita.</td>
+</tr>
+<tr class="odd">
+<td><span class="ev-numerico">Verificado numéricamente</span></td>
+<td><code>[Verificado numéricamente]{.ev-numerico}</code></td>
+<td>Comprobado en ejemplos o simulaciones; no es una prueba.</td>
+</tr>
+<tr class="even">
+<td><span class="ev-hipotesis">Hipótesis sintética</span></td>
+<td><code>[Hipótesis sintética]{.ev-hipotesis}</code></td>
+<td>Vale para el modelo generativo declarado.</td>
+</tr>
+<tr class="odd">
+<td><span class="ev-empirico">Resultado empírico citado</span></td>
+<td><code>[Resultado empírico citado]{.ev-empirico}</code></td>
+<td>Datos reales publicados por otros, o agregados autorizados. Exige una cita.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>Por ejemplo: la distancia afín-invariante tiene curvatura no positiva <span class="ev-citado">Citado</span> <span class="citation" data-cites="bhatia2007positive">(<a href="../bibliografia.html#ref-bhatia2007positive" role="doc-biblioref">Bhatia 2007, cap. 6</a>)</span>.</p>
+</section>
+<section id="cajas-temáticas" class="level2" data-number="E.3">
+<h2 data-number="E.3" class="anchored" data-anchor-id="cajas-temáticas"><span class="header-section-number">E.3</span> Cajas temáticas</h2>
+<div class="idea-clave callout callout-style-default callout-tip callout-titled" title="Idea clave">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Idea clave
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Elegir una métrica es elegir qué diferencias se consideran ruido: la afín-invariante ignora cualquier mezcla lineal invertible común a todos los registros; la euclídea, solo las rotaciones (similitudes ortogonales).</p>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip .idea-clave title="Idea clave"}</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>…</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="historia callout callout-style-default callout-note no-icon callout-titled" title="Un poco de historia: Gauss elige el tema">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>Un poco de historia: Gauss elige el tema
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Para su lección de habilitación en Göttingen, Riemann propuso tres temas: dos sobre electricidad y uno sobre geometría. Gauss eligió el de geometría, en contra de lo que Riemann esperaba, y el 10 de junio de 1854 Riemann leyó <em>Über die Hypothesen, welche der Geometrie zu Grunde liegen</em>, el texto que funda la geometría que lleva su nombre. No se publicó hasta 1868, después de su muerte.</p>
+<p><span class="fuentes-caja">Fuente: <a href="https://mathshistory.st-andrews.ac.uk/Biographies/Riemann/">MacTutor, «Bernhard Riemann»</a>. Consultado el 06-11-2026.</span></p>
+</div>
+</div>
+<div class="biografia callout callout-style-default callout-note no-icon callout-titled" title="Quién fue: Bernhard Riemann (1826–1866)">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>Quién fue: Bernhard Riemann (1826–1866)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Georg Friedrich Bernhard Riemann nació el 17 de septiembre de 1826 en Breselenz (Hannover) y murió el 20 de julio de 1866 en Selasca, a orillas del lago Mayor. En apenas cuarenta años dejó, además de la geometría riemanniana, la integral de Riemann, las superficies de Riemann y la hipótesis sobre los ceros de la función zeta.</p>
+<p><span class="fuentes-caja">Fuente: <a href="https://mathshistory.st-andrews.ac.uk/Biographies/Riemann/">MacTutor, «Bernhard Riemann»</a>. Consultado el 06-11-2026.</span></p>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>::: {.callout-note .historia icon=false title="Un poco de historia: …"}</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>…</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Fuente: [obra o página](https://…). Consultado el dd-mm-aaaa.</span><span class="co">]</span>{.fuentes-caja}</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Regla.</strong> Las cajas <code>.historia</code> y <code>.biografia</code> citan siempre su fuente, con <code>[@clave]</code> o con un enlace. Ningún dato histórico (fechas, atribuciones, anécdotas) se escribe de memoria.</p>
+<div class="caso-real callout callout-style-default callout-note no-icon callout-titled" title="Caso EEG: ganancias que cambian entre visitas">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>Caso EEG: ganancias que cambian entre visitas
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Si todos los registros comparados comparten las mismas ganancias de electrodo, <span class="math inline">\(P\mapsto DPD\)</span> con <span class="math inline">\(D\)</span> diagonal positiva, la distancia afín-invariante no cambia (<a href="../chapters/metricas-spd.html#prp-congruencia" class="quarto-xref">Proposición&nbsp;<span>4.6</span></a>). Si las ganancias cambian solo en la visita T2, con <span class="math inline">\(D\neq I\)</span>, la distancia entre <span class="math inline">\(P\)</span> y <span class="math inline">\(DPD\)</span> no es nula aunque la actividad cerebral sea idéntica: <span class="math inline">\(DPD=P\)</span> obligaría a <span class="math inline">\(d_i^2p_{ii}=p_{ii}\)</span>, es decir, <span class="math inline">\(D=I\)</span>. La invariancia protege las comparaciones entre registros con las mismas ganancias, no entre sesiones con montajes distintos. <span class="ev-demostrado">Demostrado</span></p>
+</div>
+</div>
+<div class="curiosidad callout callout-style-default callout-note no-icon callout-titled" title="Curiosidad: el cono de luz de las covarianzas">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>Curiosidad: el cono de luz de las covarianzas
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>El cono del <a href="#exm-cono-lorentz" class="quarto-xref">Ejemplo&nbsp;<span>E.1</span></a> es, salvo el cambio de coordenadas, el cono de luz de la relatividad especial en dos dimensiones espaciales: <span class="math inline">\(u^2-v^2-b^2&gt;0\)</span> con <span class="math inline">\(u&gt;0\)</span>. Con la métrica afín-invariante, cada «rebanada» <span class="math inline">\(\det P=1\)</span> es, salvo un factor de escala, un modelo del plano hiperbólico.</p>
+</div>
+</div>
+<div class="reto callout callout-style-default callout-note no-icon callout-titled" title="Reto: dos métricas, dos órdenes">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>Reto: dos métricas, dos órdenes
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Encuentra <span class="math inline">\(A,B,C\in\SPD_2\)</span> tales que <span class="math inline">\(\dLE(A,B)&lt;\dLE(A,C)\)</span> pero <span class="math inline">\(\dAI(A,B)&gt;\dAI(A,C)\)</span>. ¿Pueden conmutar las tres matrices?</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled" title="Errores frecuentes">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Advertencia</span>Errores frecuentes
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Calcular la distancia afín-invariante como <span class="math inline">\(\|\Logm(A^{-1}B)\|_F\)</span>. Solo coincide con <span class="math inline">\(\dAI(A,B)\)</span> cuando <span class="math inline">\(A\)</span> y <span class="math inline">\(B\)</span> conmutan (<a href="../chapters/metricas-spd.html#prp-frobenius-log" class="quarto-xref">Proposición&nbsp;<span>4.2</span></a>).</p>
+</div>
+</div>
+</section>
+<section id="ejercicios" class="level2" data-number="E.4">
+<h2 data-number="E.4" class="anchored" data-anchor-id="ejercicios"><span class="header-section-number">E.4</span> Ejercicios</h2>
+<p>Los ejercicios usan el entorno numerado <code>#exr-</code> y una clase que indica su tipo: <code>.rapido</code> (demostración de unas líneas), <code>.demostracion</code>, <code>.codigo</code> (con <code>NeuroRiemann.jl</code>) o <code>.simulacion</code> (datos sintéticos). La pista y la solución van plegadas dentro del ejercicio.</p>
+<div id="exr-escala-guia" class="rapido theorem exercise">
+<p><span class="theorem-title"><strong>Ejercicio E.1</strong></span> Demuestra que <span class="math inline">\(\dAI(cA,cB)=\dAI(A,B)\)</span> para todo <span class="math inline">\(c&gt;0\)</span>.</p>
+<div class="pista callout callout-style-default callout-tip callout-titled" title="Pista">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Pista
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Escribe <span class="math inline">\((cA)^{-1/2}\)</span> en función de <span class="math inline">\(A^{-1/2}\)</span>.</p>
+</div>
+</div>
+</div>
+<div class="solucion callout callout-style-default callout-note callout-titled" title="Solución">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>Solución
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><span class="math inline">\((cA)^{-1/2}(cB)(cA)^{-1/2}=c^{-1/2}A^{-1/2}\,cB\,c^{-1/2}A^{-1/2}=A^{-1/2}BA^{-1/2}\)</span>, y la distancia solo depende de esta matriz.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="exr-media-agregada" class="demostracion theorem exercise">
+<p><span class="theorem-title"><strong>Ejercicio E.2</strong></span> Sean <span class="math inline">\(X_1,\dots,X_K\in\R^{n\times T}\)</span> segmentos de <span class="math inline">\(T\)</span> muestras, cada uno con media nula por canal, y <span class="math inline">\(P_k=\tfrac1T X_kX_k^\top\)</span>. Demuestra que la covarianza (con normalización <span class="math inline">\(1/(KT)\)</span>) del registro concatenado <span class="math inline">\([X_1\ \cdots\ X_K]\)</span> es la media aritmética <span class="math inline">\(\tfrac1K\sum_kP_k\)</span>. ¿Qué pregunta responde, entonces, la media euclídea de covarianzas, y cuál la media geométrica?</p>
+<div class="solucion callout callout-style-default callout-note callout-titled" title="Solución">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>Solución
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>El registro concatenado <span class="math inline">\(X=[X_1\ \cdots\ X_K]\)</span> tiene media nula por canal, porque la tiene cada segmento, y <span class="math inline">\(XX^\top=\sum_kX_kX_k^\top\)</span>. Por tanto <span class="math inline">\(\tfrac1{KT}XX^\top=\tfrac1K\sum_k\tfrac1TX_kX_k^\top=\tfrac1K\sum_kP_k\)</span>. La media aritmética es la covarianza de todos los datos juntos: la respuesta correcta si los segmentos son muestras de un mismo proceso. La media geométrica no es la covarianza de ningún registro agregado; es el centro de los segmentos para la geometría afín-invariante, insensible a una mezcla lineal común.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="exr-riccati-codigo" class="codigo theorem exercise">
+<p><span class="theorem-title"><strong>Ejercicio E.3</strong></span> Con <code>NeuroRiemann.jl</code>, toma <code>A = spd2(4.0, 0.2, 0.0)</code> y <code>B = spd2(2.0, 0.4, 1.2)</code>. Comprueba numéricamente que <span class="math inline">\(X=A\#B\)</span> cumple <span class="math inline">\(XA^{-1}X=B\)</span> y que <span class="math inline">\(\dAI(A,X)=\tfrac12\dAI(A,B)\)</span>.</p>
+<div class="solucion callout callout-style-default callout-note callout-titled" title="Solución">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>Solución
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">NeuroRiemann</span>, <span class="bu">LinearAlgebra</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> <span class="fu">spd2</span>(<span class="fl">4.0</span>, <span class="fl">0.2</span>, <span class="fl">0.0</span>); B <span class="op">=</span> <span class="fu">spd2</span>(<span class="fl">2.0</span>, <span class="fl">0.4</span>, <span class="fl">1.2</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> <span class="fu">geomean</span>(A, B)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">norm</span>(X <span class="op">*</span> <span class="fu">inv</span>(A) <span class="op">*</span> X <span class="op">-</span> B) <span class="op">/</span> <span class="fu">norm</span>(B)                                     <span class="co"># ≈ 1e-16</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">distance</span>(<span class="fu">AffineInvariant</span>(), A, X) <span class="op">/</span> <span class="fu">distance</span>(<span class="fu">AffineInvariant</span>(), A, B)  <span class="co"># ≈ 0.5</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<p>La primera identidad es la ecuación de Riccati (<a href="../chapters/metricas-spd.html#prp-riccati" class="quarto-xref">Proposición&nbsp;<span>4.5</span></a>); la segunda, la velocidad constante de la geodésica con <span class="math inline">\(s=0\)</span>, <span class="math inline">\(t=\tfrac12\)</span> (<a href="../chapters/metricas-spd.html#prp-velocidad" class="quarto-xref">Proposición&nbsp;<span>4.8</span></a>).</p>
+</div>
+</div>
+</div>
+</div>
+<div id="exr-sesgo-simulacion" class="simulacion theorem exercise">
+<p><span class="theorem-title"><strong>Ejercicio E.4</strong></span> Fija <span class="math inline">\(\Sigma\in\SPD_2\)</span>, genera <span class="math inline">\(T\)</span> muestras gaussianas <span class="math inline">\(x_t=\Sigma^{1/2}z_t\)</span> con <span class="math inline">\(z_t\sim N(0,I)\)</span> y calcula <span class="math inline">\(P=\tfrac1T\sum_tx_tx_t^\top\)</span> (media conocida, nula). Estima <span class="math inline">\(\mathbb E\,\dAI(P,\Sigma)^2\)</span> con 1000 repeticiones para <span class="math inline">\(T\in\{10,30,100,300\}\)</span> y compáralo con <span class="math inline">\(n(n+1)/T\)</span>.</p>
+<div class="pista callout callout-style-default callout-tip callout-titled" title="Pista">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Pista
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-12" class="callout-12-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><span class="math inline">\(\dAI(P,\Sigma)=\|\Logm W\|_F\)</span> con <span class="math inline">\(W=\Sigma^{-1/2}P\Sigma^{-1/2}=\tfrac1T\sum_tz_tz_t^\top\)</span>, que no depende de <span class="math inline">\(\Sigma\)</span>. Para <span class="math inline">\(T\)</span> grande, <span class="math inline">\(\Logm W\approx W-I\)</span>.</p>
+</div>
+</div>
+</div>
+<div class="solucion callout callout-style-default callout-note callout-titled" title="Solución">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>Solución
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-13" class="callout-13-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Las entradas de <span class="math inline">\(W-I\)</span> tienen media nula, varianza <span class="math inline">\(2/T\)</span> en la diagonal y <span class="math inline">\(1/T\)</span> fuera de ella, así que <span class="math inline">\(\mathbb E\|W-I\|_F^2=2n/T+n(n-1)/T=n(n+1)/T\)</span>, que es <span class="math inline">\(6/T\)</span> para <span class="math inline">\(n=2\)</span>. La simulación debe acercarse a ese valor cuando <span class="math inline">\(T\)</span> crece <span class="ev-numerico">Verificado numéricamente</span>; con <span class="math inline">\(T\)</span> pequeño, el término de segundo orden del logaritmo lo aleja, por la dispersión de los autovalores extremos. Que el resultado no dependa de <span class="math inline">\(\Sigma\)</span> es la invariancia afín en acción.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="simuladores" class="level2" data-number="E.5">
+<h2 data-number="E.5" class="anchored" data-anchor-id="simuladores"><span class="header-section-number">E.5</span> Simuladores</h2>
+<p>Los simuladores interactivos van en un bloque <code>::: {.content-visible .laboratorio when-format="html"}</code>, con una alternativa estática para los formatos no HTML; véase el simulador de <a href="../chapters/metricas-spd.html" class="quarto-xref"><span>Capítulo 4</span></a>.</p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-bhatia2007positive" class="csl-entry" role="listitem">
+Bhatia, Rajendra. 2007. <em>Positive Definite Matrices</em>. Princeton Series en Applied Mathematics. Princeton University Press.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiado");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiado");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/me1catrr\.github\.io\/neuroriemann\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./D-cohorte-sintetica.html" class="pagination-link" aria-label="D La cohorte sintética: especificación">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">La cohorte sintética: especificación</span></span>
+      </a>
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© 2026 Rafael Castro Triguero · Universidad de Córdoba</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/me1catrr/neuroriemann/issues/new" class="toc-action"><i class="bi bi-github"></i>Informar sobre problema</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Texto y figuras <a href="https://creativecommons.org/licenses/by/4.0/deed.es">CC BY 4.0</a> · Código MIT</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

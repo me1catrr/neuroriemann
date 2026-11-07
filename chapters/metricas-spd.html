@@ -91,6 +91,8 @@ div.csl-indent {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
+<link href="../chapters/media-frechet.html" rel="next">
+<link href="../chapters/covarianzas.html" rel="prev">
 <link href="../assets/img/marca.svg" rel="icon" type="image/svg+xml">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -220,8 +222,44 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../chapters/por-que-geometria.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">¿Por qué geometría riemanniana para estudiar el EEG?</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/registro-matriz.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Del registro a la matriz: el problema geométrico</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/covarianzas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Covarianzas con pocos datos: el cono SPD y su estimación</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../chapters/metricas-spd.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Métricas sobre SPD: medir y recorrer las diferencias</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/media-frechet.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Centro y dispersión de un grupo de matrices</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/estadistica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Estadística riemanniana: grupos y trayectorias</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/conectividad.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Conectividad funcional: más allá del cono</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -255,6 +293,18 @@ window.Quarto = {
   <div class="sidebar-item-container"> 
   <a href="../appendices/C-notacion.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Notación y convenciones</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/D-cohorte-sintetica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">La cohorte sintética: especificación</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/E-cajas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Cajas y ejercicios: guía de estilo</span></span></a>
   </div>
 </li>
       </ul>
@@ -356,7 +406,7 @@ Convenciones: véase appendices/C-notacion.qmd.
 <div class="callout-body-container callout-body">
 <p><strong>Pregunta.</strong> ¿Cómo medimos las diferencias entre matrices de covarianza y qué significa recorrer el espacio que las contiene?</p>
 <p><strong>Objetivos.</strong> Comparar las geometrías euclídea, log-euclídea y afín-invariante de <span class="math inline">\(\SPD_n\)</span> como tres nociones distintas de diferencia, a través de un problema concreto: la covarianza «a medio camino» entre dos matrices. Demostrar qué conserva cada una (determinante, invariancias) y qué no (el «hinchamiento» euclídeo), y comprobar con experimentos qué ocurre cuando cambian las coordenadas.</p>
-<p><strong>Prerrequisitos.</strong> Matrices SPD y funciones matriciales espectrales (<span class="math inline">\(\Expm\)</span>, <span class="math inline">\(\Logm\)</span>, raíz y potencias principales). Las nociones de métrica riemanniana y geodésica se introducen en este capítulo, a nivel de resultados (sección «Qué quiere decir riemanniana»); el panorama general está en el capítulo <span class="nr-no-publicado quarto-xref" title="Aún no publicado en la edición web"><span>1</span></span>. Todas las matrices son reales; las complejas (hermíticas) llegan en el capítulo <span class="nr-no-publicado quarto-xref" title="Aún no publicado en la edición web"><span>7</span></span>.</p>
+<p><strong>Prerrequisitos.</strong> Matrices SPD y funciones matriciales espectrales (<span class="math inline">\(\Expm\)</span>, <span class="math inline">\(\Logm\)</span>, raíz y potencias principales). Las nociones de métrica riemanniana y geodésica se introducen en este capítulo, a nivel de resultados (sección «Qué quiere decir riemanniana»); el panorama general está en el capítulo <a href="por-que-geometria.html" class="quarto-xref"><span>1</span></a>. Todas las matrices son reales; las complejas (hermíticas) llegan en el capítulo <a href="conectividad.html" class="quarto-xref"><span>7</span></a>.</p>
 <p><strong>Código.</strong> Todas las funciones proceden de <code>NeuroRiemann.jl</code>; las identidades del capítulo están comprobadas en <code>julia/NeuroRiemann.jl/test/test_metrics.jl</code> y validadas frente a pyRiemann (apéndice <a href="../appendices/B-validacion.html" class="quarto-xref"><span>B</span></a>).</p>
 </div>
 </div>
@@ -378,7 +428,7 @@ Convenciones: véase appendices/C-notacion.qmd.
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Al comparar métricas hay tres preguntas distintas. Las <strong>geométricas</strong> (qué invariancias, geodésicas y nociones de distancia ofrece cada una) se contestan aquí con demostraciones. Las <strong>estadísticas</strong> (qué ocurre con la incertidumbre de estimación, la potencia o el error de tipo I) se tratan en los capítulos <span class="nr-no-publicado quarto-xref" title="Aún no publicado en la edición web"><span>3</span></span> y <span class="nr-no-publicado quarto-xref" title="Aún no publicado en la edición web"><span>6</span></span>. Las <strong>fisiológicas</strong> (si lo que se detecta es interpretable en la actividad cerebral) no se resuelven con geometría; véase el capítulo <span class="nr-no-publicado quarto-xref" title="Aún no publicado en la edición web"><span>1</span></span>. Una propiedad matemática excelente no implica una mejora estadística.</p>
+<p>Al comparar métricas hay tres preguntas distintas. Las <strong>geométricas</strong> (qué invariancias, geodésicas y nociones de distancia ofrece cada una) se contestan aquí con demostraciones. Las <strong>estadísticas</strong> (qué ocurre con la incertidumbre de estimación, la potencia o el error de tipo I) se tratan en los capítulos <a href="covarianzas.html" class="quarto-xref"><span>3</span></a> y <a href="estadistica.html" class="quarto-xref"><span>6</span></a>. Las <strong>fisiológicas</strong> (si lo que se detecta es interpretable en la actividad cerebral) no se resuelven con geometría; véase el capítulo <a href="por-que-geometria.html" class="quarto-xref"><span>1</span></a>. Una propiedad matemática excelente no implica una mejora estadística.</p>
 </div>
 </div>
 </section>
@@ -556,7 +606,7 @@ XA^{-1}X=B.
 <p>Unicidad: si <span class="math inline">\(X\in\SPD_n\)</span> cumple <a href="#eq-riccati" class="quarto-xref">ecuación&nbsp;<span>4.5</span></a>, la matriz <span class="math inline">\(Y=A^{-1/2}XA^{-1/2}\)</span> es SPD y cumple <span class="math inline">\(Y^2=C\)</span>. Por la unicidad de la raíz cuadrada SPD, <span class="math inline">\(Y=C^{1/2}\)</span>, de modo que <span class="math inline">\(X=A\#B\)</span>.</p>
 <p>Simetría: invirtiendo <a href="#eq-riccati" class="quarto-xref">ecuación&nbsp;<span>4.5</span></a>, <span class="math inline">\(X^{-1}AX^{-1}=B^{-1}\)</span>, es decir, <span class="math inline">\(XB^{-1}X=A\)</span>. Por tanto, <span class="math inline">\(X\)</span> resuelve la ecuación con <span class="math inline">\(A\)</span> y <span class="math inline">\(B\)</span> intercambiadas, y por unicidad <span class="math inline">\(X=B\#A\)</span>.</p>
 </div>
-<p>Para <span class="math inline">\(n=1\)</span>, <span class="math inline">\(a\#b=\sqrt{ab}\)</span>: la media geométrica usual. Así, para dos matrices, el «centro» que corresponde a cada geometría es el punto medio de su geodésica: la media aritmética <span class="math inline">\(\tfrac12(A+B)\)</span> (la covarianza de los datos agregados, capítulo <span class="nr-no-publicado quarto-xref" title="Aún no publicado en la edición web"><span>2</span></span>), <span class="math inline">\(\Expm\big(\tfrac12(\Logm A+\Logm B)\big)\)</span> y <span class="math inline">\(A\#B\)</span>. Cómo se extiende esta idea a un grupo de matrices es el tema del capítulo <span class="nr-no-publicado quarto-xref" title="Aún no publicado en la edición web"><span>5</span></span>.</p>
+<p>Para <span class="math inline">\(n=1\)</span>, <span class="math inline">\(a\#b=\sqrt{ab}\)</span>: la media geométrica usual. Así, para dos matrices, el «centro» que corresponde a cada geometría es el punto medio de su geodésica: la media aritmética <span class="math inline">\(\tfrac12(A+B)\)</span> (la covarianza de los datos agregados, capítulo <a href="registro-matriz.html" class="quarto-xref"><span>2</span></a>), <span class="math inline">\(\Expm\big(\tfrac12(\Logm A+\Logm B)\big)\)</span> y <span class="math inline">\(A\#B\)</span>. Cómo se extiende esta idea a un grupo de matrices es el tema del capítulo <a href="media-frechet.html" class="quarto-xref"><span>5</span></a>.</p>
 </section>
 <section id="laboratorio" class="level3" data-number="4.3.4">
 <h3 data-number="4.3.4" class="anchored" data-anchor-id="laboratorio"><span class="header-section-number">4.3.4</span> Laboratorio</h3>
@@ -946,7 +996,7 @@ Tabla&nbsp;4.3: Tres nociones de diferencia en <span class="math inline">\(\SPD_
 <pre><code>(d_instrumental = 1.5040536326762757, d_fisiologico = 1.5040536326762748, tstar = 0.484255416911109)</code></pre>
 </div>
 </div>
-<p>Las dos distancias coinciden porque a lo largo de la geodésica <span class="math inline">\(\gamma_{AI}\)</span> la distancia crece proporcionalmente a <span class="math inline">\(t\)</span> (<a href="#prp-velocidad" class="quarto-xref">Proposición&nbsp;<span>4.8</span></a>). Un solo número no basta para atribuir la diferencia a una causa; hace falta una comparación entre sesiones con ganancias comunes o un procedimiento que separe ambos efectos, que es una cuestión de diseño estadístico (capítulo <span class="nr-no-publicado quarto-xref" title="Aún no publicado en la edición web"><span>6</span></span>).</p>
+<p>Las dos distancias coinciden porque a lo largo de la geodésica <span class="math inline">\(\gamma_{AI}\)</span> la distancia crece proporcionalmente a <span class="math inline">\(t\)</span> (<a href="#prp-velocidad" class="quarto-xref">Proposición&nbsp;<span>4.8</span></a>). Un solo número no basta para atribuir la diferencia a una causa; hace falta una comparación entre sesiones con ganancias comunes o un procedimiento que separe ambos efectos, que es una cuestión de diseño estadístico (capítulo <a href="estadistica.html" class="quarto-xref"><span>6</span></a>).</p>
 </section>
 <section id="comprobaciones-numéricas" class="level2" data-number="4.6">
 <h2 data-number="4.6" class="anchored" data-anchor-id="comprobaciones-numéricas"><span class="header-section-number">4.6</span> Comprobaciones numéricas</h2>
@@ -1312,7 +1362,7 @@ Figura&nbsp;4.3: Error relativo mediano (20 pares por punto, <span class="math i
 </div>
 </div>
 <p>La <a href="#fig-estabilidad" class="quarto-xref">Figura&nbsp;<span>4.3</span></a> muestra que los tres métodos pierden precisión aproximadamente en proporción a <span class="math inline">\(\kappa\)</span>, y que siempre quedan por debajo de <span class="math inline">\(\varepsilon\kappa\)</span>. Esa pérdida no es un defecto de los algoritmos, sino un límite del propio problema. Al almacenar <span class="math inline">\(A\)</span> en coma flotante, sus entradas tienen un error relativo del orden de <span class="math inline">\(\varepsilon\)</span>; eso puede desplazar el menor autovalor hasta <span class="math inline">\(\varepsilon\lambda_{\max}\)</span>, es decir, cambiar <span class="math inline">\(\log\lambda_{\min}\)</span> en torno a <span class="math inline">\(\varepsilon\kappa\)</span>. Ningún método puede recuperar esa información.</p>
-<p>Entre métodos, las diferencias son pequeñas y no sistemáticas, con una ligera ventaja del autoproblema generalizado en la mayoría de los puntos. Aun así, el método 1 es preferible por otras razones: no forma inversas explícitas, trabaja siempre con matrices simétricas (sus autovalores son reales por construcción, mientras que los de <span class="math inline">\(A^{-1}B\)</span> pueden salir complejos por redondeo) y su coste es el menor. Por eso <code>isspd</code> rechaza por defecto las matrices con <span class="math inline">\(\kappa\ge10^{12}\)</span>: a partir de ahí, <span class="math inline">\(\dAI\)</span> conserva menos de unas cuatro cifras significativas, y lo que procede es regularizar la estimación (capítulo <span class="nr-no-publicado quarto-xref" title="Aún no publicado en la edición web"><span>3</span></span>), no buscar un algoritmo más fino.</p>
+<p>Entre métodos, las diferencias son pequeñas y no sistemáticas, con una ligera ventaja del autoproblema generalizado en la mayoría de los puntos. Aun así, el método 1 es preferible por otras razones: no forma inversas explícitas, trabaja siempre con matrices simétricas (sus autovalores son reales por construcción, mientras que los de <span class="math inline">\(A^{-1}B\)</span> pueden salir complejos por redondeo) y su coste es el menor. Por eso <code>isspd</code> rechaza por defecto las matrices con <span class="math inline">\(\kappa\ge10^{12}\)</span>: a partir de ahí, <span class="math inline">\(\dAI\)</span> conserva menos de unas cuatro cifras significativas, y lo que procede es regularizar la estimación (capítulo <a href="covarianzas.html" class="quarto-xref"><span>3</span></a>), no buscar un algoritmo más fino.</p>
 </div>
 </div>
 </div>
@@ -1479,10 +1529,10 @@ Figura&nbsp;4.3: Error relativo mediano (20 pares por punto, <span class="math i
 <section id="lo-que-esto-no-demuestra" class="level2" data-number="4.8">
 <h2 data-number="4.8" class="anchored" data-anchor-id="lo-que-esto-no-demuestra"><span class="header-section-number">4.8</span> Lo que esto no demuestra</h2>
 <ul>
-<li><strong>No demuestra que la geometría afín-invariante sea mejor.</strong> Demuestra qué propiedades tiene cada una. Que una invariancia sea útil depende de que la transformación que protege sea la que realmente ocurre en los datos, y eso es una cuestión estadística y fisiológica (capítulos <span class="nr-no-publicado quarto-xref" title="Aún no publicado en la edición web"><span>6</span></span> y <span class="nr-no-publicado quarto-xref" title="Aún no publicado en la edición web"><span>1</span></span>).</li>
+<li><strong>No demuestra que la geometría afín-invariante sea mejor.</strong> Demuestra qué propiedades tiene cada una. Que una invariancia sea útil depende de que la transformación que protege sea la que realmente ocurre en los datos, y eso es una cuestión estadística y fisiológica (capítulos <a href="estadistica.html" class="quarto-xref"><span>6</span></a> y <a href="por-que-geometria.html" class="quarto-xref"><span>1</span></a>).</li>
 <li><strong>No demuestra que <span class="math inline">\(\dAI\)</span> corrija la física del EEG.</strong> Hace la distancia insensible a un cambio <em>común</em> de coordenadas; no elimina la conducción de volumen, no recupera las fuentes neuronales, y no distingue un cambio instrumental entre visitas de un cambio fisiológico (Experimento 2). Las mezclas reales pueden además no ser instantáneas ni estacionarias, y con mezclas distintas por sujeto no hay invariancia entre sujetos.</li>
-<li><strong>No tiene en cuenta la incertidumbre.</strong> Trabajamos con matrices SPD dadas. Una covarianza estimada con pocas muestras es ruidosa, y con <span class="math inline">\(T/n\)</span> pequeño <span class="math inline">\(\dAI\)</span> amplifica el ruido del menor autovalor (capítulo <span class="nr-no-publicado quarto-xref" title="Aún no publicado en la edición web"><span>3</span></span>).</li>
-<li><strong>Solo trata matrices reales.</strong> Las matrices espectrales cruzadas son hermíticas y las medidas de conectividad como el wPLI no son definidas positivas (capítulo <span class="nr-no-publicado quarto-xref" title="Aún no publicado en la edición web"><span>7</span></span>).</li>
+<li><strong>No tiene en cuenta la incertidumbre.</strong> Trabajamos con matrices SPD dadas. Una covarianza estimada con pocas muestras es ruidosa, y con <span class="math inline">\(T/n\)</span> pequeño <span class="math inline">\(\dAI\)</span> amplifica el ruido del menor autovalor (capítulo <a href="covarianzas.html" class="quarto-xref"><span>3</span></a>).</li>
+<li><strong>Solo trata matrices reales.</strong> Las matrices espectrales cruzadas son hermíticas y las medidas de conectividad como el wPLI no son definidas positivas (capítulo <a href="conectividad.html" class="quarto-xref"><span>7</span></a>).</li>
 <li><strong>Las pruebas numéricas no son demostraciones.</strong> Detectan errores de implementación en matrices de tamaño <span class="math inline">\(2\)</span> y <span class="math inline">\(6\)</span> con <span class="math inline">\(\kappa\le10^3\)</span>; los resultados generales son los demostrados o citados.</li>
 <li><strong>Una distancia es un número global.</strong> No dice en qué canales ni regiones se diferencian dos registros.</li>
 </ul>
@@ -2163,13 +2213,13 @@ window._ojs.runtime.interpretFromScriptTags();
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../index.html" class="pagination-link" aria-label="NeuroRiemann">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">NeuroRiemann</span>
+      <a href="./covarianzas.html" class="pagination-link" aria-label="3 Covarianzas con pocos datos: el cono SPD y su estimación">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Covarianzas con pocos datos: el cono SPD y su estimación</span></span>
       </a>
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../bibliografia.html" class="pagination-link" aria-label="Bibliografía">
-        <span class="nav-page-text">Bibliografía</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./media-frechet.html" class="pagination-link" aria-label="5 Centro y dispersión de un grupo de matrices">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Centro y dispersión de un grupo de matrices</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

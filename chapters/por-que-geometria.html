@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Libro abierto sobre geometría riemanniana de matrices simétricas definidas positivas y sus aplicaciones al EEG: teoría rigurosa, algoritmos en Julia y simuladores interactivos.">
+
+<title>1&nbsp; ¿Por qué geometría riemanniana para estudiar el EEG? – NeuroRiemann</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/registro-matriz.html" rel="next">
+<link href="../index.html" rel="prev">
+<link href="../assets/img/marca.svg" rel="icon" type="image/svg+xml">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-be73460e561c16752b9444a2e2312caa.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-ff2d3b005d7a99a3a359846948c6f970.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No se han encontrado resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/por-que-geometria.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">¿Por qué geometría riemanniana para estudiar el EEG?</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Buscar" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="../index.html" class="sidebar-logo-link">
+      <img src="../assets/img/marca.svg" alt="NeuroRiemann" class="sidebar-logo light-content py-0 d-lg-inline d-none">
+      <img src="../assets/img/marca.svg" alt="NeuroRiemann" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">NeuroRiemann</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/me1catrr/neuroriemann" title="Ejecutar el código" class="quarto-navigation-tool px-1" aria-label="Ejecutar el código"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Buscar"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">NeuroRiemann</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/por-que-geometria.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">¿Por qué geometría riemanniana para estudiar el EEG?</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/registro-matriz.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Del registro a la matriz: el problema geométrico</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/covarianzas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Covarianzas con pocos datos: el cono SPD y su estimación</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/metricas-spd.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Métricas sobre SPD: medir y recorrer las diferencias</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/media-frechet.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Centro y dispersión de un grupo de matrices</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/estadistica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Estadística riemanniana: grupos y trayectorias</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/conectividad.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Conectividad funcional: más allá del cono</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../bibliografia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bibliografía</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Apéndices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/A-entorno.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Entorno y reproducibilidad</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/B-validacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Validación cruzada Julia–Python</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/C-notacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Notación y convenciones</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/D-cohorte-sintetica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">La cohorte sintética: especificación</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/E-cajas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Cajas y ejercicios: guía de estilo</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">En esta página</h2>
+   
+  <ul>
+  <li><a href="#la-pregunta" id="toc-la-pregunta" class="nav-link active" data-scroll-target="#la-pregunta"><span class="header-section-number">1.1</span> La pregunta</a></li>
+  <li><a href="#qué-le-pasa-a-la-señal-antes-de-verla" id="toc-qué-le-pasa-a-la-señal-antes-de-verla" class="nav-link" data-scroll-target="#qué-le-pasa-a-la-señal-antes-de-verla"><span class="header-section-number">1.2</span> Qué le pasa a la señal antes de verla</a></li>
+  <li><a href="#qué-es-la-geometría-riemanniana-y-en-qué-se-diferencia" id="toc-qué-es-la-geometría-riemanniana-y-en-qué-se-diferencia" class="nav-link" data-scroll-target="#qué-es-la-geometría-riemanniana-y-en-qué-se-diferencia"><span class="header-section-number">1.3</span> Qué es la geometría riemanniana y en qué se diferencia</a></li>
+  <li><a href="#qué-matrices-y-dos-tipos-de-pregunta" id="toc-qué-matrices-y-dos-tipos-de-pregunta" class="nav-link" data-scroll-target="#qué-matrices-y-dos-tipos-de-pregunta"><span class="header-section-number">1.4</span> Qué matrices, y dos tipos de pregunta</a></li>
+  <li><a href="#experimento-1-dos-nociones-de-diferencia" id="toc-experimento-1-dos-nociones-de-diferencia" class="nav-link" data-scroll-target="#experimento-1-dos-nociones-de-diferencia"><span class="header-section-number">1.5</span> Experimento 1: dos nociones de diferencia</a></li>
+  <li><a href="#experimento-2-la-distancia-entre-dos-estimaciones-no-es-cero" id="toc-experimento-2-la-distancia-entre-dos-estimaciones-no-es-cero" class="nav-link" data-scroll-target="#experimento-2-la-distancia-entre-dos-estimaciones-no-es-cero"><span class="header-section-number">1.6</span> Experimento 2: la distancia entre dos estimaciones no es cero</a></li>
+  <li><a href="#qué-se-supone-y-dónde-se-comprueba" id="toc-qué-se-supone-y-dónde-se-comprueba" class="nav-link" data-scroll-target="#qué-se-supone-y-dónde-se-comprueba"><span class="header-section-number">1.7</span> Qué se supone, y dónde se comprueba</a></li>
+  <li><a href="#qué-alternativas-hay" id="toc-qué-alternativas-hay" class="nav-link" data-scroll-target="#qué-alternativas-hay"><span class="header-section-number">1.8</span> Qué alternativas hay</a></li>
+  <li><a href="#cómo-se-decidirá-si-aporta-algo" id="toc-cómo-se-decidirá-si-aporta-algo" class="nav-link" data-scroll-target="#cómo-se-decidirá-si-aporta-algo"><span class="header-section-number">1.9</span> Cómo se decidirá si aporta algo</a>
+  <ul class="collapse">
+  <li><a href="#cuadro-de-promesas" id="toc-cuadro-de-promesas" class="nav-link" data-scroll-target="#cuadro-de-promesas"><span class="header-section-number">1.9.1</span> Cuadro de promesas</a></li>
+  </ul></li>
+  <li><a href="#lo-que-esto-no-demuestra" id="toc-lo-que-esto-no-demuestra" class="nav-link" data-scroll-target="#lo-que-esto-no-demuestra"><span class="header-section-number">1.10</span> Lo que esto no demuestra</a></li>
+  <li><a href="#autoevaluación" id="toc-autoevaluación" class="nav-link" data-scroll-target="#autoevaluación"><span class="header-section-number">1.11</span> Autoevaluación</a></li>
+  <li><a href="#ejercicios" id="toc-ejercicios" class="nav-link" data-scroll-target="#ejercicios"><span class="header-section-number">1.12</span> Ejercicios</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/me1catrr/neuroriemann/issues/new" class="toc-action"><i class="bi bi-github"></i>Informar sobre problema</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-por-que-geometria" class="quarto-section-identifier"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">¿Por qué geometría riemanniana para estudiar el EEG?</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!--
+Macros LaTeX comunes de NeuroRiemann. Incluir al principio de cada documento con
+el shortcode include de Quarto apuntando a /_macros.qmd (véase index.qmd).
+Pandoc las expande también para formatos no HTML (Typst/LaTeX).
+Convenciones: véase appendices/C-notacion.qmd.
+-->
+<div class="hidden">
+<p><span class="math display">\[
+% Espacios de matrices
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Sym}{\mathrm{Sym}}
+\newcommand{\SPD}{\mathrm{SPD}}
+\newcommand{\Corr}{\mathrm{Corr}}
+\newcommand{\Diag}{\mathrm{Diag}}
+\newcommand{\GL}{\mathrm{GL}}
+\newcommand{\Orth}{\mathrm{O}}
+% Funciones matriciales (espectrales, principales)
+\newcommand{\Expm}{\exp}
+\newcommand{\Logm}{\log}
+% Aplicaciones riemannianas (punto base en subíndice: \Exp_P, \Log_P)
+\newcommand{\Exp}{\operatorname{Exp}}
+\newcommand{\Log}{\operatorname{Log}}
+% Distancias
+\newcommand{\dAI}{d_{\mathrm{AI}}}
+\newcommand{\dLE}{d_{\mathrm{LE}}}
+% Operadores
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\diag}{\operatorname{diag}}
+\]</span></p>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>En este capítulo
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Pregunta.</strong> ¿Por qué comparar matrices de EEG es un problema geométrico, y qué habría que comprobar para saber si la geometría riemanniana aporta algo frente a las alternativas?</p>
+<p><strong>Objetivos.</strong> Plantear qué le ocurre a la señal antes de que se calcule una matriz, formular las preguntas del libro (científicas y metodológicas), declarar los supuestos de la geometría afín-invariante y los criterios con los que se decidirá si compensa usarla. Responder, sin geometría diferencial previa, qué es la geometría riemanniana y en qué se diferencia de la euclídea. Es un capítulo de motivación: no demuestra nada, y cada afirmación enlaza con el capítulo que la prueba o la contrasta.</p>
+<p><strong>Prerrequisitos.</strong> Ninguno. El registro y el preprocesado del EEG están en el libro de <a href="https://me1catrr.github.io/NeuroMIND/">NeuroMIND</a>.</p>
+<p><strong>Código.</strong> Dos pequeños experimentos con datos sintéticos y semilla fija; usan <code>distance</code> de <code>NeuroRiemann.jl</code>.</p>
+</div>
+</div>
+<section id="la-pregunta" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="la-pregunta"><span class="header-section-number">1.1</span> La pregunta</h2>
+<p>Este libro <strong>no parte de que la geometría riemanniana sea mejor</strong>. Parte de algo más modesto: ciertas matrices que salen de un EEG tienen una estructura matemática precisa (forman un cono, admiten distancias con propiedades demostrables) y esa estructura <em>puede</em> ser relevante para comparar estados cerebrales. Lo que hay que averiguar es <strong>cuándo</strong> lo es: bajo qué condiciones aporta ventajas frente a otras representaciones y métricas, y cuándo no merece la pena.</p>
+<div class="idea-clave callout callout-style-default callout-tip callout-titled" title="Tesis del libro">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Tesis del libro
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>No usamos geometría riemanniana porque los datos de EEG puedan escribirse como matrices definidas positivas. La estudiamos porque determinadas representaciones matriciales tienen una estructura que puede resultar relevante para comparar estados cerebrales; el objetivo es comprender esa estructura, evaluar sus consecuencias y comprobar si aporta ventajas científicas frente a otras alternativas.</p>
+</div>
+</div>
+<p>Por eso cada capítulo termina con una sección «Lo que esto no demuestra», y por eso el libro incluye desde el principio los métodos con los que hay que compararse (potencia de banda, distancia euclídea, log-euclídea).</p>
+</section>
+<section id="qué-le-pasa-a-la-señal-antes-de-verla" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="qué-le-pasa-a-la-señal-antes-de-verla"><span class="header-section-number">1.2</span> Qué le pasa a la señal antes de verla</h2>
+<p>Antes de que se calcule ninguna matriz, la señal de <span class="math inline">\(n\)</span> canales sufre tres transformaciones lineales:</p>
+<ol type="1">
+<li><strong>Ganancia de electrodo:</strong> cada canal se amplifica por un factor distinto, <span class="math inline">\(x\mapsto Dx\)</span> con <span class="math inline">\(D\)</span> diagonal invertible.</li>
+<li><strong>Mezcla por conducción de volumen:</strong> cada electrodo registra una combinación de las fuentes, <span class="math inline">\(x\mapsto Mx\)</span> con <span class="math inline">\(M\)</span> invertible (aproximadamente instantánea, pero no exactamente).</li>
+<li><strong>Referencia:</strong> con <span class="math inline">\(n\)</span> canales, la referencia promedio es la proyección <span class="math inline">\(H=I-\tfrac1n\mathbf 1\mathbf 1^\top\)</span>, que es <strong>singular</strong>.</li>
+</ol>
+<p>Sobre una covarianza actúan como <span class="math inline">\(P\mapsto DPD\)</span>, <span class="math inline">\(P\mapsto MPM^\top\)</span> y <span class="math inline">\(P\mapsto HPH\)</span>. Las dos primeras son <em>congruencias invertibles</em> y dejan la matriz en el cono (capítulo <a href="registro-matriz.html" class="quarto-xref"><span>2</span></a>); la tercera la saca de él (<a href="registro-matriz.html#prp-referencia" class="quarto-xref">Proposición&nbsp;<span>2.4</span></a>). Esta distinción es el origen de casi todo lo que sigue: una geometría que sea insensible a las congruencias invertibles hará las comparaciones independientes de la ganancia y de la mezcla <strong>si estas son comunes a las dos matrices que se comparan</strong> (<a href="metricas-spd.html#prp-congruencia" class="quarto-xref">Proposición&nbsp;<span>4.6</span></a>). No hará nada por la referencia, ni por una ganancia que cambie entre visitas (capítulo <a href="metricas-spd.html" class="quarto-xref"><span>4</span></a>).</p>
+</section>
+<section id="qué-es-la-geometría-riemanniana-y-en-qué-se-diferencia" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="qué-es-la-geometría-riemanniana-y-en-qué-se-diferencia"><span class="header-section-number">1.3</span> Qué es la geometría riemanniana y en qué se diferencia</h2>
+<p>Una <strong>geometría</strong> es una regla para medir: cuánto distan dos puntos, cuál es la «línea recta» que los une y qué significa moverse en una dirección. La que conocemos, la euclídea, usa <strong>la misma regla en todo el espacio</strong>. Comparar dos matrices como si fueran vectores (restarlas y calcular la norma de la diferencia) es usar esa regla. La geometría <strong>riemanniana</strong> admite que la regla <strong>cambie de un punto a otro</strong>, de forma suave. Es lo que ocurre en un mapa de la Tierra: un grado de longitud mide menos cerca del polo que cerca del ecuador, de modo que la regla depende de dónde se esté.</p>
+<p>Cinco ideas bastan para seguir el libro:</p>
+<div id="tbl-ideas-basicas" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ideas-basicas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;1.1: Ideas básicas de la geometría riemanniana y su forma en <span class="math inline">\(\SPD_n\)</span>. Las definiciones precisas y los resultados que se citan están en los capítulos indicados; para el marco general, <span class="citation" data-cites="docarmo1992riemannian lee2018introduction">(<a href="../bibliografia.html#ref-docarmo1992riemannian" role="doc-biblioref">Carmo 1992</a>; <a href="../bibliografia.html#ref-lee2018introduction" role="doc-biblioref">Lee 2018</a>)</span>.
+</figcaption>
+<div aria-describedby="tbl-ideas-basicas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Idea</th>
+<th>En una frase</th>
+<th>En <span class="math inline">\(\SPD_n\)</span></th>
+<th>Dónde</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Espacio tangente</strong></td>
+<td>las direcciones en las que se puede salir de un punto; es un espacio vectorial en cada punto</td>
+<td>es <span class="math inline">\(\Sym_n\)</span> en todos los puntos: cualquier perturbación simétrica pequeña deja la matriz definida positiva</td>
+<td><a href="metricas-spd.html#prp-spd-tangente" class="quarto-xref">Proposición&nbsp;<span>4.1</span></a></td>
+</tr>
+<tr class="even">
+<td><strong>Métrica</strong></td>
+<td>un producto interior en cada punto: dice cuánto mide cada dirección</td>
+<td>euclídea: <span class="math inline">\(\tr(XY)\)</span>, igual en todos los puntos; afín-invariante: <span class="math inline">\(\tr(P^{-1}XP^{-1}Y)\)</span>, que mide el cambio <strong>relativo</strong> a <span class="math inline">\(P\)</span></td>
+<td>capítulo <a href="metricas-spd.html" class="quarto-xref"><span>4</span></a></td>
+</tr>
+<tr class="odd">
+<td><strong>Distancia y geodésicas</strong></td>
+<td>la distancia es la longitud de la curva más corta; las geodésicas son las «rectas» del espacio</td>
+<td>un segmento (euclídea), una recta de logaritmos (log-euclídea) o <span class="math inline">\(A^{1/2}(A^{-1/2}BA^{-1/2})^tA^{1/2}\)</span> (afín-invariante)</td>
+<td>capítulo <a href="metricas-spd.html" class="quarto-xref"><span>4</span></a></td>
+</tr>
+<tr class="even">
+<td><strong>Exp y Log</strong></td>
+<td>llevan un vector tangente a un punto y de vuelta: sirven para linealizar un grupo de matrices</td>
+<td><span class="math inline">\(\Exp_M\)</span> y <span class="math inline">\(\Log_M\)</span> con punto base <span class="math inline">\(M\)</span></td>
+<td>capítulo <a href="media-frechet.html" class="quarto-xref"><span>5</span></a></td>
+</tr>
+<tr class="odd">
+<td><strong>Curvatura y completitud</strong></td>
+<td>cuánto se separan las geodésicas, y si se pueden prolongar sin salir del espacio</td>
+<td>euclídea: plana y <strong>no</strong> completa; log-euclídea: plana y completa; afín-invariante: curvatura no positiva y completa</td>
+<td>capítulos <a href="metricas-spd.html" class="quarto-xref"><span>4</span></a> y <a href="media-frechet.html" class="quarto-xref"><span>5</span></a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>¿En qué se diferencia de otras formas de comparar matrices?</p>
+<ul>
+<li><strong>De la geometría euclídea:</strong> la euclídea es un <strong>caso particular</strong> riemanniano, con la misma métrica en todos los puntos y curvatura cero. Las tres geometrías del libro (euclídea, log-euclídea y afín-invariante) son riemannianas: elegir entre ellas es elegir la métrica, y por eso responden a preguntas distintas (Experimento 1).</li>
+<li><strong>De una distancia a secas:</strong> un espacio con solo una distancia no tiene espacio tangente ni derivadas, y por tanto tampoco Exp, Log ni vectorización. La métrica riemanniana es lo que permite, en el capítulo <a href="media-frechet.html" class="quarto-xref"><span>5</span></a>, llevar un grupo de matrices a vectores.</li>
+<li><strong>De comparar las entradas una a una:</strong> tratar cada entrada de la matriz como una variable es geometría euclídea sobre un vector, y no tiene en cuenta que una matriz definida positiva no puede tomar cualquier valor en cada entrada (forma un cono).</li>
+<li><strong>De las medidas fuera del cono:</strong> el wPLI no es definido positivo y ninguna de estas geometrías se aplica directamente (capítulo <a href="conectividad.html" class="quarto-xref"><span>7</span></a>).</li>
+</ul>
+<p>Lo esencial es esto: la métrica que se elija determina las distancias, las «rectas», los centros de un grupo de matrices y qué transformaciones no cambian las distancias. Las tres geometrías del libro difieren en eso, no en el algoritmo con que se calculan.</p>
+</section>
+<section id="qué-matrices-y-dos-tipos-de-pregunta" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="qué-matrices-y-dos-tipos-de-pregunta"><span class="header-section-number">1.4</span> Qué matrices, y dos tipos de pregunta</h2>
+<p>Del mismo campo espectral salen matrices de naturaleza distinta: la covarianza (real, simétrica, definida positiva), el espectro cruzado (complejo, hermítico), la correlación, la coherencia, el wPLI (indefinido). Cuáles viven en el cono se demuestra en el capítulo <a href="registro-matriz.html" class="quarto-xref"><span>2</span></a> (<a href="registro-matriz.html#tbl-taxonomia" class="quarto-xref">Tabla&nbsp;<span>2.1</span></a>). Las covarianzas temporales son reales y la congruencia se escribe <span class="math inline">\(WPW^\top\)</span>; las matrices espectrales son complejas y se escribe <span class="math inline">\(WPW^*\)</span> con la adjunta. Se distinguen siempre.</p>
+<p>El libro persigue dos preguntas <strong>científicas</strong>, sobre una cohorte sintética (apéndice <a href="../appendices/D-cohorte-sintetica.html" class="quarto-xref"><span>D</span></a>):</p>
+<ul>
+<li><strong>Transversal:</strong> ¿se diferencian las matrices de los pacientes con esclerosis múltiple (EM) de las de los controles?</li>
+<li><strong>Longitudinal:</strong> ¿cambian las matrices de una persona entre dos visitas T1 y T2?</li>
+</ul>
+<p>Y cuatro preguntas <strong>metodológicas</strong>, que son las que organizan los capítulos:</p>
+<div id="tbl-preguntas" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-preguntas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;1.2: Preguntas metodológicas del libro y capítulos que las tratan.
+</figcaption>
+<div aria-describedby="tbl-preguntas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Pregunta</th>
+<th>Qué se plantea</th>
+<th>Dónde</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>P1. Representación</strong></td>
+<td>¿Qué conservan y qué pierden las matrices de covarianza, espectrales y de conectividad?</td>
+<td>Capítulos <a href="registro-matriz.html" class="quarto-xref"><span>2</span></a> y <a href="conectividad.html" class="quarto-xref"><span>7</span></a></td>
+</tr>
+<tr class="even">
+<td><strong>P2. Geometría</strong></td>
+<td>¿Qué significa que dos registros sean próximos y qué debe respetar esa proximidad?</td>
+<td>Capítulos <a href="metricas-spd.html" class="quarto-xref"><span>4</span></a> y <a href="media-frechet.html" class="quarto-xref"><span>5</span></a></td>
+</tr>
+<tr class="odd">
+<td><strong>P3. Estadística</strong></td>
+<td>¿Se pueden separar los cambios reales de la incertidumbre de estimación?</td>
+<td>Capítulos <a href="covarianzas.html" class="quarto-xref"><span>3</span></a> y <a href="estadistica.html" class="quarto-xref"><span>6</span></a></td>
+</tr>
+<tr class="even">
+<td><strong>P4. Validación</strong></td>
+<td>¿En qué escenarios los métodos riemannianos superan, igualan o empeoran a los convencionales?</td>
+<td>Capítulo <a href="estadistica.html" class="quarto-xref"><span>6</span></a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</section>
+<section id="experimento-1-dos-nociones-de-diferencia" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="experimento-1-dos-nociones-de-diferencia"><span class="header-section-number">1.5</span> Experimento 1: dos nociones de diferencia</h2>
+<p>Sean <span class="math inline">\(P=I\)</span> y <span class="math inline">\(Q=\operatorname{diag}(4,1)\)</span> en <span class="math inline">\(\SPD_2\)</span>: dos canales de igual varianza y sin covarianza, y los mismos dos canales con uno de ellos de varianza cuatro veces mayor (amplitud doble). ¿Cuánto se diferencian? Depende de qué se entienda por diferencia (capítulo <a href="metricas-spd.html" class="quarto-xref"><span>4</span></a>).</p>
+<div id="lab1-ejemplo" class="cell" data-execution_count="1">
+<details open="" class="code-fold">
+<summary>Código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">NeuroRiemann</span>, <span class="bu">LinearAlgebra</span>, <span class="bu">StableRNGs</span>, <span class="bu">Statistics</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dAI</span>(A, B) <span class="op">=</span> <span class="fu">distance</span>(<span class="fu">AffineInvariant</span>(), A, B)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>P <span class="op">=</span> <span class="fu">Matrix</span>(<span class="fl">1.0</span>I, <span class="fl">2</span>, <span class="fl">2</span>); Q <span class="op">=</span> <span class="fu">Matrix</span>(<span class="fu">Diagonal</span>([<span class="fl">4.0</span>, <span class="fl">1.0</span>]))</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"| Par | \$d_E\$ | \$d_{LE}\$ | \$d_{AI}\$ |</span><span class="sc">\n</span><span class="st">|---|---|---|---|"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (nombre, c) <span class="kw">in</span> ((<span class="st">"\$(P,Q)\$"</span>, <span class="fl">1</span>), (<span class="st">"\$(100P,100Q)\$: las mismas dos matrices, con otra unidad"</span>, <span class="fl">100</span>))</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(<span class="st">"| "</span>, nombre, <span class="st">" | "</span>, <span class="fu">round</span>(<span class="fu">distance</span>(<span class="fu">Euclidean</span>(), c <span class="op">*</span> P, c <span class="op">*</span> Q); sigdigits <span class="op">=</span> <span class="fl">4</span>), <span class="st">" | "</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>            <span class="fu">round</span>(<span class="fu">distance</span>(<span class="fu">LogEuclidean</span>(), c <span class="op">*</span> P, c <span class="op">*</span> Q); sigdigits <span class="op">=</span> <span class="fl">4</span>), <span class="st">" | "</span>, <span class="fu">round</span>(<span class="fu">dAI</span>(c <span class="op">*</span> P, c <span class="op">*</span> Q); sigdigits <span class="op">=</span> <span class="fl">4</span>), <span class="st">" |"</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">Una razón de varianzas de 4 son \$10</span><span class="sc">\\</span><span class="st">log_{10}4="</span>, <span class="fu">round</span>(<span class="fl">10</span> <span class="op">*</span> <span class="fu">log10</span>(<span class="fl">4</span>); digits <span class="op">=</span> <span class="fl">2</span>), <span class="st">"\$ dB; y \$</span><span class="sc">\\</span><span class="st">ln4="</span>, <span class="fu">round</span>(<span class="fu">log</span>(<span class="fl">4</span>); digits <span class="op">=</span> <span class="fl">4</span>), <span class="st">"\$."</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Par</th>
+<th><span class="math inline">\(d_E\)</span></th>
+<th><span class="math inline">\(d_{LE}\)</span></th>
+<th><span class="math inline">\(d_{AI}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\((P,Q)\)</span></td>
+<td>3.0</td>
+<td>1.386</td>
+<td>1.386</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\((100P,100Q)\)</span>: las mismas dos matrices, con otra unidad</td>
+<td>300.0</td>
+<td>1.386</td>
+<td>1.386</td>
+</tr>
+</tbody>
+</table>
+<p>Una razón de varianzas de 4 son <span class="math inline">\(10\log_{10}4=6.02\)</span> dB; y <span class="math inline">\(\ln4=1.3863\)</span>.</p>
+</div>
+<p>La distancia euclídea mide una diferencia <strong>absoluta</strong> y se multiplica por <span class="math inline">\(100\)</span> al cambiar de unidad; la log-euclídea y la afín-invariante miden una diferencia <strong>relativa</strong>: una razón de varianzas de cuatro, en decibelios <span class="math inline">\(6{,}02\)</span> dB, que es una medida que el análisis de EEG ya usa a diario. Aquí las dos matrices conmutan, así que las dos distancias logarítmicas coinciden (capítulo <a href="metricas-spd.html" class="quarto-xref"><span>4</span></a>). Lo interesante no es que un número sea mayor que otro, sino que <strong>responden a preguntas distintas</strong>: «¿cuánto ha cambiado la potencia?» o «¿cuánto ha cambiado en proporción?». Cuál de las dos es la adecuada depende de la hipótesis científica. <span class="ev-numerico">Verificado numéricamente</span></p>
+</section>
+<section id="experimento-2-la-distancia-entre-dos-estimaciones-no-es-cero" class="level2" data-number="1.6">
+<h2 data-number="1.6" class="anchored" data-anchor-id="experimento-2-la-distancia-entre-dos-estimaciones-no-es-cero"><span class="header-section-number">1.6</span> Experimento 2: la distancia entre dos estimaciones no es cero</h2>
+<p>En la práctica, <span class="math inline">\(P\)</span> y <span class="math inline">\(Q\)</span> no se conocen: se estiman con <span class="math inline">\(T\)</span> muestras. Dos estimaciones de la <em>misma</em> covarianza ya están a una distancia positiva (el <strong>suelo de ruido</strong>, capítulo <a href="covarianzas.html" class="quarto-xref"><span>3</span></a>). ¿Basta la diferencia <span class="math inline">\(P\)</span> frente a <span class="math inline">\(Q\)</span> del experimento anterior para distinguirlas?</p>
+<div id="lab1-ruido" class="cell" data-execution_count="1">
+<details open="" class="code-fold">
+<summary>Código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">muestra</span>(rng, Σ, T) <span class="op">=</span> (X <span class="op">=</span> <span class="fu">cholesky</span>(Σ).L <span class="op">*</span> <span class="fu">randn</span>(rng, <span class="fu">size</span>(Σ, <span class="fl">1</span>), T); <span class="fu">Symmetric</span>(X <span class="op">*</span> X<span class="op">'</span> <span class="op">/</span> T))</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">experimento_ruido</span>(; Ts <span class="op">=</span> (<span class="fl">8</span>, <span class="fl">16</span>, <span class="fl">64</span>), R <span class="op">=</span> <span class="fl">2000</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    rng <span class="op">=</span> <span class="fu">StableRNG</span>(<span class="fl">20261116</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fu">map</span>(Ts) <span class="cf">do</span> T</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        mismo <span class="op">=</span> <span class="dt">Float64</span>[]; distinto <span class="op">=</span> <span class="dt">Float64</span>[]</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> _ <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>R</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>            a, b, c <span class="op">=</span> <span class="fu">muestra</span>(rng, P, T), <span class="fu">muestra</span>(rng, P, T), <span class="fu">muestra</span>(rng, Q, T)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>            <span class="fu">push!</span>(mismo, <span class="fu">dAI</span>(a, b)); <span class="fu">push!</span>(distinto, <span class="fu">dAI</span>(a, c))</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        (; T, mismo <span class="op">=</span> <span class="fu">mean</span>(mismo), distinto <span class="op">=</span> <span class="fu">mean</span>(distinto), acierto <span class="op">=</span> <span class="fu">mean</span>(distinto <span class="op">.&gt;</span> mismo))</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> <span class="fu">experimento_ruido</span>()</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"| \$T\$ | \$d_{AI}\$ entre dos estimaciones de \$P\$ | \$d_{AI}\$ entre una estimación de \$P\$ y otra de \$Q\$ | Probabilidad de que la segunda sea mayor |</span><span class="sc">\n</span><span class="st">|---|---|---|---|"</span>)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> r <span class="kw">in</span> res</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(<span class="st">"| "</span>, r.T, <span class="st">" | "</span>, <span class="fu">round</span>(r.mismo; digits <span class="op">=</span> <span class="fl">2</span>), <span class="st">" | "</span>, <span class="fu">round</span>(r.distinto; digits <span class="op">=</span> <span class="fl">2</span>), <span class="st">" | "</span>, <span class="fu">round</span>(r.acierto; digits <span class="op">=</span> <span class="fl">2</span>), <span class="st">" |"</span>)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><span class="math inline">\(T\)</span></th>
+<th><span class="math inline">\(d_{AI}\)</span> entre dos estimaciones de <span class="math inline">\(P\)</span></th>
+<th><span class="math inline">\(d_{AI}\)</span> entre una estimación de <span class="math inline">\(P\)</span> y otra de <span class="math inline">\(Q\)</span></th>
+<th>Probabilidad de que la segunda sea mayor</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>8</td>
+<td>1.27</td>
+<td>1.85</td>
+<td>0.77</td>
+</tr>
+<tr class="even">
+<td>16</td>
+<td>0.84</td>
+<td>1.61</td>
+<td>0.91</td>
+</tr>
+<tr class="odd">
+<td>64</td>
+<td>0.4</td>
+<td>1.42</td>
+<td>1.0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Con <span class="math inline">\(T=8\)</span> muestras, dos estimaciones de la misma matriz están en promedio a <span class="math inline">\(1{,}27\)</span> y de <span class="math inline">\(P\)</span> a <span class="math inline">\(Q\)</span> a <span class="math inline">\(1{,}85\)</span>: la diferencia real (cuyo valor exacto es <span class="math inline">\(1{,}39\)</span>) es del mismo orden que el ruido, y la probabilidad de ordenar bien las dos distancias es de solo <span class="math inline">\(0{,}77\)</span>. Con <span class="math inline">\(T=64\)</span> el ruido baja a <span class="math inline">\(0{,}40\)</span> y el orden es siempre correcto. <span class="ev-hipotesis">Hipótesis sintética</span> Es la razón de que los capítulos <a href="covarianzas.html" class="quarto-xref"><span>3</span></a> y <a href="estadistica.html" class="quarto-xref"><span>6</span></a> vayan <strong>antes</strong> que las conclusiones: sin una referencia de ruido, una distancia no se puede interpretar.</p>
+</section>
+<section id="qué-se-supone-y-dónde-se-comprueba" class="level2" data-number="1.7">
+<h2 data-number="1.7" class="anchored" data-anchor-id="qué-se-supone-y-dónde-se-comprueba"><span class="header-section-number">1.7</span> Qué se supone, y dónde se comprueba</h2>
+<p>La geometría afín-invariante descansa en supuestos que no siempre se cumplen. Cada uno se prueba o se deja ver fallar en un capítulo:</p>
+<div id="tbl-supuestos" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-supuestos-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;1.3: Supuestos de la geometría afín-invariante.
+</figcaption>
+<div aria-describedby="tbl-supuestos-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Supuesto</th>
+<th>Qué ocurre si falla</th>
+<th>Dónde</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Rango completo y buen condicionamiento</td>
+<td><span class="math inline">\(\dAI\)</span> no está definida o amplifica el ruido del menor autovalor</td>
+<td>Capítulos <a href="covarianzas.html" class="quarto-xref"><span>3</span></a> y <a href="metricas-spd.html" class="quarto-xref"><span>4</span></a></td>
+</tr>
+<tr class="even">
+<td>Transformaciones comunes a los registros comparados</td>
+<td>Un cambio instrumental entre visitas no se distingue de uno fisiológico</td>
+<td>Capítulos <a href="metricas-spd.html" class="quarto-xref"><span>4</span></a> y <a href="media-frechet.html" class="quarto-xref"><span>5</span></a></td>
+</tr>
+<tr class="odd">
+<td>Muestras independientes y estacionariedad dentro de la época</td>
+<td>El ruido de estimación es mayor que el pronosticado</td>
+<td>Capítulo <a href="covarianzas.html" class="quarto-xref"><span>3</span></a> (la no estacionariedad no se modela)</td>
+</tr>
+<tr class="even">
+<td>Suficiencia de la covarianza (segundo orden)</td>
+<td>Se ignora todo lo que no sea covarianza</td>
+<td>Capítulo <a href="conectividad.html" class="quarto-xref"><span>7</span></a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>La métrica afín-invariante coincide, salvo un factor ½ en el tensor (distancia dividida por <span class="math inline">\(\sqrt2\)</span>), con la métrica de información de Fisher de la familia de gaussianas <span class="math inline">\(N(0,\Sigma)\)</span> [VERIFICAR fuente]: es la razón estadística de usarla, y vale solo si esa familia es un buen modelo.</p>
+</section>
+<section id="qué-alternativas-hay" class="level2" data-number="1.8">
+<h2 data-number="1.8" class="anchored" data-anchor-id="qué-alternativas-hay"><span class="header-section-number">1.8</span> Qué alternativas hay</h2>
+<p>Comparar matrices exige elegir tres cosas, y cada una tiene alternativas. Las preguntas de la última columna son lo que el libro contrasta; no son afirmaciones.</p>
+<div id="tbl-alternativas" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-alternativas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;1.4: Alternativas por eje. El filtro espacial CSP resuelve un problema de autovalores generalizado entre dos covarianzas, de la misma familia que la <a href="metricas-spd.html#eq-dai-espectral" class="quarto-xref">ecuación&nbsp;<span>4.4</span></a>; se menciona sin desarrollarlo.
+</figcaption>
+<div aria-describedby="tbl-alternativas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Eje</th>
+<th>Opciones</th>
+<th>Pregunta abierta</th>
+<th>Dónde</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Representación</td>
+<td>Potencia de banda por canal (log-varianza), covarianza, correlación, coherencia, wPLI</td>
+<td>¿Qué información conjunta se pierde al quedarse con la potencia de cada canal?</td>
+<td>Capítulos <a href="registro-matriz.html" class="quarto-xref"><span>2</span></a> y <a href="estadistica.html" class="quarto-xref"><span>6</span></a></td>
+</tr>
+<tr class="even">
+<td>Distancia</td>
+<td>Euclídea, log-euclídea, afín-invariante</td>
+<td>¿Compensan la invariancia por congruencia sus costes y supuestos?</td>
+<td>Capítulos <a href="metricas-spd.html" class="quarto-xref"><span>4</span></a> y <a href="estadistica.html" class="quarto-xref"><span>6</span></a></td>
+</tr>
+<tr class="odd">
+<td>Inferencia</td>
+<td>Test de permutación sobre estadísticos de distancia, modelos sobre vectores tangentes</td>
+<td>¿Se controla el error de tipo I y cuánta potencia se pierde o se gana?</td>
+<td>Capítulo <a href="estadistica.html" class="quarto-xref"><span>6</span></a></td>
+</tr>
+<tr class="even">
+<td>Uso posterior</td>
+<td>Teoría de grafos, aprendizaje automático (p.&nbsp;ej. el clasificador de distancia mínima a la media)</td>
+<td>¿Hay suficientes sujetos y una validación sin fugas?</td>
+<td>Capítulo <a href="estadistica.html" class="quarto-xref"><span>6</span></a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</section>
+<section id="cómo-se-decidirá-si-aporta-algo" class="level2" data-number="1.9">
+<h2 data-number="1.9" class="anchored" data-anchor-id="cómo-se-decidirá-si-aporta-algo"><span class="header-section-number">1.9</span> Cómo se decidirá si aporta algo</h2>
+<p>Se separan tres clases de criterio, porque una ventaja en una no implica ventaja en las otras:</p>
+<ul>
+<li><strong>Geométricos:</strong> qué invariancias respeta cada distancia y qué geodésicas tiene (capítulos <a href="metricas-spd.html" class="quarto-xref"><span>4</span></a> y <a href="media-frechet.html" class="quarto-xref"><span>5</span></a>). Se demuestran.</li>
+<li><strong>Estadísticos:</strong> error de tipo I, potencia, estabilidad con <span class="math inline">\(T/n\)</span> pequeño, fiabilidad test–retest sin cambio cerebral. Se miden con la misma cohorte sintética, <strong>con las mismas matrices, particiones y condiciones de validación para todas las geometrías</strong>, y con criterios fijados de antemano (apéndice <a href="../appendices/D-cohorte-sintetica.html" class="quarto-xref"><span>D</span></a>). Un resultado de simulación vale solo para el generador declarado.</li>
+<li><strong>Fisiológicos:</strong> si lo que se detecta es interpretable. Una distancia afín-invariante es un número global; no dice en qué canales ni regiones se diferencian dos registros. Esta clase <strong>no se resuelve con geometría</strong>, y los datos reales de NeuroMIND quedan fuera de este libro.</li>
+</ul>
+<section id="cuadro-de-promesas" class="level3" data-number="1.9.1">
+<h3 data-number="1.9.1" class="anchored" data-anchor-id="cuadro-de-promesas"><span class="header-section-number">1.9.1</span> Cuadro de promesas</h3>
+<p>Lo que este capítulo adelanta, y dónde se demuestra o se contrasta:</p>
+<div id="tbl-promesas" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-promesas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;1.5: Cuadro de promesas del capítulo.
+</figcaption>
+<div aria-describedby="tbl-promesas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Afirmación</th>
+<th>Dónde</th>
+<th>Estado</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Ganancia y mezcla comunes dejan la matriz en el cono; la referencia promedio no</td>
+<td><a href="registro-matriz.html#prp-referencia" class="quarto-xref">Proposición&nbsp;<span>2.4</span></a></td>
+<td>Demostrado</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\dAI\)</span> no cambia por una congruencia común; <span class="math inline">\(d_E\)</span> y <span class="math inline">\(\dLE\)</span> sí cambian</td>
+<td><a href="metricas-spd.html#prp-congruencia" class="quarto-xref">Proposición&nbsp;<span>4.6</span></a>, <a href="metricas-spd.html#tbl-invariancias" class="quarto-xref">Tabla&nbsp;<span>4.2</span></a></td>
+<td>Demostrado</td>
+</tr>
+<tr class="odd">
+<td>Una ganancia solo en T2 produce un «cambio» que <span class="math inline">\(\dAI\)</span> no distingue de uno fisiológico</td>
+<td>Capítulo <a href="metricas-spd.html" class="quarto-xref"><span>4</span></a></td>
+<td>Verificado numéricamente</td>
+</tr>
+<tr class="even">
+<td>La distancia entre dos estimaciones de la misma matriz es positiva y su valor esperado no depende de <span class="math inline">\(\Sigma\)</span> (afín-invariante)</td>
+<td><a href="covarianzas.html#thm-suelo" class="quarto-xref">Teorema&nbsp;<span>3.1</span></a></td>
+<td>Demostrado (primer orden)</td>
+</tr>
+<tr class="odd">
+<td>El re-centrado borra una congruencia común salvo una rotación, y también el desplazamiento fisiológico de la media</td>
+<td><a href="media-frechet.html#prp-recentrado" class="quarto-xref">Proposición&nbsp;<span>5.6</span></a></td>
+<td>Demostrado</td>
+</tr>
+<tr class="even">
+<td>Qué geometría gana según el tipo de efecto y <span class="math inline">\(T/n\)</span></td>
+<td>Capítulo <a href="estadistica.html" class="quarto-xref"><span>6</span></a></td>
+<td>Hipótesis sintética</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</section>
+</section>
+<section id="lo-que-esto-no-demuestra" class="level2" data-number="1.10">
+<h2 data-number="1.10" class="anchored" data-anchor-id="lo-que-esto-no-demuestra"><span class="header-section-number">1.10</span> Lo que esto no demuestra</h2>
+<ul>
+<li><strong>No demuestra que la geometría riemanniana aporte ventajas.</strong> Plantea cómo se comprobará. Todo el peso de la afirmación está en los capítulos siguientes, y puede resultar que en algunos escenarios no aporte nada.</li>
+<li><strong>Los dos experimentos son mínimos.</strong> Matrices <span class="math inline">\(2\times2\)</span>, gaussianas y con una sola diferencia; sirven para ilustrar la pregunta, no para extrapolar a un EEG.</li>
+<li><strong>No resuelve la parte fisiológica.</strong> Interpretar qué cambio cerebral corresponde a una distancia no es una cuestión de geometría.</li>
+<li><strong>El tratamiento de la conducción de volumen y la referencia es esquemático.</strong> Las mezclas reales no son exactamente instantáneas ni estacionarias; el capítulo <a href="registro-matriz.html" class="quarto-xref"><span>2</span></a> precisa cuándo una mezcla real no genera parte imaginaria.</li>
+<li><strong>No se usan datos de NeuroMIND.</strong> El trasfondo clínico y la estimación espectral están en su libro; aquí solo se citarían resultados agregados autorizados.</li>
+</ul>
+</section>
+<section id="autoevaluación" class="level2" data-number="1.11">
+<h2 data-number="1.11" class="anchored" data-anchor-id="autoevaluación"><span class="header-section-number">1.11</span> Autoevaluación</h2>
+<div class="autoeval callout callout-style-default callout-tip callout-titled" title="1. ¿Qué cambia al cambiar de unidades?">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>¿Qué cambia al cambiar de unidades?
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Se expresan dos covarianzas en mV² en lugar de µV². ¿Qué ocurre con las distancias euclídea y afín-invariante entre ellas?</p>
+<p><strong>Respuesta.</strong> La euclídea se multiplica por la escala; la afín-invariante no cambia (escala común, <a href="metricas-spd.html#tbl-invariancias" class="quarto-xref">Tabla&nbsp;<span>4.2</span></a>), porque mide razones de varianza y no diferencias absolutas.</p>
+</div>
+</div>
+</div>
+<div class="autoeval callout callout-style-default callout-tip callout-titled" title="2. Ganancia que cambia entre visitas">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Ganancia que cambia entre visitas
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>La actividad cerebral de una persona no cambia entre T1 y T2, pero un electrodo cambia de ganancia. ¿Detecta la geometría afín-invariante un cambio?</p>
+<p><strong>Respuesta.</strong> Sí, y no lo distingue de un cambio fisiológico: es una ganancia distinta en una sola de las dos visitas, no una transformación común. La invariancia solo protege a las comparaciones entre registros con la misma transformación.</p>
+</div>
+</div>
+</div>
+<div class="autoeval callout callout-style-default callout-tip callout-titled" title="3. ¿Una distancia grande es una diferencia real?">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>¿Una distancia grande es una diferencia real?
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Dos registros con la misma covarianza verdadera están a distancia <span class="math inline">\(1{,}2\)</span> con <span class="math inline">\(T=8\)</span> muestras. ¿Hay diferencia entre ellos?</p>
+<p><strong>Respuesta.</strong> No necesariamente: ese es el orden del suelo de ruido (Experimento 2). Hay que compararla con lo que se obtendría entre registros sin diferencia (capítulo <a href="covarianzas.html" class="quarto-xref"><span>3</span></a>).</p>
+</div>
+</div>
+</div>
+</section>
+<section id="ejercicios" class="level2" data-number="1.12">
+<h2 data-number="1.12" class="anchored" data-anchor-id="ejercicios"><span class="header-section-number">1.12</span> Ejercicios</h2>
+<div id="exr-unidades" class="rapido theorem exercise">
+<p><span class="theorem-title"><strong>Ejercicio 1.1</strong></span> Comprueba que, para <span class="math inline">\(P=I\)</span> y <span class="math inline">\(Q=\operatorname{diag}(a,1)\)</span> con <span class="math inline">\(a&gt;0\)</span>, <span class="math inline">\(d_E=|a-1|\)</span> y <span class="math inline">\(\dAI=|\ln a|\)</span>. ¿Para qué valores de <span class="math inline">\(a\)</span> la distancia euclídea sobrestima la afín-invariante? ¿Y la subestima?</p>
+<div class="solucion callout callout-style-default callout-note callout-titled" title="Solución">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>Solución
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><span class="math inline">\(\|I-Q\|_F=|1-a|\)</span> y <span class="math inline">\(\dAI=|\ln a|\)</span>. Como <span class="math inline">\(\ln a\le a-1\)</span> con igualdad solo en <span class="math inline">\(a=1\)</span>, para <span class="math inline">\(a&gt;1\)</span> la euclídea es mayor; para <span class="math inline">\(0&lt;a&lt;1\)</span>, <span class="math inline">\(|\ln a|&gt;|a-1|\)</span>, y la euclídea es menor (la afín-invariante da más peso a las disminuciones de potencia).</p>
+</div>
+</div>
+</div>
+</div>
+<div id="exr-db" class="rapido theorem exercise">
+<p><span class="theorem-title"><strong>Ejercicio 1.2</strong></span> Una razón de varianzas <span class="math inline">\(\lambda\)</span> equivale a <span class="math inline">\(10\log_{10}\lambda\)</span> dB. Expresa <span class="math inline">\(\dAI\)</span> entre <span class="math inline">\(I\)</span> y <span class="math inline">\(\operatorname{diag}(\lambda_1,\lambda_2)\)</span> en función de los decibelios de cada canal.</p>
+</div>
+<div id="exr-ruido" class="simulacion theorem exercise">
+<p><span class="theorem-title"><strong>Ejercicio 1.3</strong></span> Con la función <code>muestra</code> del laboratorio, repite el Experimento 2 con <span class="math inline">\(Q=\operatorname{diag}(1{,}5;1)\)</span> (una diferencia mucho menor). ¿Con qué <span class="math inline">\(T\)</span> se ordenan correctamente las dos distancias el <span class="math inline">\(90\,\%\)</span> de las veces?</p>
+</div>
+<div id="exr-supuesto" class="rapido theorem exercise">
+<p><span class="theorem-title"><strong>Ejercicio 1.4</strong></span> Elige uno de los supuestos de la <a href="#tbl-supuestos" class="quarto-xref">Tabla&nbsp;<span>1.3</span></a> y describe un experimento sintético que lo viole. ¿Qué esperas observar?</p>
+</div>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-docarmo1992riemannian" class="csl-entry" role="listitem">
+Carmo, Manfredo P. do. 1992. <em>Riemannian Geometry</em>. Birkh<span>ä</span>user.
+</div>
+<div id="ref-lee2018introduction" class="csl-entry" role="listitem">
+Lee, John M. 2018. <em>Introduction to Riemannian Manifolds</em>. 2.ª ed. Springer.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiado");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiado");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/me1catrr\.github\.io\/neuroriemann\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../index.html" class="pagination-link" aria-label="NeuroRiemann">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">NeuroRiemann</span>
+      </a>
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./registro-matriz.html" class="pagination-link" aria-label="2 Del registro a la matriz: el problema geométrico">
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Del registro a la matriz: el problema geométrico</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© 2026 Rafael Castro Triguero · Universidad de Córdoba</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/me1catrr/neuroriemann/issues/new" class="toc-action"><i class="bi bi-github"></i>Informar sobre problema</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Texto y figuras <a href="https://creativecommons.org/licenses/by/4.0/deed.es">CC BY 4.0</a> · Código MIT</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

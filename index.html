@@ -38,6 +38,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
+<link href="./chapters/por-que-geometria.html" rel="next">
 <link href="./assets/img/marca.svg" rel="icon" type="image/svg+xml">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -193,8 +194,44 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./chapters/por-que-geometria.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">¿Por qué geometría riemanniana para estudiar el EEG?</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapters/registro-matriz.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Del registro a la matriz: el problema geométrico</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapters/covarianzas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Covarianzas con pocos datos: el cono SPD y su estimación</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./chapters/metricas-spd.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Métricas sobre SPD: medir y recorrer las diferencias</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapters/media-frechet.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Centro y dispersión de un grupo de matrices</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapters/estadistica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Estadística riemanniana: grupos y trayectorias</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapters/conectividad.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Conectividad funcional: más allá del cono</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -228,6 +265,18 @@ window.Quarto = {
   <div class="sidebar-item-container"> 
   <a href="./appendices/C-notacion.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Notación y convenciones</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./appendices/D-cohorte-sintetica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">La cohorte sintética: especificación</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./appendices/E-cajas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Cajas y ejercicios: guía de estilo</span></span></a>
   </div>
 </li>
       </ul>
@@ -279,12 +328,11 @@ Convenciones: véase appendices/C-notacion.qmd.
 </div>
 <p>Este libro estudia cómo aplicar la geometría riemanniana al análisis de enfermedades neurodegenerativas, como la esclerosis múltiple, a partir de señales EEG. Un EEG multicanal se resume en matrices (de covarianza, de coherencia, de conectividad), y compararlas entre personas, grupos o visitas exige decidir qué significa que se parezcan. La geometría riemanniana ofrece respuestas con propiedades demostrables, pero el libro no parte de que sean las mejores: investiga, con teoría y código verificable, bajo qué condiciones aportan ventajas y señala con la misma claridad cuándo no compensan.</p>
 <div class="acciones">
-<p><span class="nr-no-publicado btn btn-primary" title="Aún no publicado en la edición web">Empezar por la introducción</span> <a href="#indice" class="btn btn-outline-primary">Índice</a> <a href="https://github.com/me1catrr/neuroriemann" class="btn btn-outline-secondary">Código en GitHub</a></p>
+<p><a href="./chapters/por-que-geometria.html" class="btn btn-primary">Empezar por la introducción</a> <a href="#indice" class="btn btn-outline-primary">Índice</a> <a href="https://github.com/me1catrr/neuroriemann" class="btn btn-outline-secondary">Código en GitHub</a></p>
 </div>
-<p>Se parte de un EEG ya preprocesado, cuyo registro y medidas clásicas están en el libro de <a href="https://me1catrr.github.io/NeuroMIND/">NeuroMIND</a>, y de álgebra lineal y cálculo. La <a href="./appendices/C-notacion.html">notación</a> se fija en un apéndice, y una <span class="nr-no-publicado" title="Aún no publicado en la edición web">cohorte sintética</span> recorre el libro.</p>
+<p>Se parte de un EEG ya preprocesado, cuyo registro y medidas clásicas están en el libro de <a href="https://me1catrr.github.io/NeuroMIND/">NeuroMIND</a>, y de álgebra lineal y cálculo. La <a href="./appendices/C-notacion.html">notación</a> se fija en un apéndice, y una <a href="./appendices/D-cohorte-sintetica.html">cohorte sintética</a> recorre el libro.</p>
 <section id="indice" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="indice">Índice</h2>
-<p>En esta edición web solo se publican los capítulos y apéndices marcados en la columna «GitHub Pages»; los demás están en revisión.</p>
 <!-- INDICE:inicio -->
 <section id="capítulos" class="level3">
 <h3 class="anchored" data-anchor-id="capítulos">Capítulos</h3>
@@ -302,24 +350,24 @@ Convenciones: véase appendices/C-notacion.qmd.
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">1</td>
-<td style="text-align: left;"><span class="nr-no-publicado" title="Aún no publicado en la edición web">¿Por qué geometría riemanniana para estudiar el EEG?</span></td>
+<td style="text-align: left;"><a href="./chapters/por-que-geometria.html">¿Por qué geometría riemanniana para estudiar el EEG?</a></td>
 <td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">2</td>
-<td style="text-align: left;"><span class="nr-no-publicado" title="Aún no publicado en la edición web">Del registro a la matriz: el problema geométrico</span></td>
+<td style="text-align: left;"><a href="./chapters/registro-matriz.html">Del registro a la matriz: el problema geométrico</a></td>
 <td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">3</td>
-<td style="text-align: left;"><span class="nr-no-publicado" title="Aún no publicado en la edición web">Covarianzas con pocos datos: el cono SPD y su estimación</span></td>
+<td style="text-align: left;"><a href="./chapters/covarianzas.html">Covarianzas con pocos datos: el cono SPD y su estimación</a></td>
 <td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">4</td>
@@ -330,24 +378,24 @@ Convenciones: véase appendices/C-notacion.qmd.
 </tr>
 <tr class="odd">
 <td style="text-align: right;">5</td>
-<td style="text-align: left;"><span class="nr-no-publicado" title="Aún no publicado en la edición web">Centro y dispersión de un grupo de matrices</span></td>
+<td style="text-align: left;"><a href="./chapters/media-frechet.html">Centro y dispersión de un grupo de matrices</a></td>
 <td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">6</td>
-<td style="text-align: left;"><span class="nr-no-publicado" title="Aún no publicado en la edición web">Estadística riemanniana: grupos y trayectorias</span></td>
+<td style="text-align: left;"><a href="./chapters/estadistica.html">Estadística riemanniana: grupos y trayectorias</a></td>
 <td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">7</td>
-<td style="text-align: left;"><span class="nr-no-publicado" title="Aún no publicado en la edición web">Conectividad funcional: más allá del cono</span></td>
+<td style="text-align: left;"><a href="./chapters/conectividad.html">Conectividad funcional: más allá del cono</a></td>
 <td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
 </tr>
 </tbody>
 </table>
@@ -390,17 +438,17 @@ Convenciones: véase appendices/C-notacion.qmd.
 </tr>
 <tr class="even">
 <td style="text-align: right;">D</td>
-<td style="text-align: left;"><span class="nr-no-publicado" title="Aún no publicado en la edición web">La cohorte sintética: especificación</span></td>
+<td style="text-align: left;"><a href="./appendices/D-cohorte-sintetica.html">La cohorte sintética: especificación</a></td>
 <td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">E</td>
-<td style="text-align: left;"><span class="nr-no-publicado" title="Aún no publicado en la edición web">Cajas y ejercicios: guía de estilo</span></td>
+<td style="text-align: left;"><a href="./appendices/E-cajas.html">Cajas y ejercicios: guía de estilo</a></td>
 <td style="text-align: center;">✓</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
 </tr>
 </tbody>
 </table>
@@ -864,8 +912,8 @@ Convenciones: véase appendices/C-notacion.qmd.
   <div class="nav-page nav-page-previous">
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./chapters/metricas-spd.html" class="pagination-link" aria-label="4 Métricas sobre SPD: medir y recorrer las diferencias">
-        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Métricas sobre SPD: medir y recorrer las diferencias</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./chapters/por-que-geometria.html" class="pagination-link" aria-label="1 ¿Por qué geometría riemanniana para estudiar el EEG?">
+        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">¿Por qué geometría riemanniana para estudiar el EEG?</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

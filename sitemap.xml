@@ -2,11 +2,35 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://me1catrr.github.io/neuroriemann/index.html</loc>
-    <lastmod>2026-11-07T11:21:42.463Z</lastmod>
+    <lastmod>2026-11-07T11:34:25.410Z</lastmod>
+  </url>
+  <url>
+    <loc>https://me1catrr.github.io/neuroriemann/chapters/por-que-geometria.html</loc>
+    <lastmod>2026-11-07T11:29:55.850Z</lastmod>
+  </url>
+  <url>
+    <loc>https://me1catrr.github.io/neuroriemann/chapters/registro-matriz.html</loc>
+    <lastmod>2026-11-07T11:29:55.850Z</lastmod>
+  </url>
+  <url>
+    <loc>https://me1catrr.github.io/neuroriemann/chapters/covarianzas.html</loc>
+    <lastmod>2026-11-07T11:29:55.849Z</lastmod>
   </url>
   <url>
     <loc>https://me1catrr.github.io/neuroriemann/chapters/metricas-spd.html</loc>
-    <lastmod>2026-11-07T11:10:33.760Z</lastmod>
+    <lastmod>2026-11-07T11:29:55.850Z</lastmod>
+  </url>
+  <url>
+    <loc>https://me1catrr.github.io/neuroriemann/chapters/media-frechet.html</loc>
+    <lastmod>2026-11-07T11:29:55.849Z</lastmod>
+  </url>
+  <url>
+    <loc>https://me1catrr.github.io/neuroriemann/chapters/estadistica.html</loc>
+    <lastmod>2026-11-07T11:29:55.849Z</lastmod>
+  </url>
+  <url>
+    <loc>https://me1catrr.github.io/neuroriemann/chapters/conectividad.html</loc>
+    <lastmod>2026-11-07T11:29:55.849Z</lastmod>
   </url>
   <url>
     <loc>https://me1catrr.github.io/neuroriemann/bibliografia.html</loc>
@@ -23,5 +47,13 @@
   <url>
     <loc>https://me1catrr.github.io/neuroriemann/appendices/C-notacion.html</loc>
     <lastmod>2026-11-06T18:55:37.155Z</lastmod>
+  </url>
+  <url>
+    <loc>https://me1catrr.github.io/neuroriemann/appendices/D-cohorte-sintetica.html</loc>
+    <lastmod>2026-11-07T11:29:55.848Z</lastmod>
+  </url>
+  <url>
+    <loc>https://me1catrr.github.io/neuroriemann/appendices/E-cajas.html</loc>
+    <lastmod>2026-11-07T11:29:55.848Z</lastmod>
   </url>
 </urlset>

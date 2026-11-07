@@ -1,0 +1,1635 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Libro abierto sobre geometría riemanniana de matrices simétricas definidas positivas y sus aplicaciones al EEG: teoría rigurosa, algoritmos en Julia y simuladores interactivos.">
+
+<title>3&nbsp; Covarianzas con pocos datos: el cono SPD y su estimación – NeuroRiemann</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/metricas-spd.html" rel="next">
+<link href="../chapters/registro-matriz.html" rel="prev">
+<link href="../assets/img/marca.svg" rel="icon" type="image/svg+xml">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-be73460e561c16752b9444a2e2312caa.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-ff2d3b005d7a99a3a359846948c6f970.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No se han encontrado resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/covarianzas.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Covarianzas con pocos datos: el cono SPD y su estimación</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Buscar" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="../index.html" class="sidebar-logo-link">
+      <img src="../assets/img/marca.svg" alt="NeuroRiemann" class="sidebar-logo light-content py-0 d-lg-inline d-none">
+      <img src="../assets/img/marca.svg" alt="NeuroRiemann" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">NeuroRiemann</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/me1catrr/neuroriemann" title="Ejecutar el código" class="quarto-navigation-tool px-1" aria-label="Ejecutar el código"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Buscar"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">NeuroRiemann</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/por-que-geometria.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">¿Por qué geometría riemanniana para estudiar el EEG?</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/registro-matriz.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Del registro a la matriz: el problema geométrico</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/covarianzas.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Covarianzas con pocos datos: el cono SPD y su estimación</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/metricas-spd.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Métricas sobre SPD: medir y recorrer las diferencias</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/media-frechet.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Centro y dispersión de un grupo de matrices</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/estadistica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Estadística riemanniana: grupos y trayectorias</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/conectividad.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Conectividad funcional: más allá del cono</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../bibliografia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bibliografía</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Apéndices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/A-entorno.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Entorno y reproducibilidad</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/B-validacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Validación cruzada Julia–Python</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/C-notacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Notación y convenciones</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/D-cohorte-sintetica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">La cohorte sintética: especificación</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/E-cajas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Cajas y ejercicios: guía de estilo</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">En esta página</h2>
+   
+  <ul>
+  <li><a href="#la-pregunta" id="toc-la-pregunta" class="nav-link active" data-scroll-target="#la-pregunta"><span class="header-section-number">3.1</span> La pregunta</a></li>
+  <li><a href="#una-covarianza-estimada-es-una-matriz-aleatoria" id="toc-una-covarianza-estimada-es-una-matriz-aleatoria" class="nav-link" data-scroll-target="#una-covarianza-estimada-es-una-matriz-aleatoria"><span class="header-section-number">3.2</span> Una covarianza estimada es una matriz aleatoria</a>
+  <ul class="collapse">
+  <li><a href="#el-suelo-de-ruido" id="toc-el-suelo-de-ruido" class="nav-link" data-scroll-target="#el-suelo-de-ruido"><span class="header-section-number">3.2.1</span> El suelo de ruido</a></li>
+  </ul></li>
+  <li><a href="#experimento-1-el-suelo-de-ruido-frente-a-tn" id="toc-experimento-1-el-suelo-de-ruido-frente-a-tn" class="nav-link" data-scroll-target="#experimento-1-el-suelo-de-ruido-frente-a-tn"><span class="header-section-number">3.3</span> Experimento 1: el suelo de ruido frente a <span class="math inline">\(T/n\)</span></a></li>
+  <li><a href="#experimento-2-muestras-autocorrelacionadas" id="toc-experimento-2-muestras-autocorrelacionadas" class="nav-link" data-scroll-target="#experimento-2-muestras-autocorrelacionadas"><span class="header-section-number">3.4</span> Experimento 2: muestras autocorrelacionadas</a></li>
+  <li><a href="#la-contracción-y-la-invariancia" id="toc-la-contracción-y-la-invariancia" class="nav-link" data-scroll-target="#la-contracción-y-la-invariancia"><span class="header-section-number">3.5</span> La contracción y la invariancia</a></li>
+  <li><a href="#cuando-la-matriz-sale-del-cono-rango" id="toc-cuando-la-matriz-sale-del-cono-rango" class="nav-link" data-scroll-target="#cuando-la-matriz-sale-del-cono-rango"><span class="header-section-number">3.6</span> Cuando la matriz sale del cono: rango</a></li>
+  <li><a href="#lo-que-esto-no-demuestra" id="toc-lo-que-esto-no-demuestra" class="nav-link" data-scroll-target="#lo-que-esto-no-demuestra"><span class="header-section-number">3.7</span> Lo que esto no demuestra</a></li>
+  <li><a href="#autoevaluación" id="toc-autoevaluación" class="nav-link" data-scroll-target="#autoevaluación"><span class="header-section-number">3.8</span> Autoevaluación</a></li>
+  <li><a href="#ejercicios" id="toc-ejercicios" class="nav-link" data-scroll-target="#ejercicios"><span class="header-section-number">3.9</span> Ejercicios</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/me1catrr/neuroriemann/issues/new" class="toc-action"><i class="bi bi-github"></i>Informar sobre problema</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-covarianzas" class="quarto-section-identifier"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Covarianzas con pocos datos: el cono SPD y su estimación</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!--
+Macros LaTeX comunes de NeuroRiemann. Incluir al principio de cada documento con
+el shortcode include de Quarto apuntando a /_macros.qmd (véase index.qmd).
+Pandoc las expande también para formatos no HTML (Typst/LaTeX).
+Convenciones: véase appendices/C-notacion.qmd.
+-->
+<div class="hidden">
+<p><span class="math display">\[
+% Espacios de matrices
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Sym}{\mathrm{Sym}}
+\newcommand{\SPD}{\mathrm{SPD}}
+\newcommand{\Corr}{\mathrm{Corr}}
+\newcommand{\Diag}{\mathrm{Diag}}
+\newcommand{\GL}{\mathrm{GL}}
+\newcommand{\Orth}{\mathrm{O}}
+% Funciones matriciales (espectrales, principales)
+\newcommand{\Expm}{\exp}
+\newcommand{\Logm}{\log}
+% Aplicaciones riemannianas (punto base en subíndice: \Exp_P, \Log_P)
+\newcommand{\Exp}{\operatorname{Exp}}
+\newcommand{\Log}{\operatorname{Log}}
+% Distancias
+\newcommand{\dAI}{d_{\mathrm{AI}}}
+\newcommand{\dLE}{d_{\mathrm{LE}}}
+% Operadores
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\diag}{\operatorname{diag}}
+\]</span></p>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>En este capítulo
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Pregunta.</strong> ¿Cuánto me fío de una covarianza estimada?</p>
+<p><strong>Objetivos.</strong> Cuantificar cuánto de la distancia entre dos covarianzas estimadas es ruido de estimación, cómo depende de la métrica y de <span class="math inline">\(T/n\)</span>, y con qué hipótesis. Ver qué le hacen a las distancias la autocorrelación de las muestras, la contracción y la pérdida de rango.</p>
+<p><strong>Prerrequisitos.</strong> Capítulo <a href="registro-matriz.html" class="quarto-xref"><span>2</span></a>. Las distancias y la invariancia afín se usan aquí a nivel de enunciado; se demuestran en el capítulo <a href="metricas-spd.html" class="quarto-xref"><span>4</span></a>.</p>
+<p><strong>Código.</strong> Los experimentos usan datos sintéticos con semilla fija y funciones de <code>NeuroRiemann.jl</code> (<code>distance</code>, <code>isspd</code>, <code>logm</code>). Los generadores (muestras gaussianas, procesos AR(2)) son provisionales: pasarán al paquete con la cohorte (apéndice <a href="../appendices/D-cohorte-sintetica.html" class="quarto-xref"><span>D</span></a>).</p>
+</div>
+</div>
+<section id="la-pregunta" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="la-pregunta"><span class="header-section-number">3.1</span> La pregunta</h2>
+<p>Una covarianza calculada con <span class="math inline">\(T\)</span> muestras no es la covarianza del proceso: es una <strong>matriz aleatoria</strong>. Si se comparan dos, parte de su distancia es ruido de estimación y no diferencia real. ¿Cuánto? ¿Depende de la métrica? ¿Qué pasa cuando hay pocas muestras por canal, cuando las muestras están autocorrelacionadas o cuando la matriz pierde rango? Sin esa referencia, un valor de distancia no se puede interpretar, y los contrastes del capítulo <a href="estadistica.html" class="quarto-xref"><span>6</span></a> tampoco.</p>
+<p>Solo hace falta un resultado de álgebra, que se usa más abajo:</p>
+<div id="prp-congruencia-cono" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposición 3.1 (La congruencia conserva el cono)</strong></span> Si <span class="math inline">\(P\in\SPD_n\)</span> y <span class="math inline">\(W\in\R^{m\times n}\)</span> tiene rango <span class="math inline">\(m\)</span> (con <span class="math inline">\(m\le n\)</span>), entonces <span class="math inline">\(WPW^\top\in\SPD_m\)</span>. <span class="ev-demostrado">Demostrado</span></p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Demostración</em>. </span><span class="math inline">\(WPW^\top\)</span> es simétrica. Para <span class="math inline">\(x\in\R^m\)</span> no nulo, <span class="math inline">\(y=W^\top x\neq0\)</span> porque <span class="math inline">\(W^\top\)</span> es inyectiva, y <span class="math inline">\(x^\top WPW^\top x=y^\top Py&gt;0\)</span>.</p>
+</div>
+</section>
+<section id="una-covarianza-estimada-es-una-matriz-aleatoria" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="una-covarianza-estimada-es-una-matriz-aleatoria"><span class="header-section-number">3.2</span> Una covarianza estimada es una matriz aleatoria</h2>
+<p>Sean <span class="math inline">\(x_1,\dots,x_T\in\R^n\)</span> independientes con distribución <span class="math inline">\(N(0,\Sigma)\)</span>, <span class="math inline">\(\Sigma\in\SPD_n\)</span>, y <span id="eq-covarianza-muestral"><span class="math display">\[
+P=\frac1T\sum_{t=1}^Tx_tx_t^\top .
+\tag{3.1}\]</span></span> Es semidefinida positiva por la misma razón que el espectro cruzado (teorema <a href="registro-matriz.html#thm-espectral" class="quarto-xref"><span>2.1</span></a>) y definida positiva si y solo si los <span class="math inline">\(x_t\)</span> generan <span class="math inline">\(\R^n\)</span>, lo que exige <span class="math inline">\(T\ge n\)</span>. Las conclusiones de este capítulo valen <strong>bajo las hipótesis de la <a href="#tbl-hipotesis" class="quarto-xref">Tabla&nbsp;<span>3.1</span></a></strong>; cada experimento muestra qué ocurre al relajar una.</p>
+<div id="tbl-hipotesis" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-hipotesis-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;3.1: Hipótesis de los resultados de este capítulo.
+</figcaption>
+<div aria-describedby="tbl-hipotesis-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Hipótesis</th>
+<th>Si no se cumple</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Media conocida y nula, normalización <span class="math inline">\(1/T\)</span></td>
+<td>Con la media estimada, el divisor natural es <span class="math inline">\(T-1\)</span> y los resultados se desplazan en <span class="math inline">\(O(1/T)\)</span></td>
+</tr>
+<tr class="even">
+<td>Gaussianidad</td>
+<td>La varianza de <span class="math inline">\(P_{ij}\)</span> cambia con los cumulantes de cuarto orden</td>
+</tr>
+<tr class="odd">
+<td>Muestras independientes</td>
+<td>Autocorrelación: el número efectivo de muestras es menor que <span class="math inline">\(T\)</span> (Experimento 2)</td>
+</tr>
+<tr class="even">
+<td>Régimen <span class="math inline">\(T\gg n\)</span> y primer orden del logaritmo</td>
+<td>Con <span class="math inline">\(T/n\)</span> pequeño el ruido de <span class="math inline">\(\dAI\)</span> crece más que el pronóstico (Experimento 1)</td>
+</tr>
+<tr class="odd">
+<td>Métrica sin factores constantes</td>
+<td><span class="math inline">\(d_{FR}=d_{AI}/\sqrt2\)</span> si se usa la métrica de Fisher–Rao</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<section id="el-suelo-de-ruido" class="level3" data-number="3.2.1">
+<h3 data-number="3.2.1" class="anchored" data-anchor-id="el-suelo-de-ruido"><span class="header-section-number">3.2.1</span> El suelo de ruido</h3>
+<div id="thm-suelo" class="theorem">
+<p><span class="theorem-title"><strong>Teorema 3.1 (La distancia afín-invariante al valor verdadero no depende de <span class="math inline">\(\Sigma\)</span>)</strong></span> En las condiciones anteriores, sea <span class="math inline">\(W=\Sigma^{-1/2}P\Sigma^{-1/2}\)</span>. Entonces:</p>
+<ol type="1">
+<li><span class="math inline">\(\dAI(P,\Sigma)=\|\Logm W\|_F\)</span>, y la distribución de <span class="math inline">\(W\)</span> no depende de <span class="math inline">\(\Sigma\)</span>: es la de <span class="math inline">\(\tfrac1T\sum_tz_tz_t^\top\)</span> con <span class="math inline">\(z_t\sim N(0,I)\)</span>.</li>
+<li>Si <span class="math inline">\(P'\)</span> es otra estimación independiente con los mismos <span class="math inline">\(\Sigma\)</span> y <span class="math inline">\(T\)</span>, <span class="math inline">\(\dAI(P,P')=\dAI(W,W')\)</span>.</li>
+<li><span class="math inline">\(\mathbb E\,\|W-I\|_F^2=\dfrac{n(n+1)}{T}\)</span>.</li>
+</ol>
+<p><span class="ev-demostrado">Demostrado</span></p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Demostración</em>. </span></p>
+<ol type="1">
+<li><p>La congruencia por <span class="math inline">\(\Sigma^{-1/2}\)</span> no cambia <span class="math inline">\(\dAI\)</span> (<a href="metricas-spd.html#prp-congruencia" class="quarto-xref">Proposición&nbsp;<span>4.6</span></a>), así que <span class="math inline">\(\dAI(P,\Sigma)=\dAI(W,I)=\|\Logm W\|_F\)</span>. Además <span class="math inline">\(z_t=\Sigma^{-1/2}x_t\sim N(0,I)\)</span> y <span class="math inline">\(W=\tfrac1T\sum_tz_tz_t^\top\)</span>. (2) Es la misma invariancia aplicada a <span class="math inline">\(P\)</span> y <span class="math inline">\(P'\)</span>.</p></li>
+<li><p><span class="math inline">\(W-I=\tfrac1T\sum_t(z_tz_t^\top-I)\)</span>. Fuera de la diagonal, <span class="math inline">\(W_{ij}=\tfrac1T\sum_tz_{t,i}z_{t,j}\)</span> tiene media <span class="math inline">\(0\)</span> y varianza <span class="math inline">\(1/T\)</span> (porque <span class="math inline">\(\mathbb E[z_i^2z_j^2]=1\)</span> si <span class="math inline">\(i\neq j\)</span>). En la diagonal, <span class="math inline">\(W_{ii}-1=\tfrac1T\sum_t(z_{t,i}^2-1)\)</span> tiene media <span class="math inline">\(0\)</span> y varianza <span class="math inline">\(2/T\)</span> (la de un <span class="math inline">\(\chi^2_1\)</span> es <span class="math inline">\(2\)</span>). Sumando las <span class="math inline">\(n(n-1)\)</span> entradas de fuera de la diagonal y las <span class="math inline">\(n\)</span> de la diagonal, <span class="math inline">\(\mathbb E\|W-I\|_F^2=\tfrac{n(n-1)+2n}{T}=\tfrac{n(n+1)}{T}\)</span>.</p></li>
+</ol>
+</div>
+<p>Como <span class="math inline">\(\Logm W\approx W-I\)</span> cuando <span class="math inline">\(W\)</span> está cerca de <span class="math inline">\(I\)</span>, el teorema da la <strong>estimación de primer orden</strong> <span id="eq-suelo"><span class="math display">\[
+\mathbb E\,\dAI(P,\Sigma)^2\approx\frac{n(n+1)}{T},\qquad \mathbb E\,\dAI(P,P')^2\approx\frac{2n(n+1)}{T}.
+\tag{3.2}\]</span></span> La segunda cantidad es el <strong>suelo de ruido</strong>: la distancia que se observaría entre dos registros con exactamente la misma covarianza verdadera. Es una aproximación, válida para <span class="math inline">\(T\gg n\)</span>; el Experimento 1 mide cuánto falla. <span class="ev-hipotesis">Hipótesis sintética</span></p>
+<p>La euclídea no tiene esa propiedad:</p>
+<div id="thm-euclidea-suelo" class="theorem">
+<p><span class="theorem-title"><strong>Teorema 3.2 (La distancia euclídea sí depende de <span class="math inline">\(\Sigma\)</span>)</strong></span> En las mismas condiciones, <span class="math inline">\(\mathbb E\,\|P-\Sigma\|_F^2=\dfrac{(\tr\Sigma)^2+\tr(\Sigma^2)}{T}\)</span>. <span class="ev-demostrado">Demostrado</span></p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Demostración</em>. </span>Por el teorema de Isserlis para gaussianas, <span class="math inline">\(\mathbb E[x_ix_jx_ix_j]=\Sigma_{ii}\Sigma_{jj}+2\Sigma_{ij}^2\)</span>, de modo que <span class="math inline">\(\operatorname{Var}(x_ix_j)=\Sigma_{ii}\Sigma_{jj}+\Sigma_{ij}^2\)</span> y <span class="math inline">\(\operatorname{Var}(P_{ij})=\tfrac1T\big(\Sigma_{ii}\Sigma_{jj}+\Sigma_{ij}^2\big)\)</span>. Sumando sobre todas las entradas, <span class="math inline">\(\sum_{ij}\Sigma_{ii}\Sigma_{jj}=(\tr\Sigma)^2\)</span> y <span class="math inline">\(\sum_{ij}\Sigma_{ij}^2=\tr(\Sigma^2)\)</span>.</p>
+</div>
+<p>El error euclídeo crece con la <strong>escala</strong> de <span class="math inline">\(\Sigma\)</span> (con las unidades de la señal) y con su estructura; el afín-invariante, no. Es la invariancia afín «en acción».</p>
+</section>
+</section>
+<section id="experimento-1-el-suelo-de-ruido-frente-a-tn" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="experimento-1-el-suelo-de-ruido-frente-a-tn"><span class="header-section-number">3.3</span> Experimento 1: el suelo de ruido frente a <span class="math inline">\(T/n\)</span></h2>
+<p>Con <span class="math inline">\(n=8\)</span> canales, comparamos dos covarianzas verdaderas: <span class="math inline">\(\Sigma_1=I\)</span> y <span class="math inline">\(\Sigma_2\)</span>, de número de condición <span class="math inline">\(100\)</span> y escala <span class="math inline">\(50\)</span>. Para cada <span class="math inline">\(T\)</span> se generan <span class="math inline">\(R=400\)</span> réplicas, se calcula <span class="math inline">\(P\)</span> y se estima <span class="math inline">\(\mathbb E\,d^2\)</span> con su error estándar.</p>
+<div id="lab2-funciones" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">NeuroRiemann</span>, <span class="bu">LinearAlgebra</span>, <span class="bu">StableRNGs</span>, <span class="bu">Statistics</span>, <span class="bu">CairoMakie</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="st">"SPD de tamaño n con autovalores logarítmicamente espaciados entre 1 y κ, por una escala."</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">spd_kappa</span>(rng, n, κ; escala <span class="op">=</span> <span class="fl">1.0</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    Q <span class="op">=</span> <span class="fu">Matrix</span>(<span class="fu">qr</span>(<span class="fu">randn</span>(rng, n, n)).Q)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> escala <span class="op">*</span> <span class="fu">symmetrize</span>(Q <span class="op">*</span> <span class="fu">Diagonal</span>(<span class="fu">exp</span>.(<span class="fu">range</span>(<span class="fl">0</span>, <span class="fu">log</span>(κ); length <span class="op">=</span> n))) <span class="op">*</span> Q<span class="op">'</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="st">"Covarianza muestral (@eq-covarianza-muestral) de T muestras N(0, Σ), con media conocida."</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">muestra</span>(rng, Σ, T) <span class="op">=</span> (X <span class="op">=</span> <span class="fu">cholesky</span>(Σ).L <span class="op">*</span> <span class="fu">randn</span>(rng, <span class="fu">size</span>(Σ, <span class="fl">1</span>), T); <span class="fu">Symmetric</span>(X <span class="op">*</span> X<span class="op">'</span> <span class="op">/</span> T))</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">dAI</span>(A, B) <span class="op">=</span> <span class="fu">distance</span>(<span class="fu">AffineInvariant</span>(), A, B)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ee</span>(v) <span class="op">=</span> <span class="fu">std</span>(v) <span class="op">/</span> <span class="fu">sqrt</span>(<span class="fu">length</span>(v))                 <span class="co"># error estándar de una media Monte Carlo</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="cn">nothing</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div id="lab2-suelo" class="cell" data-execution_count="1">
+<details open="" class="code-fold">
+<summary>Código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">experimento_suelo</span>(; n <span class="op">=</span> <span class="fl">8</span>, R <span class="op">=</span> <span class="fl">400</span>, Ts <span class="op">=</span> (<span class="fl">16</span>, <span class="fl">32</span>, <span class="fl">64</span>, <span class="fl">128</span>, <span class="fl">512</span>))</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    rng <span class="op">=</span> <span class="fu">StableRNG</span>(<span class="fl">20261109</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    Σ<span class="fl">1</span> <span class="op">=</span> <span class="fu">Matrix</span>(<span class="fl">1.0</span>I, n, n); Σ<span class="fl">2</span> <span class="op">=</span> <span class="fu">spd_kappa</span>(rng, n, <span class="fl">100</span>; escala <span class="op">=</span> <span class="fl">50.0</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    filas <span class="op">=</span> <span class="fu">map</span>(Ts) <span class="cf">do</span> T</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        d1 <span class="op">=</span> [<span class="fu">dAI</span>(<span class="fu">muestra</span>(rng, Σ<span class="fl">1</span>, T), Σ<span class="fl">1</span>)<span class="op">^</span><span class="fl">2</span> for _ <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>R]</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        d2 <span class="op">=</span> [<span class="fu">dAI</span>(<span class="fu">muestra</span>(rng, Σ<span class="fl">2</span>, T), Σ<span class="fl">2</span>)<span class="op">^</span><span class="fl">2</span> for _ <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>R]</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        dd <span class="op">=</span> [<span class="fu">dAI</span>(<span class="fu">muestra</span>(rng, Σ<span class="fl">1</span>, T), <span class="fu">muestra</span>(rng, Σ<span class="fl">1</span>, T))<span class="op">^</span><span class="fl">2</span> for _ <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>R]</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        e1 <span class="op">=</span> [<span class="fu">norm</span>(<span class="fu">muestra</span>(rng, Σ<span class="fl">1</span>, T) <span class="op">-</span> Σ<span class="fl">1</span>)<span class="op">^</span><span class="fl">2</span> for _ <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>R]</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        e2 <span class="op">=</span> [<span class="fu">norm</span>(<span class="fu">muestra</span>(rng, Σ<span class="fl">2</span>, T) <span class="op">-</span> Σ<span class="fl">2</span>)<span class="op">^</span><span class="fl">2</span> for _ <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>R]</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        λ <span class="op">=</span> [<span class="fu">eigvals</span>(<span class="fu">muestra</span>(rng, Σ<span class="fl">1</span>, T)) for _ <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>R]</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        (; T, c <span class="op">=</span> n <span class="op">/</span> T, pred <span class="op">=</span> n <span class="op">*</span> (n <span class="op">+</span> <span class="fl">1</span>) <span class="op">/</span> T, d1 <span class="op">=</span> <span class="fu">mean</span>(d1), ee1 <span class="op">=</span> <span class="fu">ee</span>(d1), d2 <span class="op">=</span> <span class="fu">mean</span>(d2), ee2 <span class="op">=</span> <span class="fu">ee</span>(d2), dd <span class="op">=</span> <span class="fu">mean</span>(dd),</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>           e1 <span class="op">=</span> <span class="fu">mean</span>(e1), ex1 <span class="op">=</span> (<span class="fu">tr</span>(Σ<span class="fl">1</span>)<span class="op">^</span><span class="fl">2</span> <span class="op">+</span> <span class="fu">tr</span>(Σ<span class="fl">1</span><span class="op">^</span><span class="fl">2</span>)) <span class="op">/</span> T, e2 <span class="op">=</span> <span class="fu">mean</span>(e2), ex2 <span class="op">=</span> (<span class="fu">tr</span>(Σ<span class="fl">2</span>)<span class="op">^</span><span class="fl">2</span> <span class="op">+</span> <span class="fu">tr</span>(Σ<span class="fl">2</span><span class="op">^</span><span class="fl">2</span>)) <span class="op">/</span> T,</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>           lmin <span class="op">=</span> <span class="fu">mean</span>(<span class="fu">first</span>.(λ)), lmax <span class="op">=</span> <span class="fu">mean</span>(<span class="fu">last</span>.(λ)))</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> filas, n</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>filas, n_exp <span class="op">=</span> <span class="fu">experimento_suelo</span>()</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="fu">f3</span>(x) <span class="op">=</span> <span class="fu">round</span>(x; sigdigits <span class="op">=</span> <span class="fl">3</span>)</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"| \$T\$ | \$T/n\$ | \$n(n+1)/T\$ | \$</span><span class="sc">\\</span><span class="st">mathbb E</span><span class="sc">\\</span><span class="st">,d_{AI}^2(P,</span><span class="sc">\\</span><span class="st">Sigma_1)\$ | \$</span><span class="sc">\\</span><span class="st">mathbb E</span><span class="sc">\\</span><span class="st">,d_{AI}^2(P,</span><span class="sc">\\</span><span class="st">Sigma_2)\$ | \$</span><span class="sc">\\</span><span class="st">mathbb E</span><span class="sc">\\</span><span class="st">,d_{AI}^2(P,P')\$ | \$2n(n+1)/T\$ |</span><span class="sc">\n</span><span class="st">|---|---|---|---|---|---|---|"</span>)</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> f <span class="kw">in</span> filas</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(<span class="st">"| "</span>, f.T, <span class="st">" | "</span>, <span class="fu">f3</span>(<span class="fl">1</span> <span class="op">/</span> f.c), <span class="st">" | "</span>, <span class="fu">f3</span>(f.pred), <span class="st">" | "</span>, <span class="fu">f3</span>(f.d1), <span class="st">" ± "</span>, <span class="fu">f3</span>(f.ee1), <span class="st">" | "</span>, <span class="fu">f3</span>(f.d2), <span class="st">" ± "</span>, <span class="fu">f3</span>(f.ee2), <span class="st">" | "</span>, <span class="fu">f3</span>(f.dd), <span class="st">" | "</span>, <span class="fu">f3</span>(<span class="fl">2</span> <span class="op">*</span> f.pred), <span class="st">" |"</span>)</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">: Distancia afín-invariante al cuadrado entre covarianzas estimadas (\$n=8\$, 400 réplicas; error estándar tras ±). {#tbl-suelo-ai}</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"| \$T\$ | \$</span><span class="sc">\\</span><span class="st">mathbb E</span><span class="sc">\\</span><span class="st">|P-</span><span class="sc">\\</span><span class="st">Sigma_1</span><span class="sc">\\</span><span class="st">|^2\$ (MC) | exacto (@thm-euclidea-suelo) | \$</span><span class="sc">\\</span><span class="st">mathbb E</span><span class="sc">\\</span><span class="st">|P-</span><span class="sc">\\</span><span class="st">Sigma_2</span><span class="sc">\\</span><span class="st">|^2\$ (MC) | exacto |</span><span class="sc">\n</span><span class="st">|---|---|---|---|---|"</span>)</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> f <span class="kw">in</span> filas</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(<span class="st">"| "</span>, f.T, <span class="st">" | "</span>, <span class="fu">f3</span>(f.e1), <span class="st">" | "</span>, <span class="fu">f3</span>(f.ex1), <span class="st">" | "</span>, <span class="fu">f3</span>(f.e2), <span class="st">" | "</span>, <span class="fu">f3</span>(f.ex2), <span class="st">" |"</span>)</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">: Distancia euclídea al cuadrado a la covarianza verdadera, con \$</span><span class="sc">\\</span><span class="st">Sigma_2\$ de escala 50. {#tbl-suelo-euclidea}</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"| \$T/n\$ | \$</span><span class="sc">\\</span><span class="st">lambda_{</span><span class="sc">\\</span><span class="st">min}\$ de \$P\$ | \$(1-</span><span class="sc">\\</span><span class="st">sqrt c)^2\$ | \$</span><span class="sc">\\</span><span class="st">lambda_{</span><span class="sc">\\</span><span class="st">max}\$ de \$P\$ | \$(1+</span><span class="sc">\\</span><span class="st">sqrt c)^2\$ |</span><span class="sc">\n</span><span class="st">|---|---|---|---|---|"</span>)</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> f <span class="kw">in</span> filas</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(<span class="st">"| "</span>, <span class="fu">f3</span>(<span class="fl">1</span> <span class="op">/</span> f.c), <span class="st">" | "</span>, <span class="fu">f3</span>(f.lmin), <span class="st">" | "</span>, <span class="fu">f3</span>((<span class="fl">1</span> <span class="op">-</span> <span class="fu">sqrt</span>(f.c))<span class="op">^</span><span class="fl">2</span>), <span class="st">" | "</span>, <span class="fu">f3</span>(f.lmax), <span class="st">" | "</span>, <span class="fu">f3</span>((<span class="fl">1</span> <span class="op">+</span> <span class="fu">sqrt</span>(f.c))<span class="op">^</span><span class="fl">2</span>), <span class="st">" |"</span>)</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">: Autovalores extremos de \$P\$ con \$</span><span class="sc">\\</span><span class="st">Sigma_1=I\$ frente a los bordes de Marchenko–Pastur, con \$c=n/T\$. {#tbl-mp}"</span>)</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="cn">nothing</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-suelo-ai" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-suelo-ai-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;3.2: Distancia afín-invariante al cuadrado entre covarianzas estimadas (<span class="math inline">\(n=8\)</span>, 400 réplicas; error estándar tras ±).
+</figcaption>
+<div aria-describedby="tbl-suelo-ai-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><span class="math inline">\(T\)</span></th>
+<th><span class="math inline">\(T/n\)</span></th>
+<th><span class="math inline">\(n(n+1)/T\)</span></th>
+<th><span class="math inline">\(\mathbb E\,d_{AI}^2(P,\Sigma_1)\)</span></th>
+<th><span class="math inline">\(\mathbb E\,d_{AI}^2(P,\Sigma_2)\)</span></th>
+<th><span class="math inline">\(\mathbb E\,d_{AI}^2(P,P')\)</span></th>
+<th><span class="math inline">\(2n(n+1)/T\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>16</td>
+<td>2.0</td>
+<td>4.5</td>
+<td>7.73 ± 0.131</td>
+<td>7.83 ± 0.141</td>
+<td>14.2</td>
+<td>9.0</td>
+</tr>
+<tr class="even">
+<td>32</td>
+<td>4.0</td>
+<td>2.25</td>
+<td>2.93 ± 0.0435</td>
+<td>2.93 ± 0.0458</td>
+<td>5.57</td>
+<td>4.5</td>
+</tr>
+<tr class="odd">
+<td>64</td>
+<td>8.0</td>
+<td>1.12</td>
+<td>1.26 ± 0.0162</td>
+<td>1.27 ± 0.0165</td>
+<td>2.46</td>
+<td>2.25</td>
+</tr>
+<tr class="even">
+<td>128</td>
+<td>16.0</td>
+<td>0.562</td>
+<td>0.592 ± 0.00724</td>
+<td>0.598 ± 0.00701</td>
+<td>1.18</td>
+<td>1.12</td>
+</tr>
+<tr class="odd">
+<td>512</td>
+<td>64.0</td>
+<td>0.141</td>
+<td>0.141 ± 0.0016</td>
+<td>0.143 ± 0.0017</td>
+<td>0.292</td>
+<td>0.281</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<div id="tbl-suelo-euclidea" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-suelo-euclidea-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;3.3: Distancia euclídea al cuadrado a la covarianza verdadera, con <span class="math inline">\(\Sigma_2\)</span> de escala 50.
+</figcaption>
+<div aria-describedby="tbl-suelo-euclidea-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><span class="math inline">\(T\)</span></th>
+<th><span class="math inline">\(\mathbb E\|P-\Sigma_1\|^2\)</span> (MC)</th>
+<th>exacto (<a href="#thm-euclidea-suelo" class="quarto-xref">Teorema&nbsp;<span>3.2</span></a>)</th>
+<th><span class="math inline">\(\mathbb E\|P-\Sigma_2\|^2\)</span> (MC)</th>
+<th>exacto</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>16</td>
+<td>4.39</td>
+<td>4.5</td>
+<td>8.6e6</td>
+<td>8.79e6</td>
+</tr>
+<tr class="even">
+<td>32</td>
+<td>2.27</td>
+<td>2.25</td>
+<td>4.18e6</td>
+<td>4.39e6</td>
+</tr>
+<tr class="odd">
+<td>64</td>
+<td>1.12</td>
+<td>1.12</td>
+<td>2.22e6</td>
+<td>2.2e6</td>
+</tr>
+<tr class="even">
+<td>128</td>
+<td>0.566</td>
+<td>0.562</td>
+<td>1.1e6</td>
+<td>1.1e6</td>
+</tr>
+<tr class="odd">
+<td>512</td>
+<td>0.142</td>
+<td>0.141</td>
+<td>283000.0</td>
+<td>275000.0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<div id="tbl-mp" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-mp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;3.4: Autovalores extremos de <span class="math inline">\(P\)</span> con <span class="math inline">\(\Sigma_1=I\)</span> frente a los bordes de Marchenko–Pastur, con <span class="math inline">\(c=n/T\)</span>.
+</figcaption>
+<div aria-describedby="tbl-mp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><span class="math inline">\(T/n\)</span></th>
+<th><span class="math inline">\(\lambda_{\min}\)</span> de <span class="math inline">\(P\)</span></th>
+<th><span class="math inline">\((1-\sqrt c)^2\)</span></th>
+<th><span class="math inline">\(\lambda_{\max}\)</span> de <span class="math inline">\(P\)</span></th>
+<th><span class="math inline">\((1+\sqrt c)^2\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>2.0</td>
+<td>0.147</td>
+<td>0.0858</td>
+<td>2.38</td>
+<td>2.91</td>
+</tr>
+<tr class="even">
+<td>4.0</td>
+<td>0.335</td>
+<td>0.25</td>
+<td>1.92</td>
+<td>2.25</td>
+</tr>
+<tr class="odd">
+<td>8.0</td>
+<td>0.492</td>
+<td>0.418</td>
+<td>1.63</td>
+<td>1.83</td>
+</tr>
+<tr class="even">
+<td>16.0</td>
+<td>0.625</td>
+<td>0.562</td>
+<td>1.44</td>
+<td>1.56</td>
+</tr>
+<tr class="odd">
+<td>64.0</td>
+<td>0.807</td>
+<td>0.766</td>
+<td>1.21</td>
+<td>1.27</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div>
+<div id="cell-fig-suelo" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>colores <span class="op">=</span> Makie.<span class="fu">wong_colors</span>()</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> <span class="fu">Figure</span>(size <span class="op">=</span> (<span class="fl">760</span>, <span class="fl">420</span>))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> <span class="fu">Axis</span>(fig[<span class="fl">1</span>, <span class="fl">1</span>]; xscale <span class="op">=</span> log10, yscale <span class="op">=</span> log10, xlabel <span class="op">=</span> <span class="st">"T / n"</span>, ylabel <span class="op">=</span> <span class="st">"E d_AI(P, Σ)²"</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> [<span class="fl">1</span> <span class="op">/</span> f.c for f <span class="kw">in</span> filas]</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lines!</span>(ax, x, [f.pred for f <span class="kw">in</span> filas]; color <span class="op">=</span> <span class="op">:</span>black, linestyle <span class="op">=</span> <span class="op">:</span>dash, label <span class="op">=</span> <span class="st">"n(n+1)/T"</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">scatterlines!</span>(ax, x, [f.d1 for f <span class="kw">in</span> filas]; color <span class="op">=</span> colores[<span class="fl">3</span>], label <span class="op">=</span> <span class="st">"Σ₁ = I"</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">scatterlines!</span>(ax, x, [f.d2 for f <span class="kw">in</span> filas]; color <span class="op">=</span> colores[<span class="fl">6</span>], marker <span class="op">=</span> <span class="op">:</span>utriangle, label <span class="op">=</span> <span class="st">"Σ₂ (κ = 100, escala 50)"</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">axislegend</span>(ax; position <span class="op">=</span> <span class="op">:</span>rt, framevisible <span class="op">=</span> <span class="cn">false</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>fig</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="fig-suelo" class="cell-output cell-output-display quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="1">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-suelo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img width="760" height="420" style="object-fit: contain; height: auto;" src="data:image/png;base64, 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" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-suelo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;3.1: Distancia afín-invariante al cuadrado entre la covarianza estimada y la verdadera, frente a <span class="math inline">\(T/n\)</span> (escala logarítmica). Los puntos de <span class="math inline">\(\Sigma_1\)</span> y <span class="math inline">\(\Sigma_2\)</span> coinciden (<a href="#thm-suelo" class="quarto-xref">Teorema&nbsp;<span>3.1</span></a>); la recta es la estimación de primer orden <span class="math inline">\(n(n+1)/T\)</span> y queda por debajo cuando <span class="math inline">\(T/n\)</span> es pequeño.
+</figcaption>
+</figure>
+</div>
+</div>
+<p>Tres lecturas:</p>
+<ul>
+<li><strong>La distancia afín-invariante no depende de <span class="math inline">\(\Sigma\)</span></strong> (<a href="#tbl-suelo-ai" class="quarto-xref">Tabla&nbsp;<span>3.2</span></a>, <a href="#fig-suelo" class="quarto-xref">Figura&nbsp;<span>3.1</span></a>): los valores de <span class="math inline">\(\Sigma_1\)</span> y <span class="math inline">\(\Sigma_2\)</span> coinciden dentro del error estándar, como dice el <a href="#thm-suelo" class="quarto-xref">Teorema&nbsp;<span>3.1</span></a>. La euclídea sí depende, y su valor medio concuerda con la fórmula exacta del <a href="#thm-euclidea-suelo" class="quarto-xref">Teorema&nbsp;<span>3.2</span></a> (<a href="#tbl-suelo-euclidea" class="quarto-xref">Tabla&nbsp;<span>3.3</span></a>; las diferencias, de pocos por ciento, son compatibles con el error Monte Carlo): con <span class="math inline">\(\Sigma_2\)</span> es unos seis órdenes de magnitud mayor que con <span class="math inline">\(\Sigma_1\)</span>, solo por la escala. <span class="ev-numerico">Verificado numéricamente</span></li>
+<li><strong>El primer orden funciona para <span class="math inline">\(T\gg n\)</span> y falla para <span class="math inline">\(T/n\)</span> pequeño.</strong> Con <span class="math inline">\(T/n\ge16\)</span> el valor medido está cerca de <span class="math inline">\(n(n+1)/T\)</span>; con <span class="math inline">\(T/n=2\)</span> es claramente mayor. La razón es que <span class="math inline">\(\Logm W\)</span> amplifica los autovalores pequeños de <span class="math inline">\(W\)</span>: al acercarse <span class="math inline">\(T\)</span> a <span class="math inline">\(n\)</span>, <span class="math inline">\(\lambda_{\min}\to0\)</span> y <span class="math inline">\(\dAI\to\infty\)</span>. Los autovalores extremos de <span class="math inline">\(P\)</span> se dispersan hacia los bordes <span class="math inline">\((1\mp\sqrt{n/T})^2\)</span> de la ley de Marchenko–Pastur (<a href="#tbl-mp" class="quarto-xref">Tabla&nbsp;<span>3.4</span></a>), que describe su comportamiento cuando <span class="math inline">\(n\)</span> y <span class="math inline">\(T\)</span> crecen con <span class="math inline">\(n/T\to c&lt;1\)</span> <span class="ev-citado">Citado</span> <span class="citation" data-cites="marcenko1967distribution">(<a href="../bibliografia.html#ref-marcenko1967distribution" role="doc-biblioref">Marčenko y Pastur 1967</a>)</span>. En <span class="math inline">\(T/n\)</span> pequeño, <span class="math inline">\(\dAI\)</span> <strong>amplifica el ruido del menor autovalor</strong>; es el contrapeso honesto de su invariancia.</li>
+<li><strong>El suelo de ruido es del orden de <span class="math inline">\(2n(n+1)/T\)</span>.</strong> Dos registros con la misma covarianza verdadera ya están a esa distancia. Cualquier diferencia entre grupos o visitas que se quiera detectar debe superarla; es la referencia de los contrastes de permutación del capítulo <a href="estadistica.html" class="quarto-xref"><span>6</span></a>.</li>
+</ul>
+</section>
+<section id="experimento-2-muestras-autocorrelacionadas" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="experimento-2-muestras-autocorrelacionadas"><span class="header-section-number">3.4</span> Experimento 2: muestras autocorrelacionadas</h2>
+<p>Las muestras de un EEG de banda no son independientes: las fases de un ritmo se repiten. Entonces <span class="math inline">\(T\)</span> no cuenta las muestras que aportan información. Para saber cuánto vale el número <em>efectivo</em>, hace falta un cálculo, no una regla.</p>
+<div id="prp-autocorrelacion" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposición 3.2 (Suelo de ruido con muestras autocorrelacionadas)</strong></span> Sean <span class="math inline">\(x^{(1)},\dots,x^{(n)}\)</span> procesos gaussianos estacionarios de media cero, independientes entre sí, con varianza <span class="math inline">\(1\)</span> y autocorrelación común <span class="math inline">\(\rho(k)\)</span>, y <span class="math inline">\(P=\tfrac1T\sum_tx_tx_t^\top\)</span> con <span class="math inline">\(x_t=(x^{(1)}_t,\dots,x^{(n)}_t)\)</span>. Entonces <span class="math display">\[
+\mathbb E\,\|P-I\|_F^2=\frac{n(n+1)}{T}\,g_T,\qquad g_T=\sum_{|k|&lt;T}\Big(1-\frac{|k|}{T}\Big)\rho(k)^2 .
+\]</span> Con muestras independientes, <span class="math inline">\(g_T=1\)</span>. <span class="ev-demostrado">Demostrado</span></p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Demostración</em>. </span>Para dos procesos gaussianos independientes de media cero, por el teorema de Isserlis, <span class="math inline">\(\operatorname{Cov}\big(x^{(i)}_tx^{(j)}_t,\,x^{(i)}_sx^{(j)}_s\big)=\rho(t-s)^2\)</span> si <span class="math inline">\(i\neq j\)</span> y <span class="math inline">\(2\rho(t-s)^2\)</span> si <span class="math inline">\(i=j\)</span>. Por tanto <span class="math inline">\(\operatorname{Var}(P_{ij})=\tfrac1{T^2}\sum_{t,s}\rho(t-s)^2=\tfrac1Tg_T\)</span> para <span class="math inline">\(i\neq j\)</span> y el doble para <span class="math inline">\(i=j\)</span>. Sumando las entradas, <span class="math inline">\(\mathbb E\|P-I\|_F^2=\tfrac{g_T}{T}\big(n(n-1)+2n\big)\)</span>.</p>
+</div>
+<p>Es decir, el suelo de ruido es el de <span class="math inline">\(T_{\mathrm{ef}}=T/g_T\)</span> muestras independientes. Con un proceso AR(2) con un pico a <span class="math inline">\(10\)</span> Hz muestreado a <span class="math inline">\(100\)</span> Hz (<span class="math inline">\(r=0{,}9\)</span>), se calcula <span class="math inline">\(g_T\)</span> y se compara con el error medido, también el de <span class="math inline">\(\dAI\)</span>:</p>
+<div id="lab2-ar2" class="cell" data-execution_count="1">
+<details open="" class="code-fold">
+<summary>Código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">experimento_ar2</span>(; n <span class="op">=</span> <span class="fl">4</span>, R <span class="op">=</span> <span class="fl">400</span>, Ts <span class="op">=</span> (<span class="fl">100</span>, <span class="fl">200</span>, <span class="fl">400</span>, <span class="fl">800</span>, <span class="fl">1600</span>))</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    rng <span class="op">=</span> <span class="fu">StableRNG</span>(<span class="fl">20261110</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    r, θ <span class="op">=</span> <span class="fl">0.9</span>, <span class="fl">2</span>π <span class="op">*</span> <span class="fl">10</span> <span class="op">/</span> <span class="fl">100</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    φ<span class="fl">1</span>, φ<span class="fl">2</span> <span class="op">=</span> <span class="fl">2</span>r <span class="op">*</span> <span class="fu">cos</span>(θ), <span class="op">-</span>r<span class="op">^</span><span class="fl">2</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    K <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="fu">maximum</span>(Ts)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    ρ <span class="op">=</span> <span class="fu">zeros</span>(K); ρ[<span class="fl">1</span>] <span class="op">=</span> <span class="fl">1</span>; ρ[<span class="fl">2</span>] <span class="op">=</span> φ<span class="fl">1</span> <span class="op">/</span> (<span class="fl">1</span> <span class="op">-</span> φ<span class="fl">2</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> k <span class="kw">in</span> <span class="fl">3</span><span class="op">:</span>K; ρ[k] <span class="op">=</span> φ<span class="fl">1</span> <span class="op">*</span> ρ[k<span class="op">-</span><span class="fl">1</span>] <span class="op">+</span> φ<span class="fl">2</span> <span class="op">*</span> ρ[k<span class="op">-</span><span class="fl">2</span>]; <span class="cf">end</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    γ<span class="fl">0</span> <span class="op">=</span> <span class="fl">1</span> <span class="op">/</span> (<span class="fl">1</span> <span class="op">-</span> φ<span class="fl">1</span> <span class="op">*</span> ρ[<span class="fl">2</span>] <span class="op">-</span> φ<span class="fl">2</span> <span class="op">*</span> ρ[<span class="fl">3</span>])                       <span class="co"># varianza con innovación unitaria</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gT</span>(T) <span class="op">=</span> <span class="fl">1</span> <span class="op">+</span> <span class="fl">2</span> <span class="op">*</span> <span class="fu">sum</span>((<span class="fl">1</span> <span class="op">-</span> k <span class="op">/</span> T) <span class="op">*</span> ρ[k<span class="op">+</span><span class="fl">1</span>]<span class="op">^</span><span class="fl">2</span> <span class="cf">for</span> k <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>T<span class="op">-</span><span class="fl">1</span>)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">function</span> <span class="fu">ar2</span>(T)                                               <span class="co"># un canal, normalizado a varianza 1</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> <span class="fu">zeros</span>(T <span class="op">+</span> <span class="fl">500</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> t <span class="kw">in</span> <span class="fl">3</span><span class="op">:</span>T<span class="op">+</span><span class="fl">500</span>; x[t] <span class="op">=</span> φ<span class="fl">1</span> <span class="op">*</span> x[t<span class="op">-</span><span class="fl">1</span>] <span class="op">+</span> φ<span class="fl">2</span> <span class="op">*</span> x[t<span class="op">-</span><span class="fl">2</span>] <span class="op">+</span> <span class="fu">randn</span>(rng); <span class="cf">end</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> x[<span class="fl">501</span><span class="op">:</span><span class="kw">end</span>] <span class="op">./</span> <span class="fu">sqrt</span>(γ<span class="fl">0</span>)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    res <span class="op">=</span> <span class="fu">map</span>(Ts) <span class="cf">do</span> T</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>        v <span class="op">=</span> <span class="dt">Float64</span>[]; d <span class="op">=</span> <span class="dt">Float64</span>[]</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> _ <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>R</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>            X <span class="op">=</span> <span class="fu">reduce</span>(hcat, [<span class="fu">ar2</span>(T) for _ <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>n])<span class="ch">'              # n × T</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>            P <span class="op">=</span> <span class="fu">Symmetric</span>(X <span class="op">*</span> X<span class="op">'</span> <span class="op">/</span> T)</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>            <span class="fu">push!</span>(v, <span class="fu">norm</span>(P <span class="op">-</span> I)<span class="op">^</span><span class="fl">2</span>); <span class="fu">push!</span>(d, <span class="fu">dAI</span>(P, <span class="fu">Matrix</span>(<span class="fl">1.0</span>I, n, n))<span class="op">^</span><span class="fl">2</span>)</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>        (; T, g <span class="op">=</span> <span class="fu">gT</span>(T), pred <span class="op">=</span> n <span class="op">*</span> (n <span class="op">+</span> <span class="fl">1</span>) <span class="op">*</span> <span class="fu">gT</span>(T) <span class="op">/</span> T, iid <span class="op">=</span> n <span class="op">*</span> (n <span class="op">+</span> <span class="fl">1</span>) <span class="op">/</span> T, v <span class="op">=</span> <span class="fu">mean</span>(v), eev <span class="op">=</span> <span class="fu">ee</span>(v), d <span class="op">=</span> <span class="fu">mean</span>(d), eed <span class="op">=</span> <span class="fu">ee</span>(d))</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> res, n</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>res_ar2, n_ar2 <span class="op">=</span> <span class="fu">experimento_ar2</span>()</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"| \$T\$ | \$g_T\$ | \$T_{</span><span class="sc">\\</span><span class="st">mathrm{ef}}=T/g_T\$ | \$n(n+1)/T\$ (independientes) | \$n(n+1)g_T/T\$ | \$</span><span class="sc">\\</span><span class="st">mathbb E</span><span class="sc">\\</span><span class="st">|P-I</span><span class="sc">\\</span><span class="st">|^2\$ (MC) | \$</span><span class="sc">\\</span><span class="st">mathbb E</span><span class="sc">\\</span><span class="st">,d_{AI}^2(P,I)\$ (MC) |</span><span class="sc">\n</span><span class="st">|---|---|---|---|---|---|---|"</span>)</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> f <span class="kw">in</span> res_ar2</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(<span class="st">"| "</span>, f.T, <span class="st">" | "</span>, <span class="fu">f3</span>(f.g), <span class="st">" | "</span>, <span class="fu">round</span>(<span class="dt">Int</span>, f.T <span class="op">/</span> f.g), <span class="st">" | "</span>, <span class="fu">f3</span>(f.iid), <span class="st">" | "</span>, <span class="fu">f3</span>(f.pred), <span class="st">" | "</span>, <span class="fu">f3</span>(f.v), <span class="st">" ± "</span>, <span class="fu">f3</span>(f.eev), <span class="st">" | "</span>, <span class="fu">f3</span>(f.d), <span class="st">" ± "</span>, <span class="fu">f3</span>(f.eed), <span class="st">" |"</span>)</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">: Suelo de ruido con </span><span class="sc">$</span>(n_ar2)<span class="st"> canales AR(2) independientes (pico a 10 Hz, \$r=0{,}9\$, 100 Hz de muestreo, 400 réplicas). {#tbl-ar2}"</span>)</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="cn">nothing</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-ar2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ar2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;3.5: Suelo de ruido con 4 canales AR(2) independientes (pico a 10 Hz, <span class="math inline">\(r=0{,}9\)</span>, 100 Hz de muestreo, 400 réplicas).
+</figcaption>
+<div aria-describedby="tbl-ar2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><span class="math inline">\(T\)</span></th>
+<th><span class="math inline">\(g_T\)</span></th>
+<th><span class="math inline">\(T_{\mathrm{ef}}=T/g_T\)</span></th>
+<th><span class="math inline">\(n(n+1)/T\)</span> (independientes)</th>
+<th><span class="math inline">\(n(n+1)g_T/T\)</span></th>
+<th><span class="math inline">\(\mathbb E\|P-I\|^2\)</span> (MC)</th>
+<th><span class="math inline">\(\mathbb E\,d_{AI}^2(P,I)\)</span> (MC)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>100</td>
+<td>4.98</td>
+<td>20</td>
+<td>0.2</td>
+<td>0.996</td>
+<td>0.983 ± 0.0303</td>
+<td>1.08 ± 0.0241</td>
+</tr>
+<tr class="even">
+<td>200</td>
+<td>5.09</td>
+<td>39</td>
+<td>0.1</td>
+<td>0.509</td>
+<td>0.499 ± 0.014</td>
+<td>0.527 ± 0.0121</td>
+</tr>
+<tr class="odd">
+<td>400</td>
+<td>5.15</td>
+<td>78</td>
+<td>0.05</td>
+<td>0.257</td>
+<td>0.241 ± 0.00643</td>
+<td>0.245 ± 0.00551</td>
+</tr>
+<tr class="even">
+<td>800</td>
+<td>5.17</td>
+<td>155</td>
+<td>0.025</td>
+<td>0.129</td>
+<td>0.126 ± 0.0029</td>
+<td>0.129 ± 0.00271</td>
+</tr>
+<tr class="odd">
+<td>1600</td>
+<td>5.19</td>
+<td>308</td>
+<td>0.0125</td>
+<td>0.0648</td>
+<td>0.0681 ± 0.00168</td>
+<td>0.0679 ± 0.00157</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div>
+<p>La <a href="#tbl-ar2" class="quarto-xref">Tabla&nbsp;<span>3.5</span></a> confirma la proposición: el error euclídeo medido coincide con <span class="math inline">\(n(n+1)g_T/T\)</span> salvo diferencias de unos dos errores estándar, y el de <span class="math inline">\(\dAI\)</span> lo sigue de cerca cuando <span class="math inline">\(T\)</span> es grande <span class="ev-numerico">Verificado numéricamente</span>. Para este proceso <span class="math inline">\(g_T\approx5\)</span>: una época de <span class="math inline">\(T=400\)</span> muestras (4 s a 100 Hz) se comporta como unas <span class="math inline">\(80\)</span> muestras independientes, y su suelo de ruido es unas cinco veces mayor que el que se pronosticaría contando muestras. Para otro proceso hay que recalcular <span class="math inline">\(g_T\)</span> <span class="ev-hipotesis">Hipótesis sintética</span>; no existe un factor universal.</p>
+</section>
+<section id="la-contracción-y-la-invariancia" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="la-contracción-y-la-invariancia"><span class="header-section-number">3.5</span> La contracción y la invariancia</h2>
+<p>Con <span class="math inline">\(T/n\)</span> pequeño, una forma habitual de estabilizar <span class="math inline">\(P\)</span> es <strong>contraerla</strong> hacia un objetivo bien condicionado: <span class="math inline">\(P_\lambda=(1-\lambda)P+\lambda\,\dfrac{\tr P}{n}\,I\)</span>, con <span class="math inline">\(\lambda\in[0,1]\)</span>. Existen reglas para elegir <span class="math inline">\(\lambda\)</span> a partir de los datos <span class="ev-citado">Citado</span> <span class="citation" data-cites="ledoit2004well">(<a href="../bibliografia.html#ref-ledoit2004well" role="doc-biblioref">Ledoit y Wolf 2004</a>)</span>, pero el punto aquí es otro: el objetivo <span class="math inline">\(\tfrac{\tr P}{n}I\)</span> <strong>no es invariante</strong> por las transformaciones que <span class="math inline">\(\dAI\)</span> sí respeta.</p>
+<div id="prp-contraccion" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposición 3.3 (La contracción no conmuta con las ganancias)</strong></span> La contracción conmuta con las similitudes ortogonales y con la escala común, <span class="math inline">\(P_\lambda(QPQ^\top)=QP_\lambda(P)Q^\top\)</span> y <span class="math inline">\(P_\lambda(cP)=cP_\lambda(P)\)</span>, pero en general no con una congruencia <span class="math inline">\(P\mapsto DPD\)</span> con <span class="math inline">\(D\)</span> diagonal. <span class="ev-demostrado">Demostrado</span></p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Demostración</em>. </span><span class="math inline">\(\tr(QPQ^\top)=\tr P\)</span> y <span class="math inline">\(\tr(cP)=c\tr P\)</span> dan las dos primeras identidades. Contraejemplo para la tercera: <span class="math inline">\(P=\diag(1,4)\)</span>, <span class="math inline">\(\lambda=\tfrac12\)</span> y <span class="math inline">\(D=\diag(1,2)\)</span>. Entonces <span class="math inline">\(P_\lambda=\diag(1{,}75;\,3{,}25)\)</span> y <span class="math inline">\(DP_\lambda D=\diag(1{,}75;\,13)\)</span>, mientras que <span class="math inline">\(DPD=\diag(1,16)\)</span> da <span class="math inline">\(P_\lambda(DPD)=\diag(4{,}75;\,12{,}25)\neq DP_\lambda D\)</span>.</p>
+</div>
+<p>Consecuencia: aunque <span class="math inline">\(\dAI\)</span> sea invariante por congruencia, <strong>la distancia entre dos covarianzas contraídas ya no lo es</strong>. Y la contracción tiene un coste de sesgo cuando <span class="math inline">\(\Sigma\)</span> no es esférica:</p>
+<div id="lab2-contraccion" class="cell" data-execution_count="1">
+<details open="" class="code-fold">
+<summary>Código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">contraer</span>(P, λ) <span class="op">=</span> <span class="fu">symmetrize</span>((<span class="fl">1</span> <span class="op">-</span> λ) <span class="op">*</span> P <span class="op">+</span> λ <span class="op">*</span> (<span class="fu">tr</span>(P) <span class="op">/</span> <span class="fu">size</span>(P, <span class="fl">1</span>)) <span class="op">*</span> I)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">experimento_contraccion</span>(; n <span class="op">=</span> <span class="fl">8</span>, T <span class="op">=</span> <span class="fl">16</span>, R <span class="op">=</span> <span class="fl">400</span>, λs <span class="op">=</span> (<span class="fl">0.0</span>, <span class="fl">0.1</span>, <span class="fl">0.3</span>, <span class="fl">0.6</span>))</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    rng <span class="op">=</span> <span class="fu">StableRNG</span>(<span class="fl">20261111</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    Σ<span class="fl">1</span> <span class="op">=</span> <span class="fu">Matrix</span>(<span class="fl">1.0</span>I, n, n); Σ<span class="fl">2</span> <span class="op">=</span> <span class="fu">spd_kappa</span>(rng, n, <span class="fl">100</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    errores <span class="op">=</span> <span class="fu">map</span>(λs) <span class="cf">do</span> λ</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        (; λ, e1 <span class="op">=</span> <span class="fu">mean</span>(<span class="fu">dAI</span>(<span class="fu">contraer</span>(<span class="fu">muestra</span>(rng, Σ<span class="fl">1</span>, T), λ), Σ<span class="fl">1</span>)<span class="op">^</span><span class="fl">2</span> <span class="cf">for</span> _ <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>R),</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>           e2 <span class="op">=</span> <span class="fu">mean</span>(<span class="fu">dAI</span>(<span class="fu">contraer</span>(<span class="fu">muestra</span>(rng, Σ<span class="fl">2</span>, T), λ), Σ<span class="fl">2</span>)<span class="op">^</span><span class="fl">2</span> <span class="cf">for</span> _ <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>R))</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># invariancia: dos covarianzas, con y sin contracción, antes y después de ganancias comunes D</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    A, B <span class="op">=</span> <span class="fu">spd_kappa</span>(rng, <span class="fl">6</span>, <span class="fl">20</span>), <span class="fu">spd_kappa</span>(rng, <span class="fl">6</span>, <span class="fl">20</span>); D <span class="op">=</span> <span class="fu">Diagonal</span>(<span class="fu">exp</span>.(<span class="fl">0.7</span> <span class="op">.*</span> <span class="fu">randn</span>(rng, <span class="fl">6</span>)))</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cg</span>(M) <span class="op">=</span> <span class="fu">symmetrize</span>(D <span class="op">*</span> M <span class="op">*</span> D)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    invar <span class="op">=</span> (sin <span class="op">=</span> (<span class="fu">dAI</span>(A, B), <span class="fu">dAI</span>(<span class="fu">cg</span>(A), <span class="fu">cg</span>(B))), con <span class="op">=</span> (<span class="fu">dAI</span>(<span class="fu">contraer</span>(A, <span class="fl">0.3</span>), <span class="fu">contraer</span>(B, <span class="fl">0.3</span>)), <span class="fu">dAI</span>(<span class="fu">contraer</span>(<span class="fu">cg</span>(A), <span class="fl">0.3</span>), <span class="fu">contraer</span>(<span class="fu">cg</span>(B), <span class="fl">0.3</span>))))</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> errores, invar</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>errores, invar <span class="op">=</span> <span class="fu">experimento_contraccion</span>()</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"| \$</span><span class="sc">\\</span><span class="st">lambda\$ | \$</span><span class="sc">\\</span><span class="st">mathbb E</span><span class="sc">\\</span><span class="st">,d_{AI}^2(P_</span><span class="sc">\\</span><span class="st">lambda,</span><span class="sc">\\</span><span class="st">Sigma)\$, \$</span><span class="sc">\\</span><span class="st">Sigma=I\$ | \$</span><span class="sc">\\</span><span class="st">mathbb E</span><span class="sc">\\</span><span class="st">,d_{AI}^2(P_</span><span class="sc">\\</span><span class="st">lambda,</span><span class="sc">\\</span><span class="st">Sigma)\$, \$</span><span class="sc">\\</span><span class="st">Sigma</span><span class="sc">\\</span><span class="st">ne I\$ (\$</span><span class="sc">\\</span><span class="st">kappa=100\$) |</span><span class="sc">\n</span><span class="st">|---|---|---|"</span>)</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="cn">e</span> <span class="kw">in</span> errores</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(<span class="st">"| "</span>, <span class="cn">e</span>.λ, <span class="st">" | "</span>, <span class="fu">f3</span>(<span class="cn">e</span>.e1), <span class="st">" | "</span>, <span class="fu">f3</span>(<span class="cn">e</span>.e2), <span class="st">" |"</span>)</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">: Error de la covarianza contraída con \$n=8\$ y \$T=16\$ (400 réplicas). {#tbl-contraccion}</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Distancia entre dos covarianzas \$A,B\$ y entre \$DAD,DBD\$ con ganancias comunes \$D\$: sin contracción \$</span><span class="sc">$</span>(<span class="fu">f3</span>(invar.sin[<span class="fl">1</span>]))<span class="st">\$ y \$</span><span class="sc">$</span>(<span class="fu">f3</span>(invar.sin[<span class="fl">2</span>]))<span class="st">\$; con contracción \$</span><span class="sc">\\</span><span class="st">lambda=0{,}3\$ \$</span><span class="sc">$</span>(<span class="fu">f3</span>(invar.con[<span class="fl">1</span>]))<span class="st">\$ y \$</span><span class="sc">$</span>(<span class="fu">f3</span>(invar.con[<span class="fl">2</span>]))<span class="st">\$."</span>)</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="cn">nothing</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-contraccion" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-contraccion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;3.6: Error de la covarianza contraída con <span class="math inline">\(n=8\)</span> y <span class="math inline">\(T=16\)</span> (400 réplicas).
+</figcaption>
+<div aria-describedby="tbl-contraccion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><span class="math inline">\(\lambda\)</span></th>
+<th><span class="math inline">\(\mathbb E\,d_{AI}^2(P_\lambda,\Sigma)\)</span>, <span class="math inline">\(\Sigma=I\)</span></th>
+<th><span class="math inline">\(\mathbb E\,d_{AI}^2(P_\lambda,\Sigma)\)</span>, <span class="math inline">\(\Sigma\ne I\)</span> (<span class="math inline">\(\kappa=100\)</span>)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0.0</td>
+<td>7.9</td>
+<td>7.6</td>
+</tr>
+<tr class="even">
+<td>0.1</td>
+<td>4.93</td>
+<td>4.91</td>
+</tr>
+<tr class="odd">
+<td>0.3</td>
+<td>2.38</td>
+<td>9.66</td>
+</tr>
+<tr class="even">
+<td>0.6</td>
+<td>0.775</td>
+<td>16.5</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>Distancia entre dos covarianzas <span class="math inline">\(A,B\)</span> y entre <span class="math inline">\(DAD,DBD\)</span> con ganancias comunes <span class="math inline">\(D\)</span>: sin contracción <span class="math inline">\(4.11\)</span> y <span class="math inline">\(4.11\)</span>; con contracción <span class="math inline">\(\lambda=0{,}3\)</span> <span class="math inline">\(2.47\)</span> y <span class="math inline">\(1.97\)</span>.</p>
+</div>
+<p>La <a href="#tbl-contraccion" class="quarto-xref">Tabla&nbsp;<span>3.6</span></a> muestra el equilibrio: con <span class="math inline">\(\Sigma=I\)</span> (el objetivo es exacto) cuanto más contracción, menor error; con <span class="math inline">\(\Sigma\)</span> anisótropa, contraer un poco ayuda y contraer mucho empeora, porque se sesga hacia una matriz esférica. Y en el último párrafo de salida, sin contracción las dos distancias coinciden y con contracción no <span class="ev-numerico">Verificado numéricamente</span>. La elección de <span class="math inline">\(\lambda\)</span> es, pues, una decisión de análisis que debe fijarse <strong>antes</strong> de comparar grupos, no una constante de limpieza.</p>
+</section>
+<section id="cuando-la-matriz-sale-del-cono-rango" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="cuando-la-matriz-sale-del-cono-rango"><span class="header-section-number">3.6</span> Cuando la matriz sale del cono: rango</h2>
+<p>El capítulo <a href="registro-matriz.html" class="quarto-xref"><span>2</span></a> demostró que la referencia promedio da <span class="math inline">\(HPH\)</span> de rango <span class="math inline">\(n-1\)</span> (<a href="registro-matriz.html#prp-referencia" class="quarto-xref">Proposición&nbsp;<span>2.4</span></a>). Allí <span class="math inline">\(\dAI\)</span> no está definida. Pero la información no se ha perdido: está en un subespacio de dimensión <span class="math inline">\(n-1\)</span>, y trabajando en él hay una salida sin ambigüedad.</p>
+<div id="thm-reduccion" class="theorem">
+<p><span class="theorem-title"><strong>Teorema 3.3 (Reducción a <span class="math inline">\(n-1\)</span> canales independiente de la base)</strong></span> Sean <span class="math inline">\(A,B\in\SPD_n\)</span>, <span class="math inline">\(H=I-\tfrac1n\mathbf 1\mathbf 1^\top\)</span> y <span class="math inline">\(Q,Q'\in\R^{(n-1)\times n}\)</span> matrices que restringidas a <span class="math inline">\(\mathbf 1^\perp\)</span> son inyectivas (por ejemplo, eliminar un canal). Entonces <span class="math inline">\(Q(HAH)Q^\top\)</span> y <span class="math inline">\(Q(HBH)Q^\top\)</span> son SPD y <span class="math display">\[
+\dAI\big(Q(HAH)Q^\top,\,Q(HBH)Q^\top\big)=\dAI\big(Q'(HAH)Q'^\top,\,Q'(HBH)Q'^\top\big).
+\]</span> <span class="ev-demostrado">Demostrado</span></p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Demostración</em>. </span>Sea <span class="math inline">\(V=\mathbf 1^\perp\)</span>, de dimensión <span class="math inline">\(n-1\)</span>. <span class="math inline">\(HAH\)</span> es definida positiva sobre <span class="math inline">\(V\)</span> y su núcleo es <span class="math inline">\(\mathbf 1\)</span>; como <span class="math inline">\(Q|_V\)</span> es un isomorfismo <span class="math inline">\(V\to\R^{n-1}\)</span>, <span class="math inline">\(Q(HAH)Q^\top\)</span> es SPD (la demostración es la de la <a href="#prp-congruencia-cono" class="quarto-xref">Proposición&nbsp;<span>3.1</span></a>, aplicada al subespacio <span class="math inline">\(V\)</span>). Sea <span class="math inline">\(R=Q'|_V\,(Q|_V)^{-1}\in\GL(n-1)\)</span>. Como <span class="math inline">\(Hx\in V\)</span> para todo <span class="math inline">\(x\)</span>, <span class="math inline">\(Q'(HAH)Q'^\top=R\,\big(Q(HAH)Q^\top\big)R^\top\)</span>, y lo mismo con <span class="math inline">\(B\)</span>. La igualdad de distancias es la <a href="metricas-spd.html#prp-congruencia" class="quarto-xref">Proposición&nbsp;<span>4.6</span></a> con <span class="math inline">\(W=R\)</span>.</p>
+</div>
+<p>Con otras métricas, la distancia <strong>sí depende</strong> de qué canal se elimine. Lo comprobamos eliminando cada uno de los seis canales:</p>
+<div id="lab2-reduccion" class="cell" data-execution_count="1">
+<details open="" class="code-fold">
+<summary>Código</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">experimento_reduccion</span>(; n <span class="op">=</span> <span class="fl">6</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    rng <span class="op">=</span> <span class="fu">StableRNG</span>(<span class="fl">20261112</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    A, B <span class="op">=</span> <span class="fu">spd_kappa</span>(rng, n, <span class="fl">20</span>), <span class="fu">spd_kappa</span>(rng, n, <span class="fl">20</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    H <span class="op">=</span> I <span class="op">-</span> <span class="fu">ones</span>(n, n) <span class="op">/</span> n</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    HA, HB <span class="op">=</span> H <span class="op">*</span> A <span class="op">*</span> H, H <span class="op">*</span> B <span class="op">*</span> H</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">reducir</span>(M, i) <span class="op">=</span> <span class="fu">symmetrize</span>(M[<span class="fu">setdiff</span>(<span class="fl">1</span><span class="op">:</span>n, i), <span class="fu">setdiff</span>(<span class="fl">1</span><span class="op">:</span>n, i)])</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> [(; E <span class="op">=</span> <span class="fu">norm</span>(<span class="fu">reducir</span>(HA, i) <span class="op">-</span> <span class="fu">reducir</span>(HB, i)),</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>             LE <span class="op">=</span> <span class="fu">distance</span>(<span class="fu">LogEuclidean</span>(), <span class="fu">reducir</span>(HA, i), <span class="fu">reducir</span>(HB, i)),</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>             AI <span class="op">=</span> <span class="fu">dAI</span>(<span class="fu">reducir</span>(HA, i), <span class="fu">reducir</span>(HB, i))) for i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>n]</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>reduc <span class="op">=</span> <span class="fu">experimento_reduccion</span>()</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"| Geometría | Mínimo | Máximo | Diferencia relativa |</span><span class="sc">\n</span><span class="st">|---|---|---|---|"</span>)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (nombre, k) <span class="kw">in</span> ((<span class="st">"Euclídea"</span>, <span class="op">:</span>E), (<span class="st">"Log-euclídea"</span>, <span class="op">:</span>LE), (<span class="st">"Afín-invariante"</span>, <span class="op">:</span>AI))</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    v <span class="op">=</span> <span class="fu">getfield</span>.(reduc, k)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(<span class="st">"| "</span>, nombre, <span class="st">" | "</span>, <span class="fu">f3</span>(<span class="fu">minimum</span>(v)), <span class="st">" | "</span>, <span class="fu">f3</span>(<span class="fu">maximum</span>(v)), <span class="st">" | "</span>, <span class="fu">f3</span>((<span class="fu">maximum</span>(v) <span class="op">-</span> <span class="fu">minimum</span>(v)) <span class="op">/</span> <span class="fu">maximum</span>(v)), <span class="st">" |"</span>)</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">: Distancia entre dos covarianzas con referencia promedio tras eliminar cada uno de los seis canales. {#tbl-reduccion}"</span>)</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="cn">nothing</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-reduccion" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-reduccion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabla&nbsp;3.7: Distancia entre dos covarianzas con referencia promedio tras eliminar cada uno de los seis canales.
+</figcaption>
+<div aria-describedby="tbl-reduccion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th>Geometría</th>
+<th>Mínimo</th>
+<th>Máximo</th>
+<th>Diferencia relativa</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Euclídea</td>
+<td>14.1</td>
+<td>22.7</td>
+<td>0.377</td>
+</tr>
+<tr class="even">
+<td>Log-euclídea</td>
+<td>2.89</td>
+<td>3.18</td>
+<td>0.089</td>
+</tr>
+<tr class="odd">
+<td>Afín-invariante</td>
+<td>3.24</td>
+<td>3.24</td>
+<td>2.06e-15</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div>
+<p>Solo <span class="math inline">\(\dAI\)</span> da el mismo valor para cualquier canal eliminado (<a href="#tbl-reduccion" class="quarto-xref">Tabla&nbsp;<span>3.7</span></a>) <span class="ev-numerico">Verificado numéricamente</span>. Tiene una condición que conviene no olvidar: la reducción compara matrices que comparten el <strong>mismo</strong> núcleo (<span class="math inline">\(\mathbf 1\)</span> en la referencia promedio). Si se eliminan componentes de ICA, el subespacio que queda es distinto en cada persona, y comparar directamente las covarianzas reducidas no tiene el mismo respaldo.</p>
+</section>
+<section id="lo-que-esto-no-demuestra" class="level2" data-number="3.7">
+<h2 data-number="3.7" class="anchored" data-anchor-id="lo-que-esto-no-demuestra"><span class="header-section-number">3.7</span> Lo que esto no demuestra</h2>
+<ul>
+<li><strong>No demuestra que <span class="math inline">\(\dAI\)</span> sea mejor que la euclídea.</strong> Demuestra que su ruido de estimación no depende de <span class="math inline">\(\Sigma\)</span> y que la euclídea sí depende; con <span class="math inline">\(T/n\)</span> pequeño, <span class="math inline">\(\dAI\)</span> amplifica el ruido del menor autovalor, y la comparación de potencia entre métricas es del capítulo <a href="estadistica.html" class="quarto-xref"><span>6</span></a>.</li>
+<li><strong>El suelo de ruido es de primer orden.</strong> Las fórmulas de la <a href="#eq-suelo" class="quarto-xref">ecuación&nbsp;<span>3.2</span></a> valen para <span class="math inline">\(T\gg n\)</span>, gaussianas, de media conocida y muestras independientes (<a href="#tbl-hipotesis" class="quarto-xref">Tabla&nbsp;<span>3.1</span></a>); fuera de ahí se relajan hipótesis una a una, y el Experimento 1 muestra el fallo con <span class="math inline">\(T/n=2\)</span>.</li>
+<li><strong><span class="math inline">\(T_{\mathrm{ef}}=T/g_T\)</span> se ha comprobado solo para canales independientes con el mismo AR(2).</strong> Con canales correlacionados, otras bandas o no gaussianidad hay que recalcularlo; las muestras reales del EEG no son un AR(2).</li>
+<li><strong>Las conclusiones valen para el modelo gaussiano declarado.</strong> El EEG real tiene colas más pesadas y no estacionariedad, que no se han modelado <span class="ev-hipotesis">Hipótesis sintética</span>.</li>
+<li><strong>La contracción mostrada es la más simple</strong> (objetivo esférico). La regla de Ledoit–Wolf para elegir <span class="math inline">\(\lambda\)</span> no se reproduce aquí, y el resultado del <a href="#prp-contraccion" class="quarto-xref">Proposición&nbsp;<span>3.3</span></a> no depende de cómo se elija <span class="math inline">\(\lambda\)</span>.</li>
+<li><strong>La reducción a <span class="math inline">\(n-1\)</span> canales exige un núcleo común.</strong> No cubre la ICA con subespacios distintos por persona.</li>
+</ul>
+</section>
+<section id="autoevaluación" class="level2" data-number="3.8">
+<h2 data-number="3.8" class="anchored" data-anchor-id="autoevaluación"><span class="header-section-number">3.8</span> Autoevaluación</h2>
+<div class="autoeval callout callout-style-default callout-tip callout-titled" title="1. Dos registros de la misma persona">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Dos registros de la misma persona
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Dos registros con exactamente la misma covarianza verdadera, calculados con <span class="math inline">\(T\)</span> muestras cada uno, ¿a qué distancia afín-invariante están, aproximadamente?</p>
+<p><strong>Respuesta.</strong> A unos <span class="math inline">\(\sqrt{2n(n+1)/T}\)</span> (el suelo de ruido de la <a href="#eq-suelo" class="quarto-xref">ecuación&nbsp;<span>3.2</span></a>), no a cero. Si se interpreta una distancia sin esa referencia, el ruido parece diferencia real.</p>
+</div>
+</div>
+</div>
+<div class="autoeval callout callout-style-default callout-tip callout-titled" title="2. Cambiar de unidades">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Cambiar de unidades
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Se expresa <span class="math inline">\(\Sigma\)</span> en mV² en lugar de µV². ¿Cambia el error esperado de la distancia afín-invariante? ¿Y el de la euclídea?</p>
+<p><strong>Respuesta.</strong> El de la afín-invariante no cambia (<a href="#thm-suelo" class="quarto-xref">Teorema&nbsp;<span>3.1</span></a>: no depende de <span class="math inline">\(\Sigma\)</span>). El de la euclídea cambia con la escala (<a href="#thm-euclidea-suelo" class="quarto-xref">Teorema&nbsp;<span>3.2</span></a>). Es un caso de invariancia por escala común, que recordarás del capítulo <a href="metricas-spd.html" class="quarto-xref"><span>4</span></a>.</p>
+</div>
+</div>
+</div>
+<div class="autoeval callout callout-style-default callout-tip callout-titled" title="3. Épocas con ritmo marcado">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Épocas con ritmo marcado
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Una época de 4 s a 100 Hz contiene <span class="math inline">\(T=400\)</span> muestras de un ritmo alfa estrecho. ¿Cuenta como 400 muestras independientes?</p>
+<p><strong>Respuesta.</strong> No: la autocorrelación reduce el número efectivo a <span class="math inline">\(T/g_T\)</span>, con <span class="math inline">\(g_T\)</span> que depende del proceso (unas cinco veces menos en el ejemplo AR(2), <a href="#prp-autocorrelacion" class="quarto-xref">Proposición&nbsp;<span>3.2</span></a>). Contar muestras subestima el ruido de estimación.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="ejercicios" class="level2" data-number="3.9">
+<h2 data-number="3.9" class="anchored" data-anchor-id="ejercicios"><span class="header-section-number">3.9</span> Ejercicios</h2>
+<div id="exr-isserlis" class="demostracion theorem exercise">
+<p><span class="theorem-title"><strong>Ejercicio 3.1</strong></span> Demuestra que <span class="math inline">\(\operatorname{Var}(P_{ij})=\tfrac1T\big(\Sigma_{ii}\Sigma_{jj}+\Sigma_{ij}^2\big)\)</span> para la covarianza muestral de <span class="math inline">\(T\)</span> vectores <span class="math inline">\(N(0,\Sigma)\)</span> independientes, y comprueba con <span class="math inline">\(\Sigma=I\)</span> que <span class="math inline">\(\mathbb E\|P-I\|_F^2=n(n+1)/T\)</span>.</p>
+<div class="pista callout callout-style-default callout-tip callout-titled" title="Pista">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Pista
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Teorema de Isserlis: <span class="math inline">\(\mathbb E[abcd]=\mathbb E[ab]\mathbb E[cd]+\mathbb E[ac]\mathbb E[bd]+\mathbb E[ad]\mathbb E[bc]\)</span> para gaussianas centradas.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="exr-ar1" class="demostracion theorem exercise">
+<p><span class="theorem-title"><strong>Ejercicio 3.2</strong></span> Para un proceso AR(1), <span class="math inline">\(\rho(k)=\phi^{|k|}\)</span>, calcula el límite de <span class="math inline">\(g_T\)</span> cuando <span class="math inline">\(T\to\infty\)</span> y deduce <span class="math inline">\(T_{\mathrm{ef}}\)</span>. ¿Para qué <span class="math inline">\(\phi\)</span> vale <span class="math inline">\(g=5\)</span>?</p>
+<div class="solucion callout callout-style-default callout-note callout-titled" title="Solución">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>Solución
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><span class="math inline">\(g_\infty=\sum_{k\in\mathbb Z}\phi^{2|k|}=\dfrac{1+\phi^2}{1-\phi^2}\)</span>, de modo que <span class="math inline">\(T_{\mathrm{ef}}=T\dfrac{1-\phi^2}{1+\phi^2}\)</span>. Igualar <span class="math inline">\(g=5\)</span> da <span class="math inline">\(\phi^2=\tfrac23\)</span>, es decir, <span class="math inline">\(\phi\approx0{,}82\)</span>.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="exr-mp" class="simulacion theorem exercise">
+<p><span class="theorem-title"><strong>Ejercicio 3.3</strong></span> Con la función <code>muestra</code> del laboratorio, estima <span class="math inline">\(\mathbb E\,\lambda_{\min}(P)\)</span> para <span class="math inline">\(n=8\)</span> y <span class="math inline">\(T/n\in\{1{,}5;\,2;\,4;\,16\}\)</span> y compárala con <span class="math inline">\((1-\sqrt{n/T})^2\)</span>. ¿Qué ocurre con <span class="math inline">\(\mathbb E\,\dAI(P,I)^2\)</span> cuando <span class="math inline">\(T/n\)</span> se acerca a <span class="math inline">\(1\)</span>?</p>
+</div>
+<div id="exr-contraccion-num" class="codigo theorem exercise">
+<p><span class="theorem-title"><strong>Ejercicio 3.4</strong></span> (Laboratorio) Con <code>contraer</code> y <code>dAI</code> del laboratorio, busca dos matrices <span class="math inline">\(A,B\in\SPD_2\)</span> y unas ganancias <span class="math inline">\(D=\diag(d_1,d_2)\)</span> para las que <span class="math inline">\(\dAI(P_\lambda(A),P_\lambda(B))\)</span> y <span class="math inline">\(\dAI(P_\lambda(DAD),P_\lambda(DBD))\)</span> difieran en más de un <span class="math inline">\(10\,\%\)</span> con <span class="math inline">\(\lambda=0{,}3\)</span>.</p>
+</div>
+<div id="exr-eliminar-canal" class="codigo theorem exercise">
+<p><span class="theorem-title"><strong>Ejercicio 3.5</strong></span> (Laboratorio) Repite el experimento de reducción sin eliminar ningún canal: proyecta sobre una base ortonormal cualquiera de <span class="math inline">\(\mathbf 1^\perp\)</span> (obtenida, por ejemplo, de la descomposición QR de <span class="math inline">\(H\)</span>). Comprueba numéricamente que <span class="math inline">\(\dAI\)</span> coincide con el de la <a href="#tbl-reduccion" class="quarto-xref">Tabla&nbsp;<span>3.7</span></a> y que las otras dos distancias cambian.</p>
+</div>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-ledoit2004well" class="csl-entry" role="listitem">
+Ledoit, Olivier, y Michael Wolf. 2004. <span>«A well-conditioned estimator for large-dimensional covariance matrices»</span>. <em>Journal of Multivariate Analysis</em> 88 (2): 365-411. <a href="https://doi.org/10.1016/S0047-259X(03)00096-4">https://doi.org/10.1016/S0047-259X(03)00096-4</a>.
+</div>
+<div id="ref-marcenko1967distribution" class="csl-entry" role="listitem">
+Marčenko, V. A., y L. A. Pastur. 1967. <span>«Distribution of eigenvalues for some sets of random matrices»</span>. <em>Mathematics of the USSR-Sbornik</em> 1 (4): 457-83. <a href="https://doi.org/10.1070/SM1967v001n04ABEH001994">https://doi.org/10.1070/SM1967v001n04ABEH001994</a>.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiado");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiado");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/me1catrr\.github\.io\/neuroriemann\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./registro-matriz.html" class="pagination-link" aria-label="2 Del registro a la matriz: el problema geométrico">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Del registro a la matriz: el problema geométrico</span></span>
+      </a>
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./metricas-spd.html" class="pagination-link" aria-label="4 Métricas sobre SPD: medir y recorrer las diferencias">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Métricas sobre SPD: medir y recorrer las diferencias</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© 2026 Rafael Castro Triguero · Universidad de Córdoba</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/me1catrr/neuroriemann/issues/new" class="toc-action"><i class="bi bi-github"></i>Informar sobre problema</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Texto y figuras <a href="https://creativecommons.org/licenses/by/4.0/deed.es">CC BY 4.0</a> · Código MIT</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
